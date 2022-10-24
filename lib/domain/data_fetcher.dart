@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'package:inventaire_m_et_t/domain/inventaire.dart';
 import 'package:sqflite/sqflite.dart';
+import 'article.dart';
 import 'type_article.dart';
 import '../database/database.dart';
 import 'mapped_object.dart';
@@ -42,5 +44,35 @@ abstract class DataFetcher<T extends MappedObject> {
 
     db.delete(tableName(),
         where: "$primaryKeyNameStr = $primaryKey");
+  }
+
+  Future<void> addToTable(article, quantity) async {
+    final Database db = await initDB();
+
+    for(int i = 0; i < quantity; i++) {
+      Inventaire inventaire = new Inventaire(
+            dateAchatArticle: DateTime.now().toString(), article: article);
+
+      db.insert(tableName(), inventaire.toMap());
+    }
+  }
+
+  Future<void> removeFromTable(Article article, quantity) async {
+    final Database db = await initDB();
+
+    var primaryKeyNameStr = primaryKeyName();
+    int pkArticle = article.pkArticle;
+    var tableNameStr = tableName();
+
+    for(int i = 0; i < quantity; i++) {
+      var str = 'fk_Article = $pkArticle AND $primaryKeyNameStr = '
+          '(SELECT $primaryKeyNameStr FROM $tableNameStr'
+          ' WHERE fk_Article = $pkArticle'
+          ' ORDER BY $primaryKeyNameStr LIMIT 2)';
+      var int = await db.delete(tableNameStr,
+          where: str,
+      whereArgs: []);
+      print(int);
+    }
   }
 }

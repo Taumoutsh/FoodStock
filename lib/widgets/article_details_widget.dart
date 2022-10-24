@@ -11,7 +11,9 @@ class ArticleDetailsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     DateTime date =
     DateTime.now().add(Duration(days: currentArticle.peremptionEnJours));
-    String dateToPrint = date.day.toString() + "-" + date.year.toString();
+    String dateToPrint = date.day.toString().padLeft(2, '0') + "-"
+        + date.month.toString().padLeft(2, '0') + "-"
+        + date.year.toString();
 
     return Expanded(
         child: Column(

@@ -13,22 +13,20 @@ class Inventaire extends MappedObject {
   static const String PK_NAME = "pk_Inventaire";
   static const String LABEL_NAME = "dateAchatArticle";
 
-  int pkInventaire;
+  int ?pkInventaire;
   String dateAchatArticle;
   Article article;
 
-
   Inventaire({
-    required this.pkInventaire,
+    this.pkInventaire,
     required this.dateAchatArticle,
     required this.article
   });
 
   Map<String, dynamic> toMap() {
     return {
-      'pk_Inventaire': pkInventaire,
       'dateAchatArticle': dateAchatArticle,
-      'article': article,
+      'fk_Article': article.pkArticle,
     };
   }
 

@@ -3,9 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:inventaire_m_et_t/domain/article.dart';
 import 'package:inventaire_m_et_t/domain/data_provider.dart';
-import 'package:inventaire_m_et_t/widgets/article_left_side_widget.dart';
-import 'package:inventaire_m_et_t/widgets/article_right_side_widget.dart';
-import 'package:inventaire_m_et_t/widgets/article_tile_separator.dart';
+import 'package:inventaire_m_et_t/service/widget_service_state.dart';
 import 'package:inventaire_m_et_t/widgets/article_tile_widget.dart';
 
 void main() {
@@ -14,6 +12,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   DataProviderService dataProviderService = DataProviderService();
+  WidgetServiceState widgetServiceState = WidgetServiceState();
 
   @override
   Widget build(BuildContext context) {
@@ -43,8 +42,6 @@ class MyApp extends StatelessWidget {
           } else {
             return Container(
               color: Colors.white,
-              child:
-              Expanded(
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -57,8 +54,7 @@ class MyApp extends StatelessWidget {
                       ),
                       const CircularProgressIndicator(),
                     ]
-                )
-              ),
+                ),
             );
           }
         });
