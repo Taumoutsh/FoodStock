@@ -12,6 +12,10 @@ class ArticleCountContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    int currentArticleNumber = dataProviderService
+        .getNumberOfAvailableArticleInInventory(currentArticle);
+
     return Container(
       alignment: Alignment.center,
       width: 90.0,
@@ -19,11 +23,9 @@ class ArticleCountContainer extends StatelessWidget {
           maxHeight: double.infinity),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: const Color(0x7049AC57)),
+          color: getCountBackgroundColor(currentArticleNumber)),
       child: Text(
-        dataProviderService
-            .getNumberOfAvailableArticleInInventory(currentArticle)
-            .toString(),
+        currentArticleNumber.toString(),
         style: const TextStyle(
             color: Color(0xFF303030),
             fontWeight: FontWeight.bold,
@@ -32,5 +34,19 @@ class ArticleCountContainer extends StatelessWidget {
         textAlign: TextAlign.center,
       ), //Quantité
     );
+  }
+
+  Color getCountBackgroundColor(int currentArticleNumber) {
+    Color colorToReturn;
+    if(currentArticleNumber > 2) {
+      colorToReturn = const Color(0x7049AC57);
+    } else if(currentArticleNumber > 1) {
+      colorToReturn = Color(0x70EBA131);
+    } else if(currentArticleNumber > 0) {
+      colorToReturn = Color(0x70F16060);
+    } else {
+      colorToReturn = Color(0x70958E8E);
+    }
+    return colorToReturn;
   }
 }

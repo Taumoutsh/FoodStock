@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:inventaire_m_et_t/domain/data_manager.dart';
 import 'package:inventaire_m_et_t/domain/data_provider.dart';
 
 import '../../domain/article.dart';
@@ -17,11 +18,13 @@ class _ArticleValidButtonWidget extends State<ArticleValidButtonWidget> {
 
   var dataProviderService = DataProviderService();
 
+  var dataManagerService = DataManagerService();
+
   var widgetServiceState = WidgetServiceState();
 
   _updateArticleQuantity() {
     setState(() {
-      dataProviderService.addOrRemoveFromInventaire(
+      dataManagerService.addOrRemoveFromInventaire(
           widget.currentArticle,
       widgetServiceState.currentQuantityByArticle
       [widget.currentArticle.pkArticle]!);

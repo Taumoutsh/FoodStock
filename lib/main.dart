@@ -1,29 +1,62 @@
+import 'dart:core';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:inventaire_m_et_t/domain/article.dart';
+import 'package:inventaire_m_et_t/domain/data_manager.dart';
 import 'package:inventaire_m_et_t/domain/data_provider.dart';
 import 'package:inventaire_m_et_t/service/widget_service_state.dart';
 import 'package:inventaire_m_et_t/widgets/article_tile_widget.dart';
+import 'package:logging/logging.dart';
+
+
 
 void main() {
-  runApp(MyApp());
+  Logger.root.level = Level.ALL; // defaults to Level.INFO
+  Logger.root.onRecord.listen((record) {
+    print('${record.level.name}: ${record.time}: ${record.message}');
+  });
+  runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
+  @override
+  State<StatefulWidget> createState() => _MyApp();
+}
+
+class _MyApp extends State<MyApp> {
+
+  List<Widget> articleTileList = [];
+
   DataProviderService dataProviderService = DataProviderService();
+  DataManagerService dataManagerService = DataManagerService();
   WidgetServiceState widgetServiceState = WidgetServiceState();
+
+   List<Widget> _redrawList() {
+    List<Widget> newArticleTileList = [];
+    for (Article article in dataProviderService.articleMap.values) {
+      newArticleTileList.add(ArticleTile(currentArticle: article));
+    }
+    return newArticleTileList;
+  }
 
   @override
   Widget build(BuildContext context) {
+    dataManagerService.addListener(() {
+      setState(() {
+        dataManagerService.refreshArticleMapFromDatabase();
+        widgetServiceState.currentUpdatedArticle = null;
+        articleTileList = _redrawList();
+      });
+    });
+
     return FutureBuilder<bool>(
-        future: dataProviderService.refreshValuesFromDatabase(),
+        future: dataManagerService.refreshValuesFromDatabase(),
         builder: (context, snapshot) {
+          articleTileList = _redrawList();
           if (snapshot.hasData) {
-            List<Widget> articleTileArray = [];
-            for (Article article in dataProviderService.articleMap.values) {
-              articleTileArray.add(ArticleTile(currentArticle: article));
-            }
             return MaterialApp(
                 title: 'Welcome to Flutter',
                 home: Scaffold(
@@ -33,7 +66,7 @@ class MyApp extends StatelessWidget {
                   ),
                   body: SingleChildScrollView(
                     child: Column(
-                      children: articleTileArray,
+                      children: articleTileList,
                     ),
                   ),
                   extendBody: true,
@@ -42,25 +75,25 @@ class MyApp extends StatelessWidget {
           } else {
             return Container(
               color: Colors.white,
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text("Database loading in progress...",
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text("Database loading in progress...",
                         style: TextStyle(color: Colors.black),
                         textDirection: TextDirection.ltr),
-                      Container(
-                         height: 20,
-                      ),
-                      const CircularProgressIndicator(),
-                    ]
-                ),
+                    Container(
+                      height: 20,
+                    ),
+                    const CircularProgressIndicator(),
+                  ]
+              ),
             );
           }
         });
   }
-}
 
+}
 
 
 

@@ -23,33 +23,39 @@ class _ArticleQuantityUpdaterWidget
 
   bool isInitialized = false;
 
-  var n = 0;
+  var currentQuantity = 0;
 
   _addValue() {
     setState(() {
-      n = n+1;
-      widgetServiceState.currentQuantityByArticle[widget.currentArticle.pkArticle] = n;
+      currentQuantity = currentQuantity+1;
+      widgetServiceState.
+      currentQuantityByArticle[widget.currentArticle.pkArticle] = currentQuantity;
     });
   }
 
   _removeValue() {
     setState(() {
-      n = n-1;
-      widgetServiceState.currentQuantityByArticle[widget.currentArticle.pkArticle] = n;
+      if(currentQuantity > 0) {
+        currentQuantity = currentQuantity - 1;
+        widgetServiceState.currentQuantityByArticle[widget.currentArticle
+            .pkArticle] = currentQuantity;
+      } else {
+
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    if(!this.isInitialized) {
+    if(!isInitialized) {
       if(!widgetServiceState.currentQuantityByArticle.
       containsKey(widget.currentArticle.pkArticle)) {
-        n = dataProviderService
+        currentQuantity = dataProviderService
             .getNumberOfAvailableArticleInInventory(widget.currentArticle);
         widgetServiceState.
-        currentQuantityByArticle[widget.currentArticle.pkArticle] = n;
+        currentQuantityByArticle[widget.currentArticle.pkArticle] = currentQuantity;
       } else {
-        n = widgetServiceState.
+        currentQuantity = widgetServiceState.
         currentQuantityByArticle[widget.currentArticle.pkArticle]!;
       }
     }
@@ -65,9 +71,9 @@ class _ArticleQuantityUpdaterWidget
           GestureDetector(
               onTap: _removeValue,
               child: Icon(Icons.remove_rounded,
-                  color: Color(0xFF747474), size: 70)),
+                  color: computeRemoveColor(currentQuantity), size: 70)),
           Text(
-              n.toString(),
+              currentQuantity.toString(),
               style: TextStyle(
                   color: Color(0xFF303030),
                   fontWeight: FontWeight.bold,
@@ -81,4 +87,15 @@ class _ArticleQuantityUpdaterWidget
       ),
     ));
   }
+
+  Color computeRemoveColor(int quantityValue) {
+    Color colorToReturn;
+    if (quantityValue > 0) {
+      colorToReturn = Color(0xFF747474);
+     } else {
+      colorToReturn = Color(0xFFDBDBDB);
+     }
+    return colorToReturn;
+  }
+
 }
