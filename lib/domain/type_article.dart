@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:inventaire_m_et_t/domain/mapped_object.dart';
 
 class TypeArticle extends MappedObject{
@@ -11,6 +9,8 @@ class TypeArticle extends MappedObject{
   int pkTypeArticle;
 
   String labelTypeArticle;
+
+  bool isSelected = false;
 
   TypeArticle({
     required this.pkTypeArticle,

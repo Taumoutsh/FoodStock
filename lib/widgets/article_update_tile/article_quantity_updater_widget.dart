@@ -27,9 +27,12 @@ class _ArticleQuantityUpdaterWidget
 
   _addValue() {
     setState(() {
-      currentQuantity = currentQuantity+1;
-      widgetServiceState.
-      currentQuantityByArticle[widget.currentArticle.pkArticle] = currentQuantity;
+      if (currentQuantity < 20) {
+        currentQuantity = currentQuantity + 1;
+        widgetServiceState.
+        currentQuantityByArticle[widget.currentArticle.pkArticle] =
+            currentQuantity;
+      }
     });
   }
 
@@ -39,8 +42,6 @@ class _ArticleQuantityUpdaterWidget
         currentQuantity = currentQuantity - 1;
         widgetServiceState.currentQuantityByArticle[widget.currentArticle
             .pkArticle] = currentQuantity;
-      } else {
-
       }
     });
   }
@@ -64,7 +65,7 @@ class _ArticleQuantityUpdaterWidget
         child: Container(
       height: double.infinity,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15), color: Colors.white),
+          borderRadius: BorderRadius.circular(20), color: Colors.white),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -82,7 +83,8 @@ class _ArticleQuantityUpdaterWidget
           GestureDetector(
               onTap: _addValue,
               child:
-                  Icon(Icons.add_rounded, color: Color(0xFF747474), size: 70))
+                  Icon(Icons.add_rounded,
+                      color: computeAddColor(currentQuantity), size: 70))
         ],
       ),
     ));
@@ -95,6 +97,16 @@ class _ArticleQuantityUpdaterWidget
      } else {
       colorToReturn = Color(0xFFDBDBDB);
      }
+    return colorToReturn;
+  }
+
+  Color computeAddColor(int quantityValue) {
+    Color colorToReturn;
+    if (quantityValue < 20) {
+      colorToReturn = Color(0xFF747474);
+    } else {
+      colorToReturn = Color(0xFFDBDBDB);
+    }
     return colorToReturn;
   }
 

@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
-import '../domain/article.dart';
-import '../domain/data_provider.dart';
+import '../../domain/article.dart';
+import '../../domain/data_provider.dart';
 
 class ArticleCountContainer extends StatelessWidget {
   final DataProviderService dataProviderService = DataProviderService();
@@ -18,12 +18,19 @@ class ArticleCountContainer extends StatelessWidget {
 
     return Container(
       alignment: Alignment.center,
-      width: 90.0,
+      width: 60.0,
       constraints: const BoxConstraints(
           maxHeight: double.infinity),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: getCountBackgroundColor(currentArticleNumber)),
+          borderRadius: BorderRadius.circular(20),
+          color: getCountBackgroundColor(currentArticleNumber),
+          boxShadow: const [
+            BoxShadow(
+                color: Color(0x336B6B6B),
+                blurRadius: 5,
+                spreadRadius: 1,
+                offset: Offset(0, 2))
+          ]),
       child: Text(
         currentArticleNumber.toString(),
         style: const TextStyle(

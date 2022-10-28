@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -52,10 +53,14 @@ class DataManagerService extends ChangeNotifier {
 
   Future<void> refreshArticleMapFromDatabase() async {
     dataProviderService.articleMap.clear();
+    Map<int, Article> unsortedMap = new HashMap();
     List<Article> articleList = await _articleDataFetcher.getDataFromTable();
     for (Article article in articleList) {
-      dataProviderService.articleMap[article.pkArticle] = article;
+      unsortedMap[article.pkArticle] = article;
     }
+    dataProviderService.articleMap =
+        Map.fromEntries(unsortedMap.entries.toList()..sort(
+                (e1, e2) => e1.value.compareTo(e2.value)));
   }
 
   Future<void> removeFromInventaire(int primaryKey) async {

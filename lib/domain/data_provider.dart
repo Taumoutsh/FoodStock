@@ -33,5 +33,9 @@ class DataProviderService {
     return nbOfAvailableArticle;
   }
 
+  get firstTypeArticleValueInMap {
+    return typeArticleMap.values.first;
+  }
+
 
 }

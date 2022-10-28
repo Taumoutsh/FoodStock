@@ -4,7 +4,7 @@ import 'package:inventaire_m_et_t/domain/type_article.dart';
 
 import 'article_tile_state_enum.dart';
 
-class Article extends ChangeNotifier {
+class Article extends ChangeNotifier implements Comparable<Article> {
 
   static const String TABLE_NAME = "Article";
   static const String PK_NAME = "pk_Article";
@@ -16,7 +16,8 @@ class Article extends ChangeNotifier {
   int peremptionEnJours;
   bool estFavoris;
   TypeArticle typeArticle;
-  ArticleTileState articleTileState = ArticleTileState.READ_ARTICLE;
+  ValueNotifier<ArticleTileState> articleTileState =
+  ValueNotifier(ArticleTileState.READ_ARTICLE);
 
   Article({
     required this.pkArticle,
@@ -26,7 +27,7 @@ class Article extends ChangeNotifier {
     required this.typeArticle
   });
 
-  void triggerListeners() {
+  void triggerTileReset() {
     this.notifyListeners();
   }
 
@@ -47,6 +48,17 @@ class Article extends ChangeNotifier {
       peremptionEnJours.hashCode ^
       estFavoris.hashCode ^
       typeArticle.hashCode;
+
+  @override
+  int compareTo(Article other) {
+    if(this.estFavoris && !other.estFavoris) {
+      return -1;
+    } else if (!this.estFavoris && other.estFavoris) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
 
   Map<String, dynamic> toMap() {
     return {

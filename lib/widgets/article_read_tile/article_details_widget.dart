@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../domain/article.dart';
+import '../../domain/article.dart';
 
 class ArticleDetailsWidget extends StatelessWidget {
   final Article currentArticle;
@@ -13,12 +13,13 @@ class ArticleDetailsWidget extends StatelessWidget {
         DateTime.now().add(Duration(days: currentArticle.peremptionEnJours));
     String dateToPrint = date.day.toString().padLeft(2, '0') +
         "-" +
-        date.month.toString().padLeft(2, '0') +
-        "-" +
-        date.year.toString();
+        date.month.toString().padLeft(2, '0');
 
-    return Expanded(
-        child: Column(
+    return Expanded(child:
+        Container(
+            constraints: BoxConstraints(minWidth: 200),
+            child:
+        Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -40,7 +41,8 @@ class ArticleDetailsWidget extends StatelessWidget {
                   fontStyle: FontStyle.italic,
                   fontSize: 12,
                   fontFamily: "Segue UI")) // DLUO
-        ]));
+        ]))
+    );
   }
 
   Widget getFavoriteWidget() {

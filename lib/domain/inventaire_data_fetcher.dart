@@ -66,7 +66,6 @@ class InventaireDataFetcher extends DataFetcher<Inventaire> {
           where: str,
           whereArgs: []);
       log.info("InventaireDataFetcher() - Suppression de l'inventaire avec l'identifiant $i");
-      print(i);
       inventaireListToRemove.add(inventaireToRemove);
     }
     return inventaireListToRemove;
