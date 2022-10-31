@@ -40,5 +40,5 @@ initDB() async {
     log.info("initDB() - Opening existing database");
   }
 // open the database
-  return await openDatabase(path, readOnly: true);
+  return await openDatabase(path);
 }
