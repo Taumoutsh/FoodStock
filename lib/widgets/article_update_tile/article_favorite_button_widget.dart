@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:inventaire_m_et_t/domain/data_manager.dart';
 import 'package:inventaire_m_et_t/service/widget_service_state.dart';
+import 'package:inventaire_m_et_t/widgets/generic_items/generic_button_widget.dart';
 
 import '../../domain/article.dart';
+import '../../domain/article_tile_state_enum.dart';
 
 class ArticleFavoriteButtonWidget extends StatefulWidget {
 
@@ -24,36 +26,29 @@ class _ArticleFavoriteButtonWidget extends State<ArticleFavoriteButtonWidget> {
   _updateFavoriteStatus() {
     setState(() {
       dataManagerService.updateArticleFavorite(widget.currentArticle);
-      widgetServiceState.favoriteAddition.value = true;
+      widgetServiceState.incrementFavoriteTriggeredCount();
       _iconStyle = getIconStyle();
+      widget.currentArticle.resetReadingTileState();
     });
   }
 
   @override
   Widget build(BuildContext context) {
     _iconStyle = getIconStyle();
-    return GestureDetector(
-        onTap: _updateFavoriteStatus,
-        child: Container(
-          margin: const EdgeInsets.fromLTRB(10, 0, 7.5, 0),
-          height: 70,
-          width: 70,
-          decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Color(0xFFFFA795), Color(0xFFFBC3B8)]),
-              shape: BoxShape.circle),
-          child: _iconStyle,
-        ));
+    return Expanded(child:
+        GenericButtonWidget(
+            colorsToApply: [Color(0xFFFF1048), Color(0xFFFF147A)],
+            onTapFunction: _updateFavoriteStatus,
+            iconData: Icons.favorite_rounded,
+            iconSize: 30));
   }
 
   getIconStyle() {
     Icon iconToReturn;
     if(!widget.currentArticle.estFavoris) {
-      iconToReturn = Icon(Icons.star_rounded, size: 50, color: Colors.white);
+      iconToReturn = Icon(Icons.favorite_rounded, size: 50, color: Colors.white);
     } else {
-      iconToReturn = Icon(Icons.star_border_rounded, size: 50, color: Colors.white);
+      iconToReturn = Icon(Icons.favorite_border_rounded, size: 50, color: Colors.white);
     }
     return iconToReturn;
   }

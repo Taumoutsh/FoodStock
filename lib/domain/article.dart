@@ -5,30 +5,32 @@ import 'package:inventaire_m_et_t/domain/type_article.dart';
 import 'article_tile_state_enum.dart';
 
 class Article extends ChangeNotifier implements Comparable<Article> {
-
   static const String TABLE_NAME = "Article";
   static const String PK_NAME = "pk_Article";
   static const String LABEL_NAME = "labelArticle";
   static const String FAVORITE_NAME = "estFavoris";
 
-  int pkArticle;
+  int? pkArticle;
   String labelArticle;
   int peremptionEnJours;
+  int quantiteAlerte;
+  int quantiteCritique;
   bool estFavoris;
   TypeArticle typeArticle;
   ValueNotifier<ArticleTileState> articleTileState =
-  ValueNotifier(ArticleTileState.READ_ARTICLE);
+      ValueNotifier(ArticleTileState.READ_ARTICLE);
+  ValueNotifier<bool> isInRemovingState = ValueNotifier(false);
 
-  Article({
-    required this.pkArticle,
-    required this.labelArticle,
-    required this.peremptionEnJours,
-    required this.estFavoris,
-    required this.typeArticle
-  });
+  Article({this.pkArticle,
+      required this.labelArticle,
+      required this.peremptionEnJours,
+      required this.quantiteAlerte,
+      required this.quantiteCritique,
+      required this.estFavoris,
+      required this.typeArticle});
 
-  void triggerTileReset() {
-    this.notifyListeners();
+  void resetReadingTileState() {
+    articleTileState.value = ArticleTileState.READ_ARTICLE;
   }
 
   @override
@@ -51,7 +53,7 @@ class Article extends ChangeNotifier implements Comparable<Article> {
 
   @override
   int compareTo(Article other) {
-    if(this.estFavoris && !other.estFavoris) {
+    if (this.estFavoris && !other.estFavoris) {
       return -1;
     } else if (!this.estFavoris && other.estFavoris) {
       return 1;
@@ -60,13 +62,20 @@ class Article extends ChangeNotifier implements Comparable<Article> {
     }
   }
 
+  @override
+  String toString() {
+    return labelArticle;
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'pk_Article': pkArticle,
-      'labelArticle' : labelArticle,
-      'peremptionEnJours' : peremptionEnJours,
-      'estFavoris' : estFavoris ? 1 : 0,
-      'fk_TypeArticle' : typeArticle.pkTypeArticle
+      'labelArticle': labelArticle,
+      'peremptionEnJours': peremptionEnJours,
+      'estFavoris': estFavoris ? 1 : 0,
+       'quantiteAlerte': quantiteAlerte,
+       'quantiteCritique': quantiteCritique,
+      'fk_TypeArticle': typeArticle.pkTypeArticle
     };
   }
 }

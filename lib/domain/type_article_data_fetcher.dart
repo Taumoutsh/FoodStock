@@ -13,7 +13,8 @@ class TypeArticleDataFetcher extends DataFetcher<TypeArticle> {
     return Future(() => List.generate(map.length, (i) {
       return TypeArticle(
           pkTypeArticle: map[i]['pk_TypeArticle'],
-          labelTypeArticle: map[i]['labelTypeArticle']
+          labelTypeArticle: map[i]['labelTypeArticle'],
+          svgResource: map[i]['svgResource'],
       );
     }));
   }

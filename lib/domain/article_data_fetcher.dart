@@ -26,7 +26,7 @@ class ArticleDataFetcher extends DataFetcher<Article> {
 
   Future<int> updateArticleFavoriteStatus(Article article) async {
     int articleNumberUpdated;
-    int primaryKey = article.pkArticle;
+    int primaryKey = article.pkArticle!;
     article.toMap();
     final Database db = await initDB();
 
@@ -35,6 +35,29 @@ class ArticleDataFetcher extends DataFetcher<Article> {
         where: "$primaryKeyNameStr = $primaryKey");
 
     return articleNumberUpdated;
+  }
+
+  Future<int> addArticleInDatabase(Article article) async {
+    int articleNumberUpdated;
+    article.toMap();
+    final Database db = await initDB();
+
+    articleNumberUpdated = await db.insert(tableName(), article.toMap());
+
+    return articleNumberUpdated;
+  }
+
+  Future<int> removeArticleFromDatabase(int articlePrimaryKey) async {
+    final Database db = await initDB();
+
+    String primaryKeyString = primaryKeyName();
+    String tableNameString = tableName();
+
+    String str = "$primaryKeyString = $articlePrimaryKey";
+
+    int count = await db.delete(tableNameString, where: str, whereArgs: []);
+
+    return count;
   }
 
   @override
@@ -46,6 +69,8 @@ class ArticleDataFetcher extends DataFetcher<Article> {
             pkArticle: mapEntry['pk_Article'],
             labelArticle: mapEntry['labelArticle'],
             peremptionEnJours: mapEntry['peremptionEnJours'],
+            quantiteAlerte: mapEntry['quantiteAlerte'],
+            quantiteCritique: mapEntry['quantiteCritique'],
             estFavoris: mapEntry['estFavoris'] == 1 ? true : false,
             typeArticle: listTypeArticle[0]));
       }

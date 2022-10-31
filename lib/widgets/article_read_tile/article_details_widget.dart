@@ -9,12 +9,6 @@ class ArticleDetailsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DateTime date =
-        DateTime.now().add(Duration(days: currentArticle.peremptionEnJours));
-    String dateToPrint = date.day.toString().padLeft(2, '0') +
-        "-" +
-        date.month.toString().padLeft(2, '0');
-
     return Expanded(child:
         Container(
             constraints: BoxConstraints(minWidth: 200),
@@ -32,15 +26,10 @@ class ArticleDetailsWidget extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
                       fontFamily: "Segue UI")),
+              Container(margin: EdgeInsets.all(2)),
               getFavoriteWidget()
             ],
-          ),
-          // Nom de l'article
-          Text("DLUO min : " + dateToPrint,
-              style: const TextStyle(
-                  fontStyle: FontStyle.italic,
-                  fontSize: 12,
-                  fontFamily: "Segue UI")) // DLUO
+          )// DLUO
         ]))
     );
   }
@@ -49,8 +38,8 @@ class ArticleDetailsWidget extends StatelessWidget {
     Widget widgetToReturn;
     if (currentArticle.estFavoris) {
       widgetToReturn = const Icon(
-        Icons.star,
-        color: Color(0xFFFFA795),
+        Icons.favorite_rounded,
+        color: Color(0xFFFF147A),
         size: 18,
       );
     } else {

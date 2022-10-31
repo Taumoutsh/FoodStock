@@ -1,9 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:inventaire_m_et_t/domain/type_article.dart';
 import 'package:inventaire_m_et_t/service/widget_service_state.dart';
 
 class MenuWidget extends StatefulWidget {
+
+  static const ASSETS_DIR = "assets/images/";
+
   WidgetServiceState widgetServiceState = WidgetServiceState();
 
   final TypeArticle typeArticle;
@@ -17,42 +21,8 @@ class MenuWidget extends StatefulWidget {
 class _MenuWidget extends State<MenuWidget> {
   _MenuWidget();
 
-  late Color _menuColorSelection = Color(0xFFE9E9E9);
-
-  _selectTypeArticle() {
-    widget.widgetServiceState.currentSelectedTypeArticle.value =
-        widget.typeArticle;
-  }
-
-  _selectColorDependingOnSelectedArticle() {
-    if (widget.widgetServiceState.currentSelectedTypeArticle.value ==
-        widget.typeArticle) {
-      _menuColorSelection = Color(0xFFBCBCBC);
-    } else {
-      _menuColorSelection = Color(0xFFE9E9E9);
-    }
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    widget.widgetServiceState.currentSelectedTypeArticle.addListener(() {
-      setState(() {
-        _selectColorDependingOnSelectedArticle();
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    widget.widgetServiceState.currentSelectedTypeArticle.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
-    _selectColorDependingOnSelectedArticle();
     return Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -61,34 +31,51 @@ class _MenuWidget extends State<MenuWidget> {
         height: 45,
         child: Row(
           children: [
-            GestureDetector(
-                onTap: _selectTypeArticle,
+            ValueListenableBuilder<TypeArticle?>(valueListenable:
+            widget.widgetServiceState.currentSelectedTypeArticle
+                , builder: (context, value, michel) {
+          return GestureDetector(
+              onTap: _selectTypeArticle,
+              child: Container(
                 child: Container(
-                  child: Container(
-                    margin: EdgeInsets.all(10),
-                    decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [Color(0xFFFFA795), Color(0xFFFBC3B8)]),
-                        shape: BoxShape.circle),
-                  ),
-                  height: 45,
-                  width: 65,
-                  margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    color: _menuColorSelection,
-                  ),
-                )),
+                  margin: EdgeInsets.all(10),
+                  child:
+                  SvgPicture.asset(MenuWidget.ASSETS_DIR +
+                          widget.typeArticle.svgResource),
+                ),
+                height: 45,
+                width: 65,
+                margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: _selectColorDependingOnSelectedTypeArticle(value),
+                ),
+              ));
+                }),
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                color: Color(0xFFBCBCBC),
+                color: Color(0xFF8B8787),
               ),
               width: 4,
+              height: 37,
             ),
           ],
         ));
   }
+
+
+  _selectTypeArticle() {
+    widget.widgetServiceState.currentSelectedTypeArticle.value =
+        widget.typeArticle;
+  }
+
+  _selectColorDependingOnSelectedTypeArticle(TypeArticle? value) {
+    if (value != null && value == widget.typeArticle) {
+      return Color(0xFF8B8787);
+    } else {
+      return Color(0x00000000);
+    }
+  }
+
 }

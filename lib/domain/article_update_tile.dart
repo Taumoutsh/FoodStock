@@ -16,8 +16,9 @@ class ArticleUpdateTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
+      flex: 1,
         child: Container(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.fromLTRB(10, 15, 10, 15),
             child: Row(textDirection: TextDirection.ltr, children: [
               ArticleQuantityUpdaterWidget(currentArticle: currentArticle),
               ArticleFavoriteButtonWidget(currentArticle: currentArticle),

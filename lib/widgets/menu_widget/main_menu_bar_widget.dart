@@ -18,22 +18,20 @@ class MainMenuBarWidget extends StatelessWidget {
     return Expanded(
         child: Container(
             margin: EdgeInsets.fromLTRB(5, 0, 5, 5),
+            clipBehavior: Clip.antiAlias,
             height: 60,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                border: const Border.fromBorderSide(BorderSide(
-                    color: Color(0xFFCBCBCB), width: 1)),
-                color: Color(0xFFE9E9E9),
+                color: Color(0xFFCFCDCD),
                 boxShadow: const [
                   BoxShadow(
-                      color: Color(0x33000000),
+                      color: Color(0x66000000),
                       blurRadius: 5,
                       spreadRadius: 1,
                       offset: Offset(0, 4))
                 ]),
             child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                clipBehavior: Clip.hardEdge,
                 child: Row(
                   children: menuWidgetList,
                 ))));

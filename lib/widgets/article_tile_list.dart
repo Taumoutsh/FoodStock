@@ -9,45 +9,47 @@ import '../domain/type_article.dart';
 import '../service/widget_service_state.dart';
 import 'article_tile_widget.dart';
 
-class ArticleTileList extends StatefulWidget {
+class ArticleTileListWidget extends StatefulWidget {
   DataProviderService dataProviderService = DataProviderService();
   DataManagerService dataManagerService = DataManagerService();
   WidgetServiceState widgetServiceState = WidgetServiceState();
+
+  ArticleTileListWidget({super.key});
 
   @override
   State<StatefulWidget> createState() => _ArticleTileList();
 }
 
-class _ArticleTileList extends State<ArticleTileList> {
+class _ArticleTileList extends State<ArticleTileListWidget> {
 
   final log = Logger('DataManagerService');
 
-  List<StatefulWidget> articleTileList = [];
+  List<ArticleTile> articleTileList = [];
 
-  List<StatefulWidget> _redrawList(TypeArticle? typeArticle) {
+  List<ArticleTile> _redrawList(TypeArticle? typeArticle) {
     articleTileList.clear();
-    List<StatefulWidget> newArticleTileList = [];
+    List<ArticleTile> newUnorderedArticleTileList = [];
     if (typeArticle != null) {
       for (Article article in widget.dataProviderService.articleMap.values) {
         if (article.typeArticle.pkTypeArticle == typeArticle.pkTypeArticle) {
-          newArticleTileList.add(ArticleTile(currentArticle: article));
+          newUnorderedArticleTileList.add(ArticleTile(currentArticle: article));
         }
       }
     }
-    return newArticleTileList;
+    List<ArticleTile> newList = newUnorderedArticleTileList..sort((e1, e2) =>
+        e1.currentArticle.compareTo(e2.currentArticle));
+    return newList;
   }
 
   @override
   void initState() {
-    log.info("INIT OF THE LIST");
+    articleTileList =
+        _redrawList(widget.widgetServiceState.currentSelectedTypeArticle.value);
+
     // Ce listener permet de remettre les tuiles dans leur état initiale
     // dans le cas où certaines étaient en état de modification.
     widget.widgetServiceState.currentSelectedTypeArticle.addListener(() {
       setState(() {
-        if (widget.widgetServiceState.currentUpdatedArticle != null) {
-          widget.widgetServiceState.currentUpdatedArticle!.articleTileState
-              .value = ArticleTileState.READ_ARTICLE;
-        }
         articleTileList = _redrawList(
             widget.widgetServiceState.currentSelectedTypeArticle.value);
       });
@@ -55,6 +57,15 @@ class _ArticleTileList extends State<ArticleTileList> {
 
     // Ce listener écoute le bouton de favoris. Il permet de
     widget.widgetServiceState.favoriteAddition.addListener(() {
+      setState(() {
+        List<ArticleTile> newList = articleTileList..sort((e1, e2) =>
+            e1.currentArticle.compareTo(e2.currentArticle));
+        articleTileList = newList;
+      });
+    });
+
+    // Ce listener écoute le bouton de favoris. Il permet de
+    widget.widgetServiceState.triggerListUpdate.addListener(() {
       setState(() {
         articleTileList = _redrawList(
             widget.widgetServiceState.currentSelectedTypeArticle.value);
@@ -64,10 +75,9 @@ class _ArticleTileList extends State<ArticleTileList> {
 
   @override
   Widget build(BuildContext context) {
-    articleTileList =
-        _redrawList(widget.widgetServiceState.currentSelectedTypeArticle.value);
     return Expanded(
         child: SingleChildScrollView(
+          padding: EdgeInsets.fromLTRB(0, 25, 0, 0),
             child: Column(
       children: articleTileList,
     )));

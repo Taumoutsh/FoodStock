@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:inventaire_m_et_t/domain/article_tile_state_enum.dart';
 import 'package:inventaire_m_et_t/domain/data_manager.dart';
 import 'package:inventaire_m_et_t/domain/data_provider.dart';
+import 'package:inventaire_m_et_t/widgets/generic_items/generic_button_widget.dart';
 
 import '../../domain/article.dart';
 import '../../service/widget_service_state.dart';
@@ -15,7 +17,6 @@ class ArticleValidButtonWidget extends StatefulWidget {
 }
 
 class _ArticleValidButtonWidget extends State<ArticleValidButtonWidget> {
-
   var dataProviderService = DataProviderService();
 
   var dataManagerService = DataManagerService();
@@ -26,32 +27,19 @@ class _ArticleValidButtonWidget extends State<ArticleValidButtonWidget> {
     setState(() {
       dataManagerService.addOrRemoveFromInventaire(
           widget.currentArticle,
-      widgetServiceState.currentQuantityByArticle
-      [widget.currentArticle.pkArticle]!);
+          widgetServiceState
+              .currentQuantityByArticle[widget.currentArticle.pkArticle]!);
+      widget.currentArticle.resetReadingTileState();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        margin: const EdgeInsets.fromLTRB(7.5, 0, 0, 0),
-        height: 70,
-        width: 70,
-        decoration: const BoxDecoration(
-          shape: BoxShape.circle,
-          gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Color(0xFF70AC62), Color(0xFF377F29)]),
-        ),
-        child: GestureDetector(
-          onTap: _updateArticleQuantity,
-          child: const Icon(
-            Icons.check_rounded,
-            size: 50,
-            color: Colors.white,
-          )
-        ));
+    return Expanded(
+      child: GenericButtonWidget(
+          colorsToApply: [Color(0xFF70AC62), Color(0xFF377F29)],
+          onTapFunction: _updateArticleQuantity,
+          iconData: Icons.check_rounded,
+          iconSize: 50));
   }
-
 }

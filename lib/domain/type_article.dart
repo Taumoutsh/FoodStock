@@ -10,11 +10,14 @@ class TypeArticle extends MappedObject{
 
   String labelTypeArticle;
 
+  String svgResource;
+
   bool isSelected = false;
 
   TypeArticle({
     required this.pkTypeArticle,
     required this.labelTypeArticle,
+    required this.svgResource
   });
 
   // Convert a Dog into a Map. The keys must correspond to the names of the
@@ -22,8 +25,15 @@ class TypeArticle extends MappedObject{
   Map<String, dynamic> toMap() {
     return {
       'pk_TypeArticle': pkTypeArticle,
-      'labelTypeArticle': labelTypeArticle
+      'labelTypeArticle': labelTypeArticle,
+      'svgResource': svgResource,
     };
+  }
+
+  @override
+  String toString() {
+    return "TypeArticle -> primary key : $pkTypeArticle,"
+        " label : $labelTypeArticle, isSelected: $isSelected";
   }
 
 }

@@ -5,7 +5,6 @@ import '../../domain/data_provider.dart';
 import '../../service/widget_service_state.dart';
 
 class ArticleQuantityUpdaterWidget extends StatefulWidget {
-
   final Article currentArticle;
 
   const ArticleQuantityUpdaterWidget({super.key, required this.currentArticle});
@@ -16,7 +15,6 @@ class ArticleQuantityUpdaterWidget extends StatefulWidget {
 
 class _ArticleQuantityUpdaterWidget
     extends State<ArticleQuantityUpdaterWidget> {
-
   var dataProviderService = DataProviderService();
 
   var widgetServiceState = WidgetServiceState();
@@ -29,8 +27,8 @@ class _ArticleQuantityUpdaterWidget
     setState(() {
       if (currentQuantity < 20) {
         currentQuantity = currentQuantity + 1;
-        widgetServiceState.
-        currentQuantityByArticle[widget.currentArticle.pkArticle] =
+        widgetServiceState
+                .currentQuantityByArticle[widget.currentArticle.pkArticle!] =
             currentQuantity;
       }
     });
@@ -38,32 +36,37 @@ class _ArticleQuantityUpdaterWidget
 
   _removeValue() {
     setState(() {
-      if(currentQuantity > 0) {
+      if (currentQuantity > 0) {
         currentQuantity = currentQuantity - 1;
-        widgetServiceState.currentQuantityByArticle[widget.currentArticle
-            .pkArticle] = currentQuantity;
+        widgetServiceState
+                .currentQuantityByArticle[widget.currentArticle.pkArticle!] =
+            currentQuantity;
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    if(!isInitialized) {
-      if(!widgetServiceState.currentQuantityByArticle.
-      containsKey(widget.currentArticle.pkArticle)) {
+    if (!isInitialized) {
+      if (!widgetServiceState.currentQuantityByArticle
+          .containsKey(widget.currentArticle.pkArticle)) {
         currentQuantity = dataProviderService
             .getNumberOfAvailableArticleInInventory(widget.currentArticle);
-        widgetServiceState.
-        currentQuantityByArticle[widget.currentArticle.pkArticle] = currentQuantity;
+        widgetServiceState
+                .currentQuantityByArticle[widget.currentArticle.pkArticle!] =
+            currentQuantity;
       } else {
-        currentQuantity = widgetServiceState.
-        currentQuantityByArticle[widget.currentArticle.pkArticle]!;
+        currentQuantity = widgetServiceState
+            .currentQuantityByArticle[widget.currentArticle.pkArticle]!;
       }
     }
 
-    return Expanded(
-        child: Container(
+    return Container(
       height: double.infinity,
+      width: 175,
+      constraints: const BoxConstraints(
+        minWidth: 175,
+      ),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20), color: Colors.white),
       child: Row(
@@ -73,8 +76,7 @@ class _ArticleQuantityUpdaterWidget
               onTap: _removeValue,
               child: Icon(Icons.remove_rounded,
                   color: computeRemoveColor(currentQuantity), size: 70)),
-          Text(
-              currentQuantity.toString(),
+          Text(currentQuantity.toString(),
               style: TextStyle(
                   color: Color(0xFF303030),
                   fontWeight: FontWeight.bold,
@@ -82,21 +84,20 @@ class _ArticleQuantityUpdaterWidget
                   fontFamily: "Segue UI")),
           GestureDetector(
               onTap: _addValue,
-              child:
-                  Icon(Icons.add_rounded,
-                      color: computeAddColor(currentQuantity), size: 70))
+              child: Icon(Icons.add_rounded,
+                  color: computeAddColor(currentQuantity), size: 70))
         ],
       ),
-    ));
+    );
   }
 
   Color computeRemoveColor(int quantityValue) {
     Color colorToReturn;
     if (quantityValue > 0) {
       colorToReturn = Color(0xFF747474);
-     } else {
+    } else {
       colorToReturn = Color(0xFFDBDBDB);
-     }
+    }
     return colorToReturn;
   }
 
@@ -109,5 +110,4 @@ class _ArticleQuantityUpdaterWidget
     }
     return colorToReturn;
   }
-
 }
