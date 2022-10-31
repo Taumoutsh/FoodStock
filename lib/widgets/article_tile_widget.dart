@@ -141,7 +141,7 @@ class _ArticleTileWidgetState extends State<ArticleTileWidget> {
                   height: 90,
                   width: computeRemovingState(value),
                   child: const Icon(Icons.delete, color: Colors.white),
-                  margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                  margin: const EdgeInsets.fromLTRB(0, 0, 5, 0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: const [

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:foodstock/domain/article_tile_state_enum.dart';
+import 'package:foodstock/widgets/article_creation/article_creation_widget.dart';
 import 'package:logging/logging.dart';
 
 import '../domain/article.dart';
@@ -83,11 +84,14 @@ class _ArticleTileList extends State<ArticleTileListWidget> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> completeArticleTileList = [];
+    completeArticleTileList.addAll(articleTileList);
+    completeArticleTileList.add(ArticleCreationWidget());
     return Expanded(
         child: SingleChildScrollView(
-          padding: EdgeInsets.fromLTRB(0, 30, 0, 0),
+          padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
             child: Column(
-      children: articleTileList,
+      children: completeArticleTileList,
     )));
   }
 }

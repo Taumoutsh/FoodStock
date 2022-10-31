@@ -44,7 +44,7 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
             scrollDirection: Axis.vertical,
             child: AnimatedContainer(
                 clipBehavior: Clip.hardEdge,
-                height: 448,
+                height: 430,
                 width: 300,
                 decoration: BoxDecoration(
                     color: _mainContainerColor,

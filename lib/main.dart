@@ -37,16 +37,17 @@ class MyApp extends StatelessWidget {
             return MaterialApp(
                 title: 'FoodStock',
                 home: Scaffold(
-                  body: Column(children: [
-                    ArticleTileListWidget(),
-                    Flex(
-                      direction: Axis.horizontal,
-                      children: [MainMenuBarWidget()],
-                    )
-                  ]),
-                  floatingActionButton: ArticleCreationButton(),
-                  //bottomNavigationBar: TypeArticleListViewWidget(),
-                ));
+                    body: Column(children: [
+                  Container(
+                      margin: const EdgeInsets.fromLTRB(0, 35, 0, 0),
+                      child: Flex(
+                        direction: Axis.horizontal,
+                        children: [MainMenuBarWidget()],
+                      )),
+                  ArticleTileListWidget(),
+                ])
+                    //bottomNavigationBar: TypeArticleListViewWidget(),
+                    ));
           } else {
             return LoadingWidget();
           }
@@ -68,9 +69,8 @@ class LoadingWidget extends StatelessWidget {
               height: 200,
               width: 200,
               clipBehavior: Clip.antiAlias,
-              decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(40)
-              ),
+              decoration:
+                  BoxDecoration(borderRadius: BorderRadius.circular(40)),
               child: Image(image: AssetImage('assets/images/foodstock.png')),
             ),
             Container(
