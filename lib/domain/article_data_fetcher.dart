@@ -1,15 +1,16 @@
 import 'dart:async';
-import 'package:inventaire_m_et_t/domain/article.dart';
-import 'package:inventaire_m_et_t/domain/data_fetcher.dart';
-import 'package:inventaire_m_et_t/domain/type_article_data_fetcher.dart';
+import 'package:foodstock/domain/article.dart';
+import 'package:foodstock/domain/data_fetcher.dart';
+import 'package:foodstock/domain/type_article_data_fetcher.dart';
+import 'package:logging/logging.dart';
 import 'package:sqflite/sqflite.dart';
 import 'type_article.dart';
 import '../database/database.dart';
-import 'mapped_object.dart';
 
 class ArticleDataFetcher extends DataFetcher<Article> {
+  final log = Logger('InventaireDataFetcher');
 
-  TypeArticleDataFetcher typeArticleDataFetcher = new TypeArticleDataFetcher();
+  TypeArticleDataFetcher typeArticleDataFetcher = TypeArticleDataFetcher();
 
   @override
   Future<List<Article>> getDataFromTable() async {
@@ -33,7 +34,8 @@ class ArticleDataFetcher extends DataFetcher<Article> {
     var primaryKeyNameStr = primaryKeyName();
     articleNumberUpdated = await db.update(tableName(), article.toMap(),
         where: "$primaryKeyNameStr = $primaryKey");
-
+    log.info("updateArticleFavoriteStatus() - Mise à jours de l'article"
+        "  <$article> ayant pour clé primarire <$articleNumberUpdated>");
     return articleNumberUpdated;
   }
 

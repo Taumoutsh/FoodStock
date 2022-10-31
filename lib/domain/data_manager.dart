@@ -1,12 +1,10 @@
 import 'dart:async';
-import 'dart:collection';
-import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:inventaire_m_et_t/domain/article.dart';
-import 'package:inventaire_m_et_t/domain/article_data_fetcher.dart';
-import 'package:inventaire_m_et_t/domain/type_article.dart';
-import 'package:inventaire_m_et_t/domain/type_article_data_fetcher.dart';
+import 'package:foodstock/domain/article.dart';
+import 'package:foodstock/domain/article_data_fetcher.dart';
+import 'package:foodstock/domain/type_article.dart';
+import 'package:foodstock/domain/type_article_data_fetcher.dart';
 
 import 'data_provider.dart';
 import 'inventaire.dart';
@@ -24,16 +22,10 @@ class DataManagerService extends ChangeNotifier {
 
   static final DataManagerService _instance = DataManagerService._internal();
 
-  // using a factory is important
-  // because it promises to return _an_ object of this type
-  // but it doesn't promise to make a new one.
   factory DataManagerService() {
     return _instance;
   }
 
-  // This named constructor is the "real" constructor
-  // It'll be called exactly once, by the static property assignment above
-  // it's also private, so it can only be called in this class
   DataManagerService._internal();
 
   Future<bool> refreshValuesFromDatabase() async {
@@ -93,9 +85,13 @@ class DataManagerService extends ChangeNotifier {
   }
 
   Future<int> addOrRemoveFromInventaire(Article article, int quantity) async {
+    // Récupération du nombre d'article dans l'inventaire
     int sizeInventaireMapByArticle =
         dataProviderService.getNumberOfAvailableArticleInInventory(article);
     List<Inventaire> futureResult;
+    // Si la quantité saisie dans le widget est supérieure à celle du modèle,
+    // ajouter des produits dans la base de données
+    // Sinon, en supprimer
     if (quantity > sizeInventaireMapByArticle) {
       futureResult = await _inventaireDataFetcher.addToTable(
           article, quantity - sizeInventaireMapByArticle);
@@ -113,8 +109,6 @@ class DataManagerService extends ChangeNotifier {
       dataProviderService.updateConservationDataByArticle(article, false);
     }
     dataProviderService.updateAvailableArticlesCountByArticle(article);
-
-    article.notifyListeners();
     return 0;
   }
 

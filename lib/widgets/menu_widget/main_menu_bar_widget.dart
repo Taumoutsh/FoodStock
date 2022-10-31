@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:inventaire_m_et_t/domain/data_provider.dart';
-import 'package:inventaire_m_et_t/domain/type_article.dart';
+import 'package:foodstock/domain/data_provider.dart';
+import 'package:foodstock/domain/type_article.dart';
 
 import 'menu_widget.dart';
 
@@ -17,12 +17,12 @@ class MainMenuBarWidget extends StatelessWidget {
     }
     return Expanded(
         child: Container(
-            margin: EdgeInsets.fromLTRB(5, 0, 5, 5),
+            margin: const EdgeInsets.fromLTRB(5, 0, 5, 5),
             clipBehavior: Clip.antiAlias,
             height: 60,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                color: Color(0xFFCFCDCD),
+                color: const Color(0xFFCFCDCD),
                 boxShadow: const [
                   BoxShadow(
                       color: Color(0x66000000),
@@ -36,5 +36,4 @@ class MainMenuBarWidget extends StatelessWidget {
                   children: menuWidgetList,
                 ))));
   }
-
 }

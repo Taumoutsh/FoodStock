@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:inventaire_m_et_t/domain/article_tile_state_enum.dart';
-import 'package:inventaire_m_et_t/domain/article_update_tile.dart';
-import 'package:inventaire_m_et_t/domain/data_provider.dart';
-import 'package:inventaire_m_et_t/service/widget_service_state.dart';
-import 'package:inventaire_m_et_t/widgets/article_remove/article_remove_dialog.dart';
+import 'package:foodstock/domain/article_tile_state_enum.dart';
+import 'package:foodstock/domain/article_update_tile.dart';
+import 'package:foodstock/domain/data_provider.dart';
+import 'package:foodstock/service/widget_service_state.dart';
+import 'package:foodstock/widgets/article_remove/article_remove_dialog.dart';
 import 'package:logging/logging.dart';
 
 import '../domain/article.dart';
@@ -13,17 +12,17 @@ import 'article_read_tile/article_left_side_widget.dart';
 import 'article_read_tile/article_right_side_widget.dart';
 import 'article_read_tile/article_tile_separator.dart';
 
-class ArticleTile extends StatefulWidget {
+class ArticleTileWidget extends StatefulWidget {
   final Article currentArticle;
 
-  const ArticleTile({super.key, required this.currentArticle});
+  const ArticleTileWidget({super.key, required this.currentArticle});
 
   @override
-  State<ArticleTile> createState() => _ArticleTileState();
+  State<ArticleTileWidget> createState() => _ArticleTileWidgetState();
 }
 
-class _ArticleTileState extends State<ArticleTile> {
-  final log = Logger('_ArticleTileState');
+class _ArticleTileWidgetState extends State<ArticleTileWidget> {
+  final log = Logger('ArticleTileWidget');
 
   double currentWidth = double.infinity;
 
@@ -35,7 +34,7 @@ class _ArticleTileState extends State<ArticleTile> {
 
   @override
   void dispose() {
-    log.info("dispose() - Dispose of : " +
+    log.config("dispose() - Dispose of : " +
         widget.currentArticle.labelArticle +
         " tile");
     super.dispose();
@@ -43,32 +42,42 @@ class _ArticleTileState extends State<ArticleTile> {
 
   _selectRightTile() {
     setState(() {
-      if (widget.currentArticle.articleTileState.value ==
+      var currentArticle = widget.currentArticle;
+      if (currentArticle.articleTileState.value ==
           ArticleTileState.UPDATE_ARTICLE) {
         if (widgetServiceState.currentUpdatedArticle != null &&
             widgetServiceState.currentUpdatedArticle!.pkArticle ==
-                widget.currentArticle.pkArticle) {
+                currentArticle.pkArticle) {
           widgetServiceState.currentUpdatedArticle = null;
         }
-        widget.currentArticle.articleTileState.value =
-            ArticleTileState.READ_ARTICLE;
+        currentArticle.articleTileState.value = ArticleTileState.READ_ARTICLE;
+        log.config(
+            "_selectRightTile() - Select <$ArticleTileState.READ_ARTICLE>"
+            " tile for article <$currentArticle>");
       } else {
         final previousUpdatedArticle = widgetServiceState.currentUpdatedArticle;
         if (previousUpdatedArticle != null) {
           previousUpdatedArticle.articleTileState.value =
               ArticleTileState.READ_ARTICLE;
+          log.config("_selectRightTile() -"
+              " Tile reset to <$ArticleTileState.READ_ARTICLE>"
+              " for previous article <$previousUpdatedArticle>");
         }
-        widgetServiceState.currentUpdatedArticle = widget.currentArticle;
-        widget.currentArticle.articleTileState.value =
-            ArticleTileState.UPDATE_ARTICLE;
-        widget.currentArticle.isInRemovingState.value = false;
+        widgetServiceState.currentUpdatedArticle = currentArticle;
+        currentArticle.articleTileState.value = ArticleTileState.UPDATE_ARTICLE;
+        currentArticle.isInRemovingState.value = false;
+        log.info("_selectRightTile() - Select"
+            " <$ArticleTileState.UPDATE_ARTICLE> tile for"
+            " article <$currentArticle>"
+            " and reset removing state to false");
       }
     });
   }
 
   @override
   void initState() {
-    log.info("initState() - Initialisation of the widget tile of Article : " +
+    super.initState();
+    log.config("initState() - Initialisation of the widget tile of Article : " +
         widget.currentArticle.labelArticle);
   }
 
@@ -80,26 +89,30 @@ class _ArticleTileState extends State<ArticleTile> {
               onTap: _selectRightTile,
               onPanUpdate: (details) {
                 // Swiping in right direction.
+                var currentArticle = widget.currentArticle;
                 if (details.delta.dx > 0) {
-                  widget.currentArticle.isInRemovingState.value = false;
+                  currentArticle.isInRemovingState.value = false;
                 }
                 // Swiping in left direction.
                 if (details.delta.dx < 0) {
                   if (ArticleTileState.READ_ARTICLE ==
-                      widget.currentArticle.articleTileState.value) {
-                    widget.currentArticle.isInRemovingState.value = true;
+                      currentArticle.articleTileState.value) {
+                    currentArticle.isInRemovingState.value = true;
                   }
                 }
               },
               child: ValueListenableBuilder<ArticleTileState>(
                   valueListenable: widget.currentArticle.articleTileState,
                   builder: (context, value, child) {
+                    Article currentArticle = widget.currentArticle;
+                    log.config("build() - Display tile state <$value>"
+                        " for article <$currentArticle>");
                     return AnimatedContainer(
                         curve: Curves.linear,
                         height: returnDynamicTileHeight(value),
-                        margin: EdgeInsets.fromLTRB(10, 7, 10, 7),
+                        margin: const EdgeInsets.fromLTRB(10, 7, 10, 7),
                         decoration: BoxDecoration(
-                            color: Color(0xFFE9E9E9),
+                            color: const Color(0xFFE9E9E9),
                             borderRadius: BorderRadius.circular(20),
                             boxShadow: const [
                               BoxShadow(
@@ -108,7 +121,7 @@ class _ArticleTileState extends State<ArticleTile> {
                                   spreadRadius: 1,
                                   offset: Offset(0, 4))
                             ]),
-                        duration: Duration(milliseconds: 100),
+                        duration: const Duration(milliseconds: 100),
                         child: Row(
                           children: getArticleTileContentByState(value),
                         ));
@@ -116,6 +129,9 @@ class _ArticleTileState extends State<ArticleTile> {
       ValueListenableBuilder<bool>(
           valueListenable: widget.currentArticle.isInRemovingState,
           builder: (context, value, child) {
+            Article currentArticle = widget.currentArticle;
+            log.config("build() - Display removal button <$value> for"
+                " article <$currentArticle>");
             return GestureDetector(
                 onTap: _removeArticle,
                 child: AnimatedContainer(
@@ -124,8 +140,8 @@ class _ArticleTileState extends State<ArticleTile> {
                   curve: Curves.ease,
                   height: 90,
                   width: computeRemovingState(value),
-                  child: Icon(Icons.delete, color: Colors.white),
-                  margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                  child: const Icon(Icons.delete, color: Colors.white),
+                  margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: const [
@@ -135,12 +151,12 @@ class _ArticleTileState extends State<ArticleTile> {
                           spreadRadius: 1,
                           offset: Offset(0, 4))
                     ],
-                    gradient: LinearGradient(
+                    gradient: const LinearGradient(
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                         colors: [Color(0xFFF38888), Color(0xFFFF4E4E)]),
                   ),
-                  duration: Duration(milliseconds: 300),
+                  duration: const Duration(milliseconds: 300),
                 ));
           })
     ]);

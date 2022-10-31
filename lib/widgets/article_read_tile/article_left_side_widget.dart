@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:inventaire_m_et_t/domain/conservation_data.dart';
-import 'package:inventaire_m_et_t/domain/data_provider.dart';
+import 'package:foodstock/domain/conservation_data.dart';
+import 'package:foodstock/domain/data_provider.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
 import '../../domain/article.dart';
@@ -20,14 +20,14 @@ class _ArticleLeftSideTile extends State<ArticleLeftSideTile> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+        margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
         height: double.infinity,
         child: ValueListenableBuilder<ConservationData>(
           valueListenable: dataProviderService
               .conservationDataByArticle[widget.currentArticle.pkArticle]!,
           builder: (context, value, child) {
             return Container(
-              margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+              margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
               child: CircularPercentIndicator(
                 percent: value.computeLastingInPercentAbsolute(),
                 center: Text(
@@ -60,15 +60,15 @@ class _ArticleLeftSideTile extends State<ArticleLeftSideTile> {
 
   Color _updateProgressColor(double conservationDataDiff) {
     if (conservationDataDiff < 0.5) {
-      return Color(0xFF70AC62);
+      return const Color(0xFF70AC62);
     } else if (conservationDataDiff < 0.75) {
-      return Color(0xFFEBA131);
+      return const Color(0xFFEBA131);
     } else if (conservationDataDiff < 1) {
-      return Color(0xFFFF4E4E);
+      return const Color(0xFFFF4E4E);
     } else if (conservationDataDiff.isNaN) {
-      return Color(0xFF464545);
+      return const Color(0xFF464545);
     } else {
-      return Color(0xFF744216);
+      return const Color(0xFF744216);
     }
   }
 }

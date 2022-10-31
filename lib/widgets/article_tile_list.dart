@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:inventaire_m_et_t/domain/article_tile_state_enum.dart';
+import 'package:foodstock/domain/article_tile_state_enum.dart';
 import 'package:logging/logging.dart';
 
 import '../domain/article.dart';
@@ -22,21 +22,21 @@ class ArticleTileListWidget extends StatefulWidget {
 
 class _ArticleTileList extends State<ArticleTileListWidget> {
 
-  final log = Logger('DataManagerService');
+  final log = Logger('ArticleTileListWidget');
 
-  List<ArticleTile> articleTileList = [];
+  List<ArticleTileWidget> articleTileList = [];
 
-  List<ArticleTile> _redrawList(TypeArticle? typeArticle) {
+  List<ArticleTileWidget> _redrawList(TypeArticle? typeArticle) {
     articleTileList.clear();
-    List<ArticleTile> newUnorderedArticleTileList = [];
+    List<ArticleTileWidget> newUnorderedArticleTileList = [];
     if (typeArticle != null) {
       for (Article article in widget.dataProviderService.articleMap.values) {
         if (article.typeArticle.pkTypeArticle == typeArticle.pkTypeArticle) {
-          newUnorderedArticleTileList.add(ArticleTile(currentArticle: article));
+          newUnorderedArticleTileList.add(ArticleTileWidget(currentArticle: article));
         }
       }
     }
-    List<ArticleTile> newList = newUnorderedArticleTileList..sort((e1, e2) =>
+    List<ArticleTileWidget> newList = newUnorderedArticleTileList..sort((e1, e2) =>
         e1.currentArticle.compareTo(e2.currentArticle));
     return newList;
   }
@@ -49,6 +49,9 @@ class _ArticleTileList extends State<ArticleTileListWidget> {
     // Ce listener permet de remettre les tuiles dans leur état initiale
     // dans le cas où certaines étaient en état de modification.
     widget.widgetServiceState.currentSelectedTypeArticle.addListener(() {
+      log.config("currentSelectedTypeArticle.listener() -"
+          " Redraw tiles list because the"
+          " current selected TypeArticle has changed");
       setState(() {
         articleTileList = _redrawList(
             widget.widgetServiceState.currentSelectedTypeArticle.value);
@@ -57,8 +60,11 @@ class _ArticleTileList extends State<ArticleTileListWidget> {
 
     // Ce listener écoute le bouton de favoris. Il permet de
     widget.widgetServiceState.favoriteAddition.addListener(() {
+      log.config("favoriteAddition.listener() -"
+          " Redraw tiles list because the"
+          " favorite button has been triggered");
       setState(() {
-        List<ArticleTile> newList = articleTileList..sort((e1, e2) =>
+        List<ArticleTileWidget> newList = articleTileList..sort((e1, e2) =>
             e1.currentArticle.compareTo(e2.currentArticle));
         articleTileList = newList;
       });
@@ -66,6 +72,8 @@ class _ArticleTileList extends State<ArticleTileListWidget> {
 
     // Ce listener écoute le bouton de favoris. Il permet de
     widget.widgetServiceState.triggerListUpdate.addListener(() {
+      log.config("triggerListUpdate.listener() -"
+          " Redraw tiles list because an Article has been added or remove");
       setState(() {
         articleTileList = _redrawList(
             widget.widgetServiceState.currentSelectedTypeArticle.value);

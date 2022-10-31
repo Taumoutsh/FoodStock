@@ -8,13 +8,13 @@ class ArticleCreationButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Align(
-        alignment: Alignment(1, 0.75),
+        alignment: const Alignment(1, 0.75),
         child: FloatingActionButton(
           onPressed: () {
                 showDialog<void>(
                 context: context,
                 builder: (BuildContext context) {
-                  return ArticleCreationDialog();
+                  return const ArticleCreationDialog();
           });
           },
           backgroundColor: Colors.green,

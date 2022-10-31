@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
-import 'package:inventaire_m_et_t/domain/mapped_object.dart';
+import 'package:foodstock/domain/mapped_object.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -24,6 +24,7 @@ class Inventaire extends MappedObject {
     required this.article
   });
 
+  @override
   Map<String, dynamic> toMap() {
     return {
       'dateAchatArticle': dateAchatArticle,

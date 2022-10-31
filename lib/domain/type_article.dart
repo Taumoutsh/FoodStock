@@ -1,4 +1,4 @@
-import 'package:inventaire_m_et_t/domain/mapped_object.dart';
+import 'package:foodstock/domain/mapped_object.dart';
 
 class TypeArticle extends MappedObject{
 
@@ -20,8 +20,7 @@ class TypeArticle extends MappedObject{
     required this.svgResource
   });
 
-  // Convert a Dog into a Map. The keys must correspond to the names of the
-  // columns in the database.
+  @override
   Map<String, dynamic> toMap() {
     return {
       'pk_TypeArticle': pkTypeArticle,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:foodstock/domain/article.dart';
 
-import '../../domain/article.dart';
 
 class ArticleDetailsWidget extends StatelessWidget {
   final Article currentArticle;
@@ -11,7 +11,7 @@ class ArticleDetailsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(child:
         Container(
-            constraints: BoxConstraints(minWidth: 200),
+            constraints: const BoxConstraints(minWidth: 200),
             child:
         Column(
             mainAxisAlignment: MainAxisAlignment.center,

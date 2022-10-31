@@ -1,8 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:inventaire_m_et_t/domain/data_manager.dart';
-import 'package:inventaire_m_et_t/service/widget_service_state.dart';
-import 'package:inventaire_m_et_t/widgets/menu_widget/main_menu_bar_widget.dart';
+import 'package:foodstock/domain/data_manager.dart';
+import 'package:foodstock/service/widget_service_state.dart';
+import 'package:foodstock/widgets/menu_widget/main_menu_bar_widget.dart';
 
 import '../generic_items/generic_button_widget.dart';
 
@@ -14,7 +16,11 @@ class ArticleCreationDialog extends StatefulWidget {
 }
 
 class _ArticleCreationDialog extends State<ArticleCreationDialog> {
+  Color _mainContainerColor = const Color(0xFFE9E9E9);
+
   bool isValidForm = true;
+
+  Timer? timer;
 
   DataManagerService dataManagerService = DataManagerService();
 
@@ -36,13 +42,14 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
         ),
         child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
-            child: Container(
+            child: AnimatedContainer(
                 clipBehavior: Clip.hardEdge,
                 height: 448,
                 width: 300,
                 decoration: BoxDecoration(
-                    color: Color(0xFFE9E9E9),
+                    color: _mainContainerColor,
                     borderRadius: BorderRadius.circular(20)),
+                duration: const Duration(milliseconds: 300),
                 child: Container(
                     margin: EdgeInsets.all(10),
                     decoration: BoxDecoration(
@@ -52,7 +59,7 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Container(
-                          margin: EdgeInsets.fromLTRB(10, 0, 10, 10),
+                          margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
                           child: TextField(
                             controller: _articleNameController,
                             scrollPadding: EdgeInsets.zero,
@@ -67,7 +74,7 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
                           ),
                         ),
                         Container(
-                          margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                          margin: const EdgeInsets.fromLTRB(5, 10, 5, 10),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -77,7 +84,8 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
                                           fontWeight: FontWeight.bold,
                                           fontSize: 18,
                                           fontFamily: "Segue UI")),
-                                  padding: EdgeInsets.fromLTRB(10, 10, 10, 10)),
+                                  padding: const EdgeInsets.fromLTRB(
+                                      10, 10, 10, 10)),
                               Flex(
                                 direction: Axis.horizontal,
                                 children: [MainMenuBarWidget()],
@@ -86,7 +94,7 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
                           ),
                         ),
                         Container(
-                            margin: EdgeInsets.fromLTRB(10, 0, 10, 10),
+                            margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
                             child: TextField(
                               controller: _articleDurationController,
                               keyboardType: TextInputType.number,
@@ -105,13 +113,13 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
                             )),
                         Container(
                           height: 65,
-                          margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                          margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                           child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Expanded(
                                     child: Container(
-                                        child: const Text("Niveaux d'alerte",
+                                        child: const Text("Quantités d'alerte",
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
@@ -120,13 +128,14 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
                                         padding: const EdgeInsets.fromLTRB(
                                             10, 10, 10, 10))),
                                 Container(
-                                    margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                                    margin:
+                                        const EdgeInsets.fromLTRB(10, 0, 0, 0),
                                     alignment: Alignment.center,
                                     width: 60.0,
                                     constraints: const BoxConstraints(
                                         maxHeight: double.infinity),
                                     decoration: BoxDecoration(
-                                        color: Color(0x70F16060),
+                                        color: const Color(0x70F16060),
                                         borderRadius: BorderRadius.circular(20),
                                         boxShadow: const [
                                           BoxShadow(
@@ -136,8 +145,8 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
                                               offset: Offset(0, 2))
                                         ]),
                                     child: Container(
-                                        margin:
-                                            EdgeInsets.fromLTRB(10, 0, 10, 10),
+                                        margin: const EdgeInsets.fromLTRB(
+                                            10, 0, 10, 10),
                                         child: TextField(
                                           controller: _criticalLevelController,
                                           keyboardType: TextInputType.number,
@@ -158,12 +167,13 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
                                         ))),
                                 Container(
                                     alignment: Alignment.center,
-                                    margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                    margin:
+                                        const EdgeInsets.fromLTRB(10, 0, 10, 0),
                                     width: 60.0,
                                     constraints: const BoxConstraints(
                                         maxHeight: double.infinity),
                                     decoration: BoxDecoration(
-                                        color: Color(0x70EBA131),
+                                        color: const Color(0x70EBA131),
                                         borderRadius: BorderRadius.circular(20),
                                         boxShadow: const [
                                           BoxShadow(
@@ -173,8 +183,8 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
                                               offset: Offset(0, 2))
                                         ]),
                                     child: Container(
-                                        margin:
-                                            EdgeInsets.fromLTRB(10, 0, 10, 10),
+                                        margin: const EdgeInsets.fromLTRB(
+                                            10, 0, 10, 10),
                                         child: TextField(
                                           controller: _alertLevelController,
                                           keyboardType: TextInputType.number,
@@ -200,9 +210,10 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
                             children: [
                               Expanded(
                                   child: Container(
-                                      margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                      margin: const EdgeInsets.fromLTRB(
+                                          0, 10, 0, 0),
                                       child: GenericButtonWidget(
-                                          colorsToApply: [
+                                          colorsToApply: const [
                                             Color(0xFF70AC62),
                                             Color(0xFF377F29)
                                           ],
@@ -215,6 +226,7 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
   }
 
   _addArticle() async {
+    isValidForm = true;
     if (_articleNameController.value.text == "") {
       isValidForm &= false;
     }
@@ -239,6 +251,24 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
         widgetServiceState.triggerListUpdate.value++;
       }
       Navigator.of(context).pop();
-    } else {}
+    } else {
+      int blinkCountLimit = 2;
+      if (timer != null) {
+        timer!.cancel();
+      }
+      timer = Timer.periodic(const Duration(milliseconds: 400), (Timer timer) {
+        setState(() {
+          if (blinkCountLimit % 2 == 0) {
+            _mainContainerColor = const Color(0xFFF00000);
+          } else {
+            _mainContainerColor = const Color(0xFFE9E9E9);
+          }
+          blinkCountLimit--;
+          if (blinkCountLimit == 0) {
+            timer.cancel();
+          }
+        });
+      });
+    }
   }
 }

@@ -53,8 +53,8 @@ class ConservationData extends ChangeNotifier {
   }
 
   bool isReallyNotInInventory() {
-    return this.currentConservationDays == 0
-        && this.nominalConservationDays == 0;
+    return currentConservationDays == 0
+        && nominalConservationDays == 0;
   }
 
 }

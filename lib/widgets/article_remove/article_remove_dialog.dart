@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:inventaire_m_et_t/domain/data_manager.dart';
-import 'package:inventaire_m_et_t/service/widget_service_state.dart';
-import 'package:inventaire_m_et_t/widgets/menu_widget/main_menu_bar_widget.dart';
+import 'package:foodstock/domain/data_manager.dart';
+import 'package:foodstock/service/widget_service_state.dart';
+import 'package:foodstock/widgets/menu_widget/main_menu_bar_widget.dart';
 
 import '../../domain/article.dart';
 import '../generic_items/generic_button_widget.dart';
@@ -26,6 +26,7 @@ class _ArticleRemoveDialog extends State<ArticleRemoveDialog> {
 
   @override
   void initState() {
+    super.initState();
     articleNameString = widget.currentArticle.labelArticle;
   }
 

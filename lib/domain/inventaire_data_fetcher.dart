@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'package:inventaire_m_et_t/domain/article.dart';
-import 'package:inventaire_m_et_t/domain/data_fetcher.dart';
-import 'package:inventaire_m_et_t/domain/inventaire.dart';
+import 'package:foodstock/domain/article.dart';
+import 'package:foodstock/domain/data_fetcher.dart';
+import 'package:foodstock/domain/inventaire.dart';
 import 'package:sqflite/sqflite.dart';
 import 'article_data_fetcher.dart';
 import '../database/database.dart';
@@ -10,7 +10,7 @@ import 'package:logging/logging.dart';
 class InventaireDataFetcher extends DataFetcher<Inventaire> {
   final log = Logger('InventaireDataFetcher');
 
-  ArticleDataFetcher articleDataFetcher = new ArticleDataFetcher();
+  ArticleDataFetcher articleDataFetcher = ArticleDataFetcher();
 
   Future<List<Inventaire>> getFirstDataFromTableWhereArticle(
       int articleKey, bool byAsc) async {
@@ -18,7 +18,7 @@ class InventaireDataFetcher extends DataFetcher<Inventaire> {
     final Database db = await initDB();
 
     String foreignKeyNameString = foreignKeyName();
-    String labelNameString = labelName();
+    String dateAchatArticleString = labelName();
 
     String orderByDirection = "";
     if (byAsc) {
@@ -29,7 +29,7 @@ class InventaireDataFetcher extends DataFetcher<Inventaire> {
 
     final List<Map<String, dynamic>> map = await db.query(tableName(),
         where: "$foreignKeyNameString = $articleKey",
-        orderBy: labelNameString + " " + orderByDirection,
+        orderBy: dateAchatArticleString + " " + orderByDirection,
         limit: 1);
 
     return constructObjectFromDatabase(map);
@@ -41,12 +41,11 @@ class InventaireDataFetcher extends DataFetcher<Inventaire> {
     List<Inventaire> inventaireListToAdd = [];
 
     for (int i = 0; i < quantity; i++) {
-      Inventaire inventaire = new Inventaire(
+      Inventaire inventaire = Inventaire(
           dateAchatArticle: DateTime.now().toString(), article: article);
-
       int i = await db.insert(tableName(), inventaire.toMap());
-      print(i);
-
+      log.info("addToTable() -"
+              " Ajout de l'item d'inventaire avec l'identifiant $i");
       inventaire.pkInventaire = i;
 
       inventaireListToAdd.add(inventaire);
@@ -73,8 +72,8 @@ class InventaireDataFetcher extends DataFetcher<Inventaire> {
       var str =
           'fk_Article = $pkArticle AND $primaryKeyNameStr = $inventaireToRemoveKey';
       int i = await db.delete(tableNameStr, where: str, whereArgs: []);
-      log.info(
-          "InventaireDataFetcher() - Suppression de l'inventaire avec l'identifiant $i");
+      log.info("removeFromTable() - Suppression de l'item d'inventaire"
+              " avec l'identifiant $i");
       inventaireListToRemove.add(inventaireToRemove);
     }
     return inventaireListToRemove;
@@ -86,6 +85,9 @@ class InventaireDataFetcher extends DataFetcher<Inventaire> {
     String tableNameStr = tableName();
     String str = 'fk_Article = $articleKey';
     int count = await db.delete(tableNameStr, where: str, whereArgs: []);
+    log.info("removeAllArticleFromTable() - Suppression de tous les items"
+        " d'inventaire liés à l'article <$articleKey>."
+        " Nombre d'éléments supprimés : <$count>");
     return count;
   }
 

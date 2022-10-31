@@ -77,7 +77,7 @@ class _ArticleQuantityUpdaterWidget
               child: Icon(Icons.remove_rounded,
                   color: computeRemoveColor(currentQuantity), size: 70)),
           Text(currentQuantity.toString(),
-              style: TextStyle(
+              style: const TextStyle(
                   color: Color(0xFF303030),
                   fontWeight: FontWeight.bold,
                   fontSize: 30,
@@ -94,9 +94,9 @@ class _ArticleQuantityUpdaterWidget
   Color computeRemoveColor(int quantityValue) {
     Color colorToReturn;
     if (quantityValue > 0) {
-      colorToReturn = Color(0xFF747474);
+      colorToReturn = const Color(0xFF747474);
     } else {
-      colorToReturn = Color(0xFFDBDBDB);
+      colorToReturn = const Color(0xFFDBDBDB);
     }
     return colorToReturn;
   }
@@ -104,9 +104,9 @@ class _ArticleQuantityUpdaterWidget
   Color computeAddColor(int quantityValue) {
     Color colorToReturn;
     if (quantityValue < 20) {
-      colorToReturn = Color(0xFF747474);
+      colorToReturn = const Color(0xFF747474);
     } else {
-      colorToReturn = Color(0xFFDBDBDB);
+      colorToReturn = const Color(0xFFDBDBDB);
     }
     return colorToReturn;
   }

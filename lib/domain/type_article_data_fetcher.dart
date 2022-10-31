@@ -1,10 +1,6 @@
 import 'dart:async';
-import 'package:inventaire_m_et_t/domain/article.dart';
-import 'package:inventaire_m_et_t/domain/data_fetcher.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:foodstock/domain/data_fetcher.dart';
 import 'type_article.dart';
-import '../database/database.dart';
-import 'mapped_object.dart';
 
 class TypeArticleDataFetcher extends DataFetcher<TypeArticle> {
 

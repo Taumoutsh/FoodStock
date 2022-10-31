@@ -1,10 +1,10 @@
 import 'package:flutter/widgets.dart';
-import 'package:inventaire_m_et_t/domain/mapped_object.dart';
-import 'package:inventaire_m_et_t/domain/type_article.dart';
+import 'package:foodstock/domain/mapped_object.dart';
+import 'package:foodstock/domain/type_article.dart';
 
 import 'article_tile_state_enum.dart';
 
-class Article extends ChangeNotifier implements Comparable<Article> {
+class Article extends MappedObject implements Comparable<Article> {
   static const String TABLE_NAME = "Article";
   static const String PK_NAME = "pk_Article";
   static const String LABEL_NAME = "labelArticle";
@@ -53,9 +53,9 @@ class Article extends ChangeNotifier implements Comparable<Article> {
 
   @override
   int compareTo(Article other) {
-    if (this.estFavoris && !other.estFavoris) {
+    if (estFavoris && !other.estFavoris) {
       return -1;
-    } else if (!this.estFavoris && other.estFavoris) {
+    } else if (!estFavoris && other.estFavoris) {
       return 1;
     } else {
       return 0;
@@ -63,10 +63,6 @@ class Article extends ChangeNotifier implements Comparable<Article> {
   }
 
   @override
-  String toString() {
-    return labelArticle;
-  }
-
   Map<String, dynamic> toMap() {
     return {
       'pk_Article': pkArticle,
@@ -77,5 +73,10 @@ class Article extends ChangeNotifier implements Comparable<Article> {
        'quantiteCritique': quantiteCritique,
       'fk_TypeArticle': typeArticle.pkTypeArticle
     };
+  }
+
+  @override
+  String toString() {
+    return labelArticle;
   }
 }

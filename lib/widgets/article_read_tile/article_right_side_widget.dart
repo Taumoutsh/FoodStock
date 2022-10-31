@@ -20,14 +20,14 @@ class _ArticleRightSideTile extends State<ArticleRightSideTile> {
   Widget build(BuildContext context) {
     return Expanded(
         child: Container(
-            margin: EdgeInsets.all(8),
+            margin: const EdgeInsets.all(8),
             decoration: BoxDecoration(
                 color: Colors.white, borderRadius: BorderRadius.circular(15)),
             child: ValueListenableBuilder<bool>(
               valueListenable: widget.currentArticle.isInRemovingState,
               builder: (context, value, child) {
                 return Container(
-                    margin: EdgeInsets.all(7),
+                    margin: const EdgeInsets.all(7),
                     child: Row(
                       children: _computeWidgetList(value)
                     ));

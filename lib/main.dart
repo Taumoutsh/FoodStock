@@ -2,12 +2,12 @@ import 'dart:core';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:inventaire_m_et_t/domain/data_manager.dart';
-import 'package:inventaire_m_et_t/domain/data_provider.dart';
-import 'package:inventaire_m_et_t/service/widget_service_state.dart';
-import 'package:inventaire_m_et_t/widgets/article_creation/article_creation.dart';
-import 'package:inventaire_m_et_t/widgets/article_tile_list.dart';
-import 'package:inventaire_m_et_t/widgets/menu_widget/main_menu_bar_widget.dart';
+import 'package:foodstock/domain/data_manager.dart';
+import 'package:foodstock/domain/data_provider.dart';
+import 'package:foodstock/service/widget_service_state.dart';
+import 'package:foodstock/widgets/article_creation/article_creation.dart';
+import 'package:foodstock/widgets/article_tile_list.dart';
+import 'package:foodstock/widgets/menu_widget/main_menu_bar_widget.dart';
 import 'package:logging/logging.dart';
 
 void main() {

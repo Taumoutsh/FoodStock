@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:inventaire_m_et_t/domain/type_article.dart';
-import 'package:inventaire_m_et_t/service/widget_service_state.dart';
+import 'package:foodstock/domain/type_article.dart';
+import 'package:foodstock/service/widget_service_state.dart';
 
 class MenuWidget extends StatefulWidget {
 
@@ -38,14 +38,14 @@ class _MenuWidget extends State<MenuWidget> {
               onTap: _selectTypeArticle,
               child: Container(
                 child: Container(
-                  margin: EdgeInsets.all(10),
+                  margin: const EdgeInsets.all(10),
                   child:
                   SvgPicture.asset(MenuWidget.ASSETS_DIR +
                           widget.typeArticle.svgResource),
                 ),
                 height: 45,
                 width: 65,
-                margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
                   color: _selectColorDependingOnSelectedTypeArticle(value),
@@ -55,7 +55,7 @@ class _MenuWidget extends State<MenuWidget> {
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                color: Color(0xFF8B8787),
+                color: const Color(0xFF8B8787),
               ),
               width: 4,
               height: 37,
@@ -72,9 +72,9 @@ class _MenuWidget extends State<MenuWidget> {
 
   _selectColorDependingOnSelectedTypeArticle(TypeArticle? value) {
     if (value != null && value == widget.typeArticle) {
-      return Color(0xFF8B8787);
+      return const Color(0xFF8B8787);
     } else {
-      return Color(0x00000000);
+      return const Color(0x00000000);
     }
   }
 
