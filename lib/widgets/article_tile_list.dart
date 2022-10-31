@@ -85,7 +85,7 @@ class _ArticleTileList extends State<ArticleTileListWidget> {
   Widget build(BuildContext context) {
     return Expanded(
         child: SingleChildScrollView(
-          padding: EdgeInsets.fromLTRB(0, 25, 0, 0),
+          padding: EdgeInsets.fromLTRB(0, 30, 0, 0),
             child: Column(
       children: articleTileList,
     )));

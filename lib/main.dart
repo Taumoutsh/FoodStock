@@ -35,9 +35,8 @@ class MyApp extends StatelessWidget {
             widgetServiceState.currentSelectedTypeArticle.value =
                 dataProviderService.typeArticleMap.values.first;
             return MaterialApp(
-                title: 'Welcome to Flutter',
+                title: 'FoodStock',
                 home: Scaffold(
-                  persistentFooterButtons: [],
                   body: Column(children: [
                     ArticleTileListWidget(),
                     Flex(
@@ -64,13 +63,22 @@ class LoadingWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Text("Database loading in progress...",
-                style: TextStyle(color: Colors.black),
-                textDirection: TextDirection.ltr),
+            Container(
+              margin: EdgeInsets.fromLTRB(0, 0, 0, 15),
+              height: 200,
+              width: 200,
+              clipBehavior: Clip.antiAlias,
+              decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(40)
+              ),
+              child: Image(image: AssetImage('assets/images/foodstock.png')),
+            ),
             Container(
               height: 20,
             ),
-            const CircularProgressIndicator(),
+            const CircularProgressIndicator(
+              color: Color(0xFFF1730E),
+            ),
           ]),
     );
   }
