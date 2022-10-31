@@ -33,7 +33,7 @@ class _MenuWidget extends State<MenuWidget> {
           children: [
             ValueListenableBuilder<TypeArticle?>(valueListenable:
             widget.widgetServiceState.currentSelectedTypeArticle
-                , builder: (context, value, michel) {
+                , builder: (context, value, child) {
           return GestureDetector(
               onTap: _selectTypeArticle,
               child: Container(

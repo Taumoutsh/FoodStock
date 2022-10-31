@@ -15,7 +15,7 @@ class ArticleCountContainer extends StatelessWidget {
     return ValueListenableBuilder<int>(
         valueListenable: dataProviderService
             .availableArticlesCount[currentArticle.pkArticle]!,
-        builder: (context, value, michel) {
+        builder: (context, value, child) {
           return Container(
               alignment: Alignment.center,
               width: 60.0,
