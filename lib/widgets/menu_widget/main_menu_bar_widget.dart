@@ -17,7 +17,7 @@ class MainMenuBarWidget extends StatelessWidget {
     }
     return Expanded(
         child: Container(
-            margin: const EdgeInsets.fromLTRB(5, 0, 5, 5),
+            margin: const EdgeInsets.fromLTRB(5, 0, 5, 20),
             clipBehavior: Clip.antiAlias,
             height: 60,
             decoration: BoxDecoration(
