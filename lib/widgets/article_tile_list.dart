@@ -22,7 +22,6 @@ class ArticleTileListWidget extends StatefulWidget {
 }
 
 class _ArticleTileList extends State<ArticleTileListWidget> {
-
   final log = Logger('ArticleTileListWidget');
 
   List<ArticleTileWidget> articleTileList = [];
@@ -33,12 +32,13 @@ class _ArticleTileList extends State<ArticleTileListWidget> {
     if (typeArticle != null) {
       for (Article article in widget.dataProviderService.articleMap.values) {
         if (article.typeArticle.pkTypeArticle == typeArticle.pkTypeArticle) {
-          newUnorderedArticleTileList.add(ArticleTileWidget(currentArticle: article));
+          newUnorderedArticleTileList
+              .add(ArticleTileWidget(currentArticle: article));
         }
       }
     }
-    List<ArticleTileWidget> newList = newUnorderedArticleTileList..sort((e1, e2) =>
-        e1.currentArticle.compareTo(e2.currentArticle));
+    List<ArticleTileWidget> newList = newUnorderedArticleTileList
+      ..sort((e1, e2) => e1.currentArticle.compareTo(e2.currentArticle));
     return newList;
   }
 
@@ -65,8 +65,8 @@ class _ArticleTileList extends State<ArticleTileListWidget> {
           " Redraw tiles list because the"
           " favorite button has been triggered");
       setState(() {
-        List<ArticleTileWidget> newList = articleTileList..sort((e1, e2) =>
-            e1.currentArticle.compareTo(e2.currentArticle));
+        List<ArticleTileWidget> newList = articleTileList
+          ..sort((e1, e2) => e1.currentArticle.compareTo(e2.currentArticle));
         articleTileList = newList;
       });
     });
@@ -88,10 +88,12 @@ class _ArticleTileList extends State<ArticleTileListWidget> {
     completeArticleTileList.addAll(articleTileList);
     completeArticleTileList.add(ArticleCreationWidget());
     return Expanded(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-            child: Column(
-      children: completeArticleTileList,
-    )));
+        child: Container(
+            margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+            child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                child: Column(
+                  children: completeArticleTileList,
+                ))));
   }
 }

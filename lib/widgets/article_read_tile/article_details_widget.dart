@@ -23,7 +23,6 @@ class ArticleDetailsWidget extends StatelessWidget {
             children: [
               Text(currentArticle.labelArticle,
                   style: const TextStyle(
-                      fontWeight: FontWeight.bold,
                       fontSize: 18,
                       fontFamily: "Segue UI")),
               Container(margin: EdgeInsets.all(2)),

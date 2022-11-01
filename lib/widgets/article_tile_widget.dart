@@ -90,11 +90,11 @@ class _ArticleTileWidgetState extends State<ArticleTileWidget> {
               onPanUpdate: (details) {
                 // Swiping in right direction.
                 var currentArticle = widget.currentArticle;
-                if (details.delta.dx > 0) {
+                if (details.delta.dx > 3) {
                   currentArticle.isInRemovingState.value = false;
                 }
                 // Swiping in left direction.
-                if (details.delta.dx < 0) {
+                if (details.delta.dx < -3) {
                   if (ArticleTileState.READ_ARTICLE ==
                       currentArticle.articleTileState.value) {
                     currentArticle.isInRemovingState.value = true;
