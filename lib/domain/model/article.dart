@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
-import 'package:foodstock/domain/mapped_object.dart';
-import 'package:foodstock/domain/type_article.dart';
+import 'package:foodstock/domain/model/datatypes/mapped_object.dart';
+import 'package:foodstock/domain/model/type_article.dart';
 
-import 'article_tile_state_enum.dart';
+import 'enumerate/article_tile_state_enum.dart';
 
 class Article extends MappedObject implements Comparable<Article> {
   static const String TABLE_NAME = "Article";

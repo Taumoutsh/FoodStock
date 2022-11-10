@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foodstock/domain/article.dart';
+import 'package:foodstock/domain/model/article.dart';
 
 
 class ArticleDetailsWidget extends StatelessWidget {

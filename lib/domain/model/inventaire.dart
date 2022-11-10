@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
-import 'package:foodstock/domain/mapped_object.dart';
+import 'package:foodstock/domain/model/datatypes/mapped_object.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 

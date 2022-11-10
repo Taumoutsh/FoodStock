@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:foodstock/domain/data_manager.dart';
+import 'package:foodstock/service/data_manager.dart';
 import 'package:foodstock/service/widget_service_state.dart';
 import 'package:foodstock/widgets/menu_widget/main_menu_bar_widget.dart';
 

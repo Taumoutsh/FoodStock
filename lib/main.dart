@@ -2,13 +2,15 @@ import 'dart:core';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:foodstock/domain/data_manager.dart';
-import 'package:foodstock/domain/data_provider.dart';
+import 'package:foodstock/service/data_manager.dart';
+import 'package:foodstock/service/data_provider.dart';
 import 'package:foodstock/service/widget_service_state.dart';
-import 'package:foodstock/widgets/article_creation/article_creation.dart';
+
 import 'package:foodstock/widgets/article_tile_list.dart';
 import 'package:foodstock/widgets/menu_widget/main_menu_bar_widget.dart';
 import 'package:logging/logging.dart';
+
+final log = Logger('Main');
 
 void main() {
   Logger.root.level = Level.ALL; // defaults to Level.INFO
@@ -29,7 +31,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<bool>(
-        future: dataManagerService.refreshValuesFromDatabase(),
+        future: dataManagerService.refreshValuesFromDatabase(false),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             widgetServiceState.currentSelectedTypeArticle.value =

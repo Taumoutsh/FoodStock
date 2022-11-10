@@ -1,16 +1,16 @@
 import 'dart:async';
-import 'package:foodstock/domain/article.dart';
-import 'package:foodstock/domain/data_fetcher.dart';
-import 'package:foodstock/domain/inventaire.dart';
+import 'package:foodstock/domain/model/article.dart';
+import 'package:foodstock/domain/fetcher/sqlite/sqlite_data_fetcher.dart';
+import 'package:foodstock/domain/model/inventaire.dart';
 import 'package:sqflite/sqflite.dart';
-import 'article_data_fetcher.dart';
-import '../database/database.dart';
+import '../../../database/database.dart';
 import 'package:logging/logging.dart';
+import '../../../service/data_provider.dart';
 
-class InventaireDataFetcher extends DataFetcher<Inventaire> {
+class SqliteInventaireDataFetcher extends SqliteDataFetcher<Inventaire> {
   final log = Logger('InventaireDataFetcher');
 
-  ArticleDataFetcher articleDataFetcher = ArticleDataFetcher();
+  var dataProviderService = DataProviderService();
 
   Future<List<Inventaire>> getFirstDataFromTableWhereArticle(
       int articleKey, bool byAsc) async {
@@ -95,12 +95,12 @@ class InventaireDataFetcher extends DataFetcher<Inventaire> {
   Future<List<Inventaire>> constructObjectFromDatabase(map) async {
     List<Inventaire> articleToReturn = [];
     for (Map<String, dynamic> mapEntry in map) {
-      List<Article> listArticle =
-          await articleDataFetcher.getData(mapEntry['fk_Article']);
+      Article article =
+      dataProviderService.articleMap[mapEntry['fk_Article']]!;
       articleToReturn.add(Inventaire(
           pkInventaire: mapEntry['pk_Inventaire'],
           dateAchatArticle: mapEntry['dateAchatArticle'].toString(),
-          article: listArticle[0]));
+          article: article));
     }
     return Future(() => articleToReturn);
   }
@@ -122,5 +122,11 @@ class InventaireDataFetcher extends DataFetcher<Inventaire> {
 
   String foreignKeyName() {
     return Inventaire.FK_ARTICLE;
+  }
+
+  @override
+  Future<int> updateData(Inventaire t) {
+    // TODO: implement updateData
+    throw UnimplementedError();
   }
 }

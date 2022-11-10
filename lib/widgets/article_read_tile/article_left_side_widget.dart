@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:foodstock/domain/conservation_data.dart';
-import 'package:foodstock/domain/data_provider.dart';
+import 'package:foodstock/domain/model/conservation_data.dart';
+import 'package:foodstock/service/data_provider.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
-import '../../domain/article.dart';
+import '../../domain/model/article.dart';
 
 class ArticleLeftSideTile extends StatefulWidget {
   final Article currentArticle;

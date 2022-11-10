@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
-import 'package:foodstock/domain/conservation_data.dart';
-import 'package:foodstock/domain/article.dart';
-import 'package:foodstock/domain/type_article.dart';
+import 'package:foodstock/domain/model/conservation_data.dart';
+import 'package:foodstock/domain/model/article.dart';
+import 'package:foodstock/domain/model/type_article.dart';
 
-import 'inventaire.dart';
+import '../domain/model/inventaire.dart';
 
 class DataProviderService {
   Map<int, Article> articleMap = {};

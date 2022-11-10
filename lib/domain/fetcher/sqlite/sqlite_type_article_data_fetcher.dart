@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'package:foodstock/domain/data_fetcher.dart';
-import 'type_article.dart';
+import 'package:foodstock/domain/fetcher/sqlite/sqlite_data_fetcher.dart';
+import '../../model/type_article.dart';
 
-class TypeArticleDataFetcher extends DataFetcher<TypeArticle> {
+class SqliteTypeArticleDataFetcher extends SqliteDataFetcher<TypeArticle> {
 
   @override
   Future<List<TypeArticle>> constructObjectFromDatabase(map) {
@@ -28,5 +28,11 @@ class TypeArticleDataFetcher extends DataFetcher<TypeArticle> {
   @override
   String primaryKeyName() {
     return TypeArticle.PK_NAME;
+  }
+
+  @override
+  Future<int> updateData(TypeArticle t) {
+    // TODO: implement updateData
+    throw UnimplementedError();
   }
 }

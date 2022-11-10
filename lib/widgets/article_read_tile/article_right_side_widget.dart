@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../domain/article.dart';
+import '../../domain/model/article.dart';
 import 'article_count_container.dart';
 import 'article_details_widget.dart';
 

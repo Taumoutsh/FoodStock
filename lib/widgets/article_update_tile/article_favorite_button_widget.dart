@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:foodstock/domain/data_manager.dart';
+import 'package:foodstock/service/data_manager.dart';
 import 'package:foodstock/service/widget_service_state.dart';
 import 'package:foodstock/widgets/generic_items/generic_button_widget.dart';
 
-import '../../domain/article.dart';
-import '../../domain/article_tile_state_enum.dart';
+import '../../domain/model/article.dart';
+import '../../domain/model/enumerate/article_tile_state_enum.dart';
 
 class ArticleFavoriteButtonWidget extends StatefulWidget {
   final Article currentArticle;

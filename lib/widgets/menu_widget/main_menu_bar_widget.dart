@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:foodstock/domain/data_provider.dart';
-import 'package:foodstock/domain/type_article.dart';
+import 'package:foodstock/service/data_provider.dart';
+import 'package:foodstock/domain/model/type_article.dart';
 
 import 'menu_widget.dart';
 

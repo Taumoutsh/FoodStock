@@ -1,16 +1,16 @@
 import 'dart:async';
-import 'package:foodstock/domain/article.dart';
-import 'package:foodstock/domain/data_fetcher.dart';
-import 'package:foodstock/domain/type_article_data_fetcher.dart';
+import 'package:foodstock/domain/model/article.dart';
+import 'package:foodstock/domain/fetcher/sqlite/sqlite_data_fetcher.dart';
 import 'package:logging/logging.dart';
 import 'package:sqflite/sqflite.dart';
-import 'type_article.dart';
-import '../database/database.dart';
+import '../../../database/database.dart';
+import '../../../service/data_provider.dart';
+import '../../model/type_article.dart';
 
-class ArticleDataFetcher extends DataFetcher<Article> {
+class SqliteArticleDataFetcher extends SqliteDataFetcher<Article> {
   final log = Logger('InventaireDataFetcher');
 
-  TypeArticleDataFetcher typeArticleDataFetcher = TypeArticleDataFetcher();
+  var dataProviderService = DataProviderService();
 
   @override
   Future<List<Article>> getDataFromTable() async {
@@ -25,7 +25,7 @@ class ArticleDataFetcher extends DataFetcher<Article> {
     return constructObjectFromDatabase(map);
   }
 
-  Future<int> updateArticleFavoriteStatus(Article article) async {
+  Future<int> updateData(Article article) async {
     int articleNumberUpdated;
     int primaryKey = article.pkArticle!;
     article.toMap();
@@ -66,7 +66,8 @@ class ArticleDataFetcher extends DataFetcher<Article> {
   Future<List<Article>> constructObjectFromDatabase(List<Map<String, dynamic>> map) async {
     List<Article> articleToReturn = [];
     for (Map<String, dynamic> mapEntry in map) {
-        List<TypeArticle> listTypeArticle = await typeArticleDataFetcher.getData(mapEntry['fk_TypeArticle']);
+        TypeArticle typeArticle = dataProviderService
+            .typeArticleMap[mapEntry['fk_TypeArticle']]!;
         articleToReturn.add(Article(
             pkArticle: mapEntry['pk_Article'],
             labelArticle: mapEntry['labelArticle'],
@@ -74,7 +75,7 @@ class ArticleDataFetcher extends DataFetcher<Article> {
             quantiteAlerte: mapEntry['quantiteAlerte'],
             quantiteCritique: mapEntry['quantiteCritique'],
             estFavoris: mapEntry['estFavoris'] == 1 ? true : false,
-            typeArticle: listTypeArticle[0]));
+            typeArticle: typeArticle));
       }
     return Future(() => articleToReturn);
   }

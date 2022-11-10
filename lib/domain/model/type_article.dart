@@ -1,4 +1,4 @@
-import 'package:foodstock/domain/mapped_object.dart';
+import 'package:foodstock/domain/model/datatypes/mapped_object.dart';
 
 class TypeArticle extends MappedObject{
 

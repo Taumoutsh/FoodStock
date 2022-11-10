@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:foodstock/domain/data_manager.dart';
-import 'package:foodstock/domain/data_provider.dart';
+import 'package:foodstock/service/data_manager.dart';
+import 'package:foodstock/service/data_provider.dart';
 import 'package:foodstock/widgets/generic_items/generic_button_widget.dart';
 
-import '../../domain/article.dart';
+import '../../domain/model/article.dart';
 import '../../service/widget_service_state.dart';
 
 class ArticleValidButtonWidget extends StatefulWidget {

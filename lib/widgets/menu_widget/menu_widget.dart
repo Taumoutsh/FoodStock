@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:foodstock/domain/type_article.dart';
+import 'package:foodstock/domain/model/type_article.dart';
 import 'package:foodstock/service/widget_service_state.dart';
 
 class MenuWidget extends StatefulWidget {

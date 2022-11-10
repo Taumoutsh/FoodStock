@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
-import '../../domain/article.dart';
-import '../../domain/data_provider.dart';
+import '../../domain/model/article.dart';
+import '../../service/data_provider.dart';
 
 class ArticleCountContainer extends StatelessWidget {
   final DataProviderService dataProviderService = DataProviderService();

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:foodstock/domain/article_tile_state_enum.dart';
-import 'package:foodstock/domain/article_update_tile.dart';
-import 'package:foodstock/domain/data_provider.dart';
+import 'package:foodstock/domain/model/enumerate/article_tile_state_enum.dart';
+import 'package:foodstock/widgets/article_update_tile/article_update_tile.dart';
+import 'package:foodstock/service/data_provider.dart';
 import 'package:foodstock/service/widget_service_state.dart';
 import 'package:foodstock/widgets/article_remove/article_remove_dialog.dart';
 import 'package:logging/logging.dart';
 
-import '../domain/article.dart';
-import '../domain/data_manager.dart';
+import '../domain/model/article.dart';
+import '../service/data_manager.dart';
 import 'article_read_tile/article_left_side_widget.dart';
 import 'article_read_tile/article_right_side_widget.dart';
 import 'article_read_tile/article_tile_separator.dart';

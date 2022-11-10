@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
-import '../../domain/article.dart';
-import '../../domain/data_provider.dart';
+import '../../domain/model/article.dart';
+import '../../service/data_provider.dart';
 import '../../service/widget_service_state.dart';
 
 class ArticleQuantityUpdaterWidget extends StatefulWidget {

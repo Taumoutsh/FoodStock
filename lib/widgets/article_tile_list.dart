@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
-import 'package:foodstock/domain/article_tile_state_enum.dart';
+import 'package:foodstock/domain/model/enumerate/article_tile_state_enum.dart';
 import 'package:foodstock/widgets/article_creation/article_creation_widget.dart';
 import 'package:logging/logging.dart';
 
-import '../domain/article.dart';
-import '../domain/data_manager.dart';
-import '../domain/data_provider.dart';
-import '../domain/type_article.dart';
+import '../domain/model/article.dart';
+import '../service/data_manager.dart';
+import '../service/data_provider.dart';
+import '../domain/model/type_article.dart';
 import '../service/widget_service_state.dart';
 import 'article_tile_widget.dart';
 

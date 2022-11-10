@@ -1,24 +1,31 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:foodstock/domain/article.dart';
-import 'package:foodstock/domain/article_data_fetcher.dart';
-import 'package:foodstock/domain/type_article.dart';
-import 'package:foodstock/domain/type_article_data_fetcher.dart';
+import 'package:foodstock/domain/model/article.dart';
+import 'package:foodstock/domain/model/type_article.dart';
 
+import '../database/firebase_provider.dart';
+import '../domain/fetcher/data_fetcher.dart';
 import 'data_provider.dart';
-import 'inventaire.dart';
-import 'inventaire_data_fetcher.dart';
+import '../domain/fetcher/firebase/firebase_article_data_fetcher.dart';
+import '../domain/fetcher/firebase/firebase_inventaire_data_fetcher.dart';
+import '../domain/fetcher/firebase/firebase_type_article_data_fetcher.dart';
+import '../domain/fetcher/sqlite/sqlite_article_data_fetcher.dart';
+import '../domain/fetcher/sqlite/sqlite_type_article_data_fetcher.dart';
+import '../domain/model/inventaire.dart';
+import '../domain/fetcher/sqlite/sqlite_inventaire_data_fetcher.dart';
 import 'package:logging/logging.dart';
 
 class DataManagerService extends ChangeNotifier {
   final log = Logger('DataManagerService');
 
-  ArticleDataFetcher _articleDataFetcher = new ArticleDataFetcher();
-  TypeArticleDataFetcher _typeArticleDataFetcher = new TypeArticleDataFetcher();
-  InventaireDataFetcher _inventaireDataFetcher = new InventaireDataFetcher();
+  late DataFetcher _articleDataFetcher;
+  late DataFetcher _typeArticleDataFetcher;
+  late DataFetcher _inventaireDataFetcher;
 
   var dataProviderService = DataProviderService();
+
+  var firebaseProvider = FirebaseProvider();
 
   static final DataManagerService _instance = DataManagerService._internal();
 
@@ -28,16 +35,29 @@ class DataManagerService extends ChangeNotifier {
 
   DataManagerService._internal();
 
-  Future<bool> refreshValuesFromDatabase() async {
-    refreshArticleMapFromDatabase();
-    List<TypeArticle> articleTypeList =
-        await _typeArticleDataFetcher.getDataFromTable();
+  Future<void> _initializeDataFetchersSource(bool usesFirebase) async {
+    if (usesFirebase) {
+      await firebaseProvider.initialiseFirebaseDatabase();
+      _articleDataFetcher = FirebaseArticleDataFetcher();
+      _typeArticleDataFetcher = FirebaseTypeArticleDataFetcher();
+      _inventaireDataFetcher = FirebaseInventaireDataFetcher();
+    } else {
+      _articleDataFetcher = SqliteArticleDataFetcher();
+      _typeArticleDataFetcher = SqliteTypeArticleDataFetcher();
+      _inventaireDataFetcher = SqliteInventaireDataFetcher();
+    }
+  }
+
+  Future<bool> refreshValuesFromDatabase(bool usesFirebase) async {
+    await _initializeDataFetchersSource(usesFirebase);
+    List articleTypeList = await _typeArticleDataFetcher.getDataFromTable();
     for (TypeArticle typeArticle in articleTypeList) {
       dataProviderService.typeArticleMap[typeArticle.pkTypeArticle] =
           typeArticle;
     }
-    List<Inventaire> inventaireList = await _inventaireDataFetcher
-        .getDataFromTableOrderBy(_inventaireDataFetcher.labelName(), true);
+    await refreshArticleMapFromDatabase();
+    List inventaireList = await _inventaireDataFetcher.getDataFromTableOrderBy(
+        _inventaireDataFetcher.labelName(), true);
     for (Inventaire inventaire in inventaireList) {
       // Assume that we always have the primary key when getting inventory object
       dataProviderService.inventaireMap[inventaire.pkInventaire!] = inventaire;
@@ -48,15 +68,10 @@ class DataManagerService extends ChangeNotifier {
   }
 
   Future<void> refreshArticleMapFromDatabase() async {
-    List<Article> articleList = await _articleDataFetcher.getDataFromTable();
+    List articleList = await _articleDataFetcher.getDataFromTable();
     for (Article article in articleList) {
       dataProviderService.articleMap[article.pkArticle!] = article;
     }
-  }
-
-  Future<void> removeFromInventaire(int primaryKey) async {
-    dataProviderService.inventaireMap.remove(primaryKey);
-    return await _inventaireDataFetcher.removeDataFromTable(primaryKey);
   }
 
   Future<int> updateArticleFavorite(Article article) async {
@@ -68,8 +83,7 @@ class DataManagerService extends ChangeNotifier {
     }
     bool estFavoris = article.estFavoris;
     estFavoris = !estFavoris;
-    int articleHasBeenUpdated =
-        await _articleDataFetcher.updateArticleFavoriteStatus(article);
+    int articleHasBeenUpdated = await _articleDataFetcher.updateData(article);
     if (articleHasBeenUpdated == 1) {
       dataProviderService.articleMap[article.pkArticle!] = article;
       log.info(
@@ -93,16 +107,18 @@ class DataManagerService extends ChangeNotifier {
     // ajouter des produits dans la base de données
     // Sinon, en supprimer
     if (quantity > sizeInventaireMapByArticle) {
-      futureResult = await _inventaireDataFetcher.addToTable(
-          article, quantity - sizeInventaireMapByArticle);
+      futureResult =
+          await (_inventaireDataFetcher as SqliteInventaireDataFetcher)
+              .addToTable(article, quantity - sizeInventaireMapByArticle);
       for (Inventaire inventaire in futureResult) {
         dataProviderService.inventaireMap[inventaire.pkInventaire!] =
             inventaire;
       }
       dataProviderService.updateConservationDataByArticle(article, true);
     } else {
-      futureResult = await _inventaireDataFetcher.removeFromTable(
-          article, sizeInventaireMapByArticle - quantity);
+      futureResult =
+          await (_inventaireDataFetcher as SqliteInventaireDataFetcher)
+              .removeFromTable(article, sizeInventaireMapByArticle - quantity);
       for (Inventaire inventaire in futureResult) {
         dataProviderService.inventaireMap.remove(inventaire.pkInventaire);
       }
@@ -112,8 +128,8 @@ class DataManagerService extends ChangeNotifier {
     return 0;
   }
 
-  Future<bool> addNewArticle(String articleName, int articlePeremption, int alerteLevel,
-      int criticalLevel, TypeArticle articleType) async {
+  Future<bool> addNewArticle(String articleName, int articlePeremption,
+      int alerteLevel, int criticalLevel, TypeArticle articleType) async {
     bool isArticleAddedToDatabase;
     log.info("addNewArticle() - Processus d'ajout de l'article $articleName, "
         "peremption : $articlePeremption de type $articleType, "
@@ -126,7 +142,8 @@ class DataManagerService extends ChangeNotifier {
         estFavoris: false,
         typeArticle: articleType);
     int articleCreationState =
-        await _articleDataFetcher.addArticleInDatabase(article);
+        await (_articleDataFetcher as SqliteArticleDataFetcher)
+            .addArticleInDatabase(article);
     if (articleCreationState != 0) {
       log.info("addNewArticle() - L'article avec la clé primaire "
           "$articleCreationState a été ajouté avec succès"
@@ -149,31 +166,37 @@ class DataManagerService extends ChangeNotifier {
     log.info("removeArticle() - Suppression de l'article <$article>");
     int articleKey = article.pkArticle!;
     bool articleRemovalSucceeded = false;
-    int inventoryResponse = await _inventaireDataFetcher.removeAllArticleFromTable(articleKey);
-    log.info("removeArticle() - Nombre d'items inventaire supprimés en base de données associés"
+    int inventoryResponse =
+        await (_inventaireDataFetcher as SqliteInventaireDataFetcher)
+            .removeAllArticleFromTable(articleKey);
+    log.info(
+        "removeArticle() - Nombre d'items inventaire supprimés en base de données associés"
         " à l'article <$article> : $inventoryResponse");
-    if(inventoryResponse > 0) {
+    if (inventoryResponse > 0) {
       List<int> inventoryKeyToRemove = [];
-      for(Inventaire inventaire in dataProviderService.inventaireMap.values) {
-        if(inventaire.article.pkArticle == articleKey) {
+      for (Inventaire inventaire in dataProviderService.inventaireMap.values) {
+        if (inventaire.article.pkArticle == articleKey) {
           inventoryKeyToRemove.add(inventaire.pkInventaire!);
         }
       }
-      for(int inventoryPrimaryKey in inventoryKeyToRemove) {
-        log.info("removeArticle() - Suppression dans le modèle de l'item inventaire"
+      for (int inventoryPrimaryKey in inventoryKeyToRemove) {
+        log.info(
+            "removeArticle() - Suppression dans le modèle de l'item inventaire"
             " <$inventoryPrimaryKey>");
         dataProviderService.inventaireMap.remove(inventoryPrimaryKey);
       }
     }
     int articleResponse =
-    await _articleDataFetcher.removeArticleFromDatabase(articleKey);
-    if(articleResponse > 0) {
+        await (_articleDataFetcher as SqliteArticleDataFetcher)
+            .removeArticleFromDatabase(articleKey);
+    if (articleResponse > 0) {
       log.info("removeArticle() - Suppression de l'article <$article> réussie"
           " à l'article <$article> : $inventoryResponse");
       dataProviderService.articleMap.remove(articleKey);
       articleRemovalSucceeded = true;
     } else {
-      log.severe("removeArticle() - Echec lors de la suppression de l'article <$article>");
+      log.severe(
+          "removeArticle() - Echec lors de la suppression de l'article <$article>");
     }
     return articleRemovalSucceeded;
   }

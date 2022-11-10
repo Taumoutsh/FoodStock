@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/article_update_tile/article_favorite_button_widget.dart';
-import '../widgets/article_update_tile/article_quantity_updater_widget.dart';
-import '../widgets/article_update_tile/article_valid_button_widget.dart';
-import 'article.dart';
+import 'article_favorite_button_widget.dart';
+import 'article_quantity_updater_widget.dart';
+import 'article_valid_button_widget.dart';
+import '../../domain/model/article.dart';
 
 class ArticleUpdateTile extends StatelessWidget {
 
