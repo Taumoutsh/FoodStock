@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:foodstock/domain/model/article.dart';
 import 'package:logging/logging.dart';
 import '../../../service/data_provider.dart';
@@ -10,16 +11,35 @@ class FirebaseArticleDataFetcher extends FirebaseDataFetcher<Article> {
 
   final log = Logger('FirebaseArticleDataFetcher');
 
-  Future<int> updateArticleFavoriteStatus(Article article) async {
-    return 1;
+  @override
+  Future<String> addData(Article article) async {
+    String articleIdToReturn = "0";
+    FirebaseFirestore? firestoreDatabase = firebaseProvider.db;
+    if (firestoreDatabase != null) {
+      DocumentReference<dynamic> documentReference = await firestoreDatabase
+          .collection(tableName())
+          .add(article.toFirebase());
+      article.articleReference = documentReference;
+      articleIdToReturn = documentReference.id;
+      log.info("addToTable() -"
+              " Ajout de l'item d'inventaire avec l'identifiant " +
+          articleIdToReturn);
+    }
+    return articleIdToReturn;
   }
 
-  Future<int> addArticleInDatabase(Article article) async {
-    return 1;
-  }
-
-  Future<int> removeArticleFromDatabase(int articlePrimaryKey) async {
-    return 1;
+  @override
+  Future<int> updateData(Article article) async {
+    int count = 0;
+    FirebaseFirestore? firestoreDatabase = firebaseProvider.db;
+    if (firestoreDatabase != null) {
+       await firestoreDatabase
+          .collection(tableName())
+      .doc(article.pkArticle)
+      .update(article.toFirebase());
+       count++;
+    }
+    return count;
   }
 
   @override
@@ -28,15 +48,17 @@ class FirebaseArticleDataFetcher extends FirebaseDataFetcher<Article> {
     List<Article> articleToReturn = [];
     for (Map<String, dynamic> mapEntry in map) {
       TypeArticle typeArticle = dataProviderService
-          .typeArticleMap[int.parse(mapEntry['fk_TypeArticle'])]!;
-      articleToReturn.add(Article(
+          .typeArticleMap[mapEntry['fk_TypeArticle'].toString()]!;
+      var articleToAdd = Article(
           pkArticle: mapEntry['pk_Article'],
           labelArticle: mapEntry['labelArticle'],
           peremptionEnJours: mapEntry['peremptionEnJours'],
           quantiteAlerte: mapEntry['quantiteAlerte'],
           quantiteCritique: mapEntry['quantiteCritique'],
           estFavoris: mapEntry['estFavoris'] == 1 ? true : false,
-          typeArticle: typeArticle));
+          typeArticle: typeArticle);
+      articleToAdd.articleReference = mapEntry['articleReference'];
+      articleToReturn.add(articleToAdd);
     }
     return Future(() => articleToReturn);
   }
@@ -57,8 +79,7 @@ class FirebaseArticleDataFetcher extends FirebaseDataFetcher<Article> {
   }
 
   @override
-  Future<int> updateData(Article t) {
-    // TODO: implement updateData
-    throw UnimplementedError();
+  String getReferenceLabel() {
+    return Article.REFERENCE_LABEL;
   }
 }

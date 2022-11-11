@@ -2,13 +2,13 @@ abstract class DataFetcher<T> {
 
   Future<List> getData(int primaryKey);
 
-  Future<List> getDataOrderBy(int primaryKey, String orderByColumn);
-
-  Future<List> getDataFromTable();
+  Future<List> getAllData();
 
   Future<List> getDataFromTableOrderBy(String label, bool byAsc);
 
-  Future<void> removeDataFromTable(int primaryKey);
+  Future<int> removeData(String primaryKey);
+
+  Future<String> addData(T t);
 
   Future<int> updateData(T t);
 

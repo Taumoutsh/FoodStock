@@ -10,7 +10,7 @@ class WidgetServiceState extends ChangeNotifier {
 
   static final WidgetServiceState _instance = WidgetServiceState._internal();
 
-  Map<int, int> currentQuantityByArticle = {};
+  Map<String, int> currentQuantityByArticle = {};
 
   Article? currentUpdatedArticle;
 

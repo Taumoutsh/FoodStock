@@ -25,13 +25,7 @@ abstract class FirebaseDataFetcher<T> extends DataFetcher<T> {
   }
 
   @override
-  Future<List<T>> getDataOrderBy(int primaryKey, String orderByColumn) async {
-    final List<Map<String, dynamic>> map = [];
-    return constructObjectFromDatabase(map);
-  }
-
-  @override
-  Future<List<T>> getDataFromTable() async {
+  Future<List<T>> getAllData() async {
     // Get a reference to the database.
     FirebaseFirestore? firestoreDatabase = firebaseProvider.db;
     List<Map<String, dynamic>> listOfMaps = [];
@@ -41,6 +35,20 @@ abstract class FirebaseDataFetcher<T> extends DataFetcher<T> {
       listOfMaps = _computeListOfMaps(queryResponse);
     }
     return constructObjectFromDatabase(listOfMaps);
+  }
+
+  @override
+  Future<int> removeData(String primaryKey) async {
+    int count = 0;
+    FirebaseFirestore? firestoreDatabase = firebaseProvider.db;
+    if(firestoreDatabase != null ){
+      await firestoreDatabase
+          .collection(tableName())
+          .doc(primaryKey)
+          .delete();
+      count++;
+    }
+    return count;
   }
 
   @override
@@ -71,12 +79,12 @@ abstract class FirebaseDataFetcher<T> extends DataFetcher<T> {
           }
         }
       }
-      mapInternal[primaryKeyName()] = int.parse(rawDataMap.id);
+      mapInternal[primaryKeyName()] = rawDataMap.id;
+      mapInternal[getReferenceLabel()] = rawDataMap.reference;
       listOfMaps.add(mapInternal);
     }
     return listOfMaps;
   }
 
-  Future<void> removeDataFromTable(int primaryKey) async {
-  }
+  String getReferenceLabel();
 }

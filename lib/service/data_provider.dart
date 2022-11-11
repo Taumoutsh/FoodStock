@@ -6,11 +6,11 @@ import 'package:foodstock/domain/model/type_article.dart';
 import '../domain/model/inventaire.dart';
 
 class DataProviderService {
-  Map<int, Article> articleMap = {};
-  Map<int, TypeArticle> typeArticleMap = {};
-  Map<int, Inventaire> inventaireMap = {};
-  Map<int, ValueNotifier<int>> availableArticlesCount = {};
-  Map<int, ValueNotifier<ConservationData>> conservationDataByArticle = {};
+  Map<String, Article> articleMap = {};
+  Map<String, TypeArticle> typeArticleMap = {};
+  Map<String, Inventaire> inventaireMap = {};
+  Map<String, ValueNotifier<int>> availableArticlesCount = {};
+  Map<String, ValueNotifier<ConservationData>> conservationDataByArticle = {};
 
   static final DataProviderService _instance = DataProviderService._internal();
 
@@ -27,6 +27,19 @@ class DataProviderService {
       articleCountToReturn = actualCount;
     }
     return articleCountToReturn;
+  }
+
+  Future<Inventaire> getOlderInventoryItemByArticle(Article article) async {
+    Inventaire inventoryItem = inventaireMap.values.last;
+    for (Inventaire inventory in inventaireMap.values) {
+      if(inventory.article == article) {
+        if(inventory.dateAchatArticleDateTime
+            .isBefore(inventoryItem.dateAchatArticleDateTime)) {
+          inventoryItem = inventory;
+        }
+      }
+    }
+    return inventoryItem;
   }
 
   void addConservationDataAllArticle() {

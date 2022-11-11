@@ -8,7 +8,7 @@ class SqliteTypeArticleDataFetcher extends SqliteDataFetcher<TypeArticle> {
   Future<List<TypeArticle>> constructObjectFromDatabase(map) {
     return Future(() => List.generate(map.length, (i) {
       return TypeArticle(
-          pkTypeArticle: map[i]['pk_TypeArticle'],
+          pkTypeArticle: map[i]['pk_TypeArticle'].toString(),
           labelTypeArticle: map[i]['labelTypeArticle'],
           svgResource: map[i]['svgResource'],
       );
@@ -31,8 +31,14 @@ class SqliteTypeArticleDataFetcher extends SqliteDataFetcher<TypeArticle> {
   }
 
   @override
-  Future<int> updateData(TypeArticle t) {
+  Future<int> updateData(TypeArticle typeArticle) {
     // TODO: implement updateData
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String> addData(TypeArticle typeArticle) {
+    // TODO: implement addData
     throw UnimplementedError();
   }
 }

@@ -1,38 +1,34 @@
 import 'dart:async';
-import 'package:foodstock/domain/model/article.dart';
 import 'package:logging/logging.dart';
 import '../../model/type_article.dart';
 import 'firebase_data_fetcher.dart';
 
 class FirebaseTypeArticleDataFetcher extends FirebaseDataFetcher<TypeArticle> {
-  final log = Logger('FirebaseArticleDataFetcher');
-
-  Future<int> updateTypeArticleFavoriteStatus(Article article) async {
-    return 1;
-  }
-
-  Future<int> addTypeArticleInDatabase(Article article) async {
-    return 1;
-  }
-
-  Future<int> removeTypeArticleFromDatabase(int articlePrimaryKey) async {
-    return 1;
-  }
+  final log = Logger('FirebaseTypeArticleDataFetcher');
 
   @override
   Future<List<TypeArticle>> constructObjectFromDatabase(listOfMaps) {
     return Future(() {
       List<TypeArticle> list = [];
-      for (Map map in listOfMaps) {
-        TypeArticle typeArticle = TypeArticle(
-          pkTypeArticle: map['pk_TypeArticle'],
-          labelTypeArticle: map['labelTypeArticle'],
-          svgResource: map['svgResource'],
+      for (Map mapEntry in listOfMaps) {
+        var typeArticleToAdd = TypeArticle(
+          pkTypeArticle: mapEntry['pk_TypeArticle'],
+          labelTypeArticle: mapEntry['labelTypeArticle'],
+          svgResource: mapEntry['svgResource'],
         );
-        list.add(typeArticle);
+        typeArticleToAdd.typeArticleReference =
+            mapEntry[TypeArticle.REFERENCE_LABEL];
+
+        list.add(typeArticleToAdd);
       }
       return list;
     });
+  }
+
+  @override
+  Future<int> updateData(TypeArticle t) {
+    // TODO: implement updateData
+    throw UnimplementedError();
   }
 
   @override
@@ -51,8 +47,13 @@ class FirebaseTypeArticleDataFetcher extends FirebaseDataFetcher<TypeArticle> {
   }
 
   @override
-  Future<int> updateData(TypeArticle t) {
-    // TODO: implement updateData
+  String getReferenceLabel() {
+    return TypeArticle.REFERENCE_LABEL;
+  }
+
+  @override
+  Future<String> addData(TypeArticle t) {
+    // TODO: implement addData
     throw UnimplementedError();
   }
 }

@@ -1,0 +1,4 @@
+enum DatabaseSource {
+  FIREBASE_DATABASE,
+  SQLITE_DATABASE
+}

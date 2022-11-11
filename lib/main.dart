@@ -2,6 +2,7 @@ import 'dart:core';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:foodstock/domain/model/enumerate/database_source.dart';
 import 'package:foodstock/service/data_manager.dart';
 import 'package:foodstock/service/data_provider.dart';
 import 'package:foodstock/service/widget_service_state.dart';
@@ -31,7 +32,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<bool>(
-        future: dataManagerService.refreshValuesFromDatabase(false),
+        future: dataManagerService.refreshValuesFromDatabase(
+            DatabaseSource.FIREBASE_DATABASE),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             widgetServiceState.currentSelectedTypeArticle.value =

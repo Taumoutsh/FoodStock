@@ -20,25 +20,10 @@ abstract class SqliteDataFetcher<T> extends DataFetcher<T> {
   }
 
   @override
-  Future<List<T>> getDataOrderBy(int primaryKey, String orderByColumn) async {
+  Future<List<T>> getAllData() async {
     // Get a reference to the database.
     final Database db = await initDB();
-
-    var primaryKeyNameStr = primaryKeyName();
-    final List<Map<String, dynamic>> map = await db.query(tableName(),
-        where: "$primaryKeyNameStr = $primaryKey",
-        orderBy: orderByColumn + " DESC");
-
-    return constructObjectFromDatabase(map);
-  }
-
-  @override
-  Future<List<T>> getDataFromTable() async {
-    // Get a reference to the database.
-    final Database db = await initDB();
-
     final List<Map<String, dynamic>> map = await db.query(tableName());
-
     return constructObjectFromDatabase(map);
   }
 
@@ -60,12 +45,13 @@ abstract class SqliteDataFetcher<T> extends DataFetcher<T> {
     return constructObjectFromDatabase(map);
   }
 
-  Future<void> removeDataFromTable(int primaryKey) async {
+  @override
+  Future<int> removeData(String primaryKey) async {
+    int count = 0;
     final Database db = await initDB();
-
     var primaryKeyNameStr = primaryKeyName();
-
-    db.delete(tableName(),
+    count = await db.delete(tableName(),
         where: "$primaryKeyNameStr = $primaryKey");
+    return count;
   }
 }

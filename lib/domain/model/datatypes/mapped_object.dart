@@ -1,5 +1,5 @@
 abstract class MappedObject {
 
-  Map<String, dynamic> toMap();
+  Map<String, dynamic> toSqlite();
 
 }
