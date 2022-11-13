@@ -23,8 +23,9 @@ class ArticleDetailsWidget extends StatelessWidget {
             children: [
               Text(currentArticle.labelArticle,
                   style: const TextStyle(
-                      fontSize: 18,
-                      fontFamily: "Segue UI")),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: ".AppleSystemUIFont")),
               Container(margin: EdgeInsets.all(2)),
               getFavoriteWidget()
             ],

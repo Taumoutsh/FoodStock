@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:foodstock/domain/model/comparator/article_comparator.dart';
 import 'package:foodstock/domain/model/enumerate/article_tile_state_enum.dart';
 import 'package:foodstock/widgets/article_creation/article_creation_widget.dart';
 import 'package:logging/logging.dart';
@@ -14,6 +15,7 @@ class ArticleTileListWidget extends StatefulWidget {
   DataProviderService dataProviderService = DataProviderService();
   DataManagerService dataManagerService = DataManagerService();
   WidgetServiceState widgetServiceState = WidgetServiceState();
+  ArticleComparator articleComparator = ArticleComparator();
 
   ArticleTileListWidget({super.key});
 
@@ -38,7 +40,8 @@ class _ArticleTileList extends State<ArticleTileListWidget> {
       }
     }
     List<ArticleTileWidget> newList = newUnorderedArticleTileList
-      ..sort((e1, e2) => e1.currentArticle.compareTo(e2.currentArticle));
+      ..sort((e1, e2) => widget.articleComparator
+          .compareTwoArticle(e1.currentArticle, e2.currentArticle));
     return newList;
   }
 
@@ -66,7 +69,8 @@ class _ArticleTileList extends State<ArticleTileListWidget> {
           " favorite button has been triggered");
       setState(() {
         List<ArticleTileWidget> newList = articleTileList
-          ..sort((e1, e2) => e1.currentArticle.compareTo(e2.currentArticle));
+          ..sort((e1, e2) => widget.articleComparator
+              .compareTwoArticle(e1.currentArticle, e2.currentArticle));
         articleTileList = newList;
       });
     });

@@ -24,10 +24,15 @@ class _ArticleValidButtonWidget extends State<ArticleValidButtonWidget> {
 
   _updateArticleQuantity() {
     setState(() {
-      dataManagerService.addOrRemoveFromInventaire(
+      Future<bool> futureInventoryHasChanged = dataManagerService.addOrRemoveFromInventaire(
           widget.currentArticle,
           widgetServiceState
               .currentQuantityByArticle[widget.currentArticle.pkArticle]!);
+      futureInventoryHasChanged.then((inventoryHasChanged) => {
+        if(inventoryHasChanged) {
+            widgetServiceState.triggerListUpdate.value++
+        }
+      });
       widget.currentArticle.resetReadingTileState();
     });
   }

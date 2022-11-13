@@ -100,8 +100,9 @@ class DataManagerService extends ChangeNotifier {
     return articleHasBeenUpdated;
   }
 
-  Future<int> addOrRemoveFromInventaire(Article article, int quantity) async {
+  Future<bool> addOrRemoveFromInventaire(Article article, int quantity) async {
     // Récupération du nombre d'article dans l'inventaire
+    bool inventoryHasChanged = false; // Boolean utilisé pour recharger la liste en cas d'ajout d'article dans l'inventaire
     int sizeInventaireMapByArticle =
         dataProviderService.getNumberOfAvailableArticleInInventory(article);
     List<Inventaire> futureResult;
@@ -113,6 +114,9 @@ class DataManagerService extends ChangeNotifier {
       futureResult =
           await (_inventaireDataFetcher as InventaireSpecialQueries)
               .addInventoryItems(article, quantity - sizeInventaireMapByArticle);
+      if(futureResult != null && futureResult.isNotEmpty) {
+        inventoryHasChanged = true;
+      }
       for (Inventaire inventaire in futureResult) {
         dataProviderService.inventaireMap[inventaire.pkInventaire!] =
             inventaire;
@@ -124,6 +128,9 @@ class DataManagerService extends ChangeNotifier {
         await (_inventaireDataFetcher as InventaireSpecialQueries)
             .removeInventoryItemWhereArticle(article);
         if(singleInventaire != null ){
+          if(!inventoryHasChanged) {
+            inventoryHasChanged = true;
+          }
           dataProviderService.inventaireMap
               .remove(singleInventaire.pkInventaire);
         }
@@ -131,7 +138,7 @@ class DataManagerService extends ChangeNotifier {
       dataProviderService.updateConservationDataByArticle(article, false);
     }
     dataProviderService.updateAvailableArticlesCountByArticle(article);
-    return 0;
+    return inventoryHasChanged;
   }
 
   Future<bool> addNewArticle(String articleName, int articlePeremption,

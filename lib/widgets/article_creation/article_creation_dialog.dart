@@ -64,13 +64,12 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
                             controller: _articleNameController,
                             scrollPadding: EdgeInsets.zero,
                             style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                                fontFamily: "Segue UI"),
+                                fontSize: 16,
+                                fontFamily: ".AppleSystemUIFont"),
                             decoration: const InputDecoration(
                                 contentPadding:
                                     EdgeInsets.fromLTRB(0, 10, 0, 0),
-                                hintText: "Nom de l'article"),
+                                hintText: "Intitulé de l'article"),
                           ),
                         ),
                         Container(
@@ -79,13 +78,12 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                  child: const Text("Type d'article",
+                                  child: const Text("Catégorie d'article",
                                       style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18,
-                                          fontFamily: "Segue UI")),
+                                          fontSize: 16,
+                                          fontFamily: ".AppleSystemUIFont")),
                                   padding: const EdgeInsets.fromLTRB(
-                                      10, 10, 10, 10)),
+                                      5, 10, 10, 10)),
                               Flex(
                                 direction: Axis.horizontal,
                                 children: [MainMenuBarWidget()],
@@ -103,9 +101,8 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
                               ],
                               scrollPadding: EdgeInsets.zero,
                               style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                  fontFamily: "Segue UI"),
+                                  fontSize: 16,
+                                  fontFamily: ".AppleSystemUIFont"),
                               decoration: const InputDecoration(
                                   contentPadding:
                                       EdgeInsets.fromLTRB(0, 10, 0, 0),
@@ -119,12 +116,11 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
                               children: [
                                 Expanded(
                                     child: Container(
-                                        child: const Text("Quantités d'alerte",
+                                        child: const Text("Niveaux d'alertes",
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 18,
-                                                fontFamily: "Segue UI")),
+                                                fontSize: 16,
+                                                fontFamily: ".AppleSystemUIFont")),
                                         padding: const EdgeInsets.fromLTRB(
                                             10, 10, 10, 10))),
                                 Container(
@@ -159,7 +155,7 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
                                           style: const TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 24,
-                                              fontFamily: "Segue UI"),
+                                              fontFamily: ".AppleSystemUIFont"),
                                           decoration: const InputDecoration(
                                               contentPadding:
                                                   EdgeInsets.fromLTRB(
@@ -197,7 +193,7 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
                                           style: const TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 24,
-                                              fontFamily: "Segue UI"),
+                                              fontFamily: ".AppleSystemUIFont"),
                                           decoration: const InputDecoration(
                                               contentPadding:
                                                   EdgeInsets.fromLTRB(

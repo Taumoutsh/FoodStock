@@ -38,7 +38,7 @@ class _ArticleRemoveDialog extends State<ArticleRemoveDialog> {
       ),
       child: Container(
           clipBehavior: Clip.hardEdge,
-          height: 230,
+          height: 260,
           width: 415,
           decoration: BoxDecoration(
               color: const Color(0xFFE9E9E9),
@@ -54,11 +54,10 @@ class _ArticleRemoveDialog extends State<ArticleRemoveDialog> {
                         margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                         child: Text("L'article $articleNameString et son stock associé est"
                             " sur le point d'être supprimé."
-                            "\nVeuillez valider pour confirmer cette action.",
+                            "\n\nVeuillez valider pour confirmer cette action.",
                             style: const TextStyle(
-                                fontWeight: FontWeight.bold,
                                 fontSize: 18,
-                                fontFamily: "Segue UI")),
+                                fontFamily: ".AppleSystemUIFont")),
                   ),
                   Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                     Expanded(

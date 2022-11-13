@@ -80,8 +80,8 @@ class _ArticleQuantityUpdaterWidget
               style: const TextStyle(
                   color: Color(0xFF303030),
                   fontWeight: FontWeight.bold,
-                  fontSize: 30,
-                  fontFamily: "Segue UI")),
+                  fontSize: 28,
+                  fontFamily: ".AppleSystemUIFont")),
           GestureDetector(
               onTap: _addValue,
               child: Icon(Icons.add_rounded,
