@@ -21,9 +21,9 @@ import 'package:logging/logging.dart';
 class DataManagerService extends ChangeNotifier {
   final log = Logger('DataManagerService');
 
-  late DataFetcher _articleDataFetcher;
-  late DataFetcher _typeArticleDataFetcher;
-  late DataFetcher _inventaireDataFetcher;
+  late DataFetcher<Article> _articleDataFetcher;
+  late DataFetcher<TypeArticle> _typeArticleDataFetcher;
+  late DataFetcher<Inventaire> _inventaireDataFetcher;
 
   var dataProviderService = DataProviderService();
 
@@ -37,7 +37,8 @@ class DataManagerService extends ChangeNotifier {
 
   DataManagerService._internal();
 
-  Future<void> _initializeDataFetchersSource(DatabaseSource databaseSource) async {
+  Future<void> _initializeDataFetchersSource(
+      DatabaseSource databaseSource) async {
     if (databaseSource == DatabaseSource.FIREBASE_DATABASE) {
       await firebaseProvider.initialiseFirebaseDatabase();
       _articleDataFetcher = FirebaseArticleDataFetcher();
@@ -102,7 +103,8 @@ class DataManagerService extends ChangeNotifier {
 
   Future<bool> addOrRemoveFromInventaire(Article article, int quantity) async {
     // Récupération du nombre d'article dans l'inventaire
-    bool inventoryHasChanged = false; // Boolean utilisé pour recharger la liste en cas d'ajout d'article dans l'inventaire
+    bool inventoryHasChanged =
+        false; // Boolean utilisé pour recharger la liste en cas d'ajout d'article dans l'inventaire
     int sizeInventaireMapByArticle =
         dataProviderService.getNumberOfAvailableArticleInInventory(article);
     List<Inventaire> futureResult;
@@ -111,10 +113,9 @@ class DataManagerService extends ChangeNotifier {
     // ajouter des produits dans la base de données
     // Sinon, en supprimer
     if (quantity > sizeInventaireMapByArticle) {
-      futureResult =
-          await (_inventaireDataFetcher as InventaireSpecialQueries)
-              .addInventoryItems(article, quantity - sizeInventaireMapByArticle);
-      if(futureResult != null && futureResult.isNotEmpty) {
+      futureResult = await (_inventaireDataFetcher as InventaireSpecialQueries)
+          .addInventoryItems(article, quantity - sizeInventaireMapByArticle);
+      if (futureResult != null && futureResult.isNotEmpty) {
         inventoryHasChanged = true;
       }
       for (Inventaire inventaire in futureResult) {
@@ -125,10 +126,10 @@ class DataManagerService extends ChangeNotifier {
     } else {
       for (int i = 0; i < sizeInventaireMapByArticle - quantity; i++) {
         singleInventaire =
-        await (_inventaireDataFetcher as InventaireSpecialQueries)
-            .removeInventoryItemWhereArticle(article);
-        if(singleInventaire != null ){
-          if(!inventoryHasChanged) {
+            await (_inventaireDataFetcher as InventaireSpecialQueries)
+                .removeInventoryItemWhereArticle(article);
+        if (singleInventaire != null) {
+          if (!inventoryHasChanged) {
             inventoryHasChanged = true;
           }
           dataProviderService.inventaireMap
@@ -154,8 +155,7 @@ class DataManagerService extends ChangeNotifier {
         quantiteCritique: criticalLevel,
         estFavoris: false,
         typeArticle: articleType);
-    String articleCreationState =
-        await _articleDataFetcher.addData(article);
+    String articleCreationState = await _articleDataFetcher.addData(article);
     if (articleCreationState.toString() != "0") {
       log.info("addNewArticle() - L'article avec la clé primaire "
           "$articleCreationState a été ajouté avec succès"
@@ -172,6 +172,39 @@ class DataManagerService extends ChangeNotifier {
           "données et dans le modèle");
     }
     return isArticleAddedToDatabase;
+  }
+
+  Future<bool> updateArticle(
+      Article oldArticle,
+      String articleName,
+      int articlePeremption,
+      int alerteLevel,
+      int criticalLevel,
+      TypeArticle articleType) async {
+    bool articleHasBeenUpdated = false;
+    Article updatedArticle = Article(
+        labelArticle: articleName,
+        peremptionEnJours: articlePeremption,
+        quantiteAlerte: alerteLevel,
+        quantiteCritique: criticalLevel,
+        estFavoris: oldArticle.estFavoris,
+        typeArticle: articleType);
+    updatedArticle.pkArticle = oldArticle.pkArticle;
+    int articleUpdatedCount =
+        await _articleDataFetcher.updateData(updatedArticle);
+    if (articleUpdatedCount > 0) {
+      articleHasBeenUpdated = true;
+      dataProviderService.articleMap[updatedArticle.pkArticle!] =
+          updatedArticle;
+      log.info("updateArticle() - L'article avec la clé primaire "
+          "$updatedArticle a été modifié avec succès"
+          " à la base de données");
+    } else {
+      log.severe("updateArticle() - L'article avec le label "
+          "$updatedArticle n'a pas pu être modifié dans la base de "
+          "données et dans le modèle");
+    }
+    return articleHasBeenUpdated;
   }
 
   Future<bool> removeArticle(Article article) async {
@@ -198,8 +231,7 @@ class DataManagerService extends ChangeNotifier {
         dataProviderService.inventaireMap.remove(inventoryPrimaryKey);
       }
     }
-    int articleResponse =
-        await _articleDataFetcher.removeData(articleKey);
+    int articleResponse = await _articleDataFetcher.removeData(articleKey);
     if (articleResponse > 0) {
       log.info("removeArticle() - Suppression de l'article <$article> réussie"
           " nombre d'item d'inventaire supprimés : $inventoryResponse");

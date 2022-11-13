@@ -15,7 +15,7 @@ class ArticleCreationWidget extends StatelessWidget {
                   showDialog<void>(
                       context: context,
                       builder: (BuildContext context) {
-                        return const ArticleCreationDialog();
+                        return ArticleCreationDialog(null);
                       });
                 },
                 child: AnimatedContainer(

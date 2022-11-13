@@ -5,17 +5,24 @@ import 'package:flutter/services.dart';
 import 'package:foodstock/service/data_manager.dart';
 import 'package:foodstock/service/widget_service_state.dart';
 import 'package:foodstock/widgets/menu_widget/main_menu_bar_widget.dart';
+import 'package:logging/logging.dart';
 
+import '../../domain/model/article.dart';
 import '../generic_items/generic_button_widget.dart';
 
 class ArticleCreationDialog extends StatefulWidget {
-  const ArticleCreationDialog({super.key});
+
+  ArticleCreationDialog(this.potentialCurrentArticle, {super.key});
+
+  Article? potentialCurrentArticle;
 
   @override
   State<StatefulWidget> createState() => _ArticleCreationDialog();
 }
 
 class _ArticleCreationDialog extends State<ArticleCreationDialog> {
+  final log = Logger('ArticleCreationDialog');
+
   Color _mainContainerColor = const Color(0xFFE9E9E9);
 
   bool isValidForm = true;
@@ -34,8 +41,25 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
 
   final _criticalLevelController = TextEditingController();
 
+  void _predefineControllersText() {
+    if(widget.potentialCurrentArticle != null) {
+      _articleNameController.text =
+          widget.potentialCurrentArticle!.labelArticle;
+      _articleDurationController.text =
+          widget.potentialCurrentArticle!.peremptionEnJours.toString();
+      _alertLevelController.text =
+          widget.potentialCurrentArticle!.quantiteAlerte.toString();
+      _criticalLevelController.text =
+          widget.potentialCurrentArticle!.quantiteCritique.toString();
+    } else {
+      log.info("_predefineControllersText() - No initial text is required"
+          "it appears to be the article creation use case");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    _predefineControllersText();
     return Dialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0),
@@ -213,7 +237,8 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
                                             Color(0xFF70AC62),
                                             Color(0xFF377F29)
                                           ],
-                                          onTapFunction: _addArticle,
+                                          onTapFunction: () => _addOrUpdateArticle(
+                                              widget.potentialCurrentArticle),
                                           iconData: Icons.check_rounded,
                                           iconSize: 50))),
                             ])
@@ -221,7 +246,7 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
                     )))));
   }
 
-  _addArticle() async {
+  _addOrUpdateArticle(Article? potentialCurrentArticle) async {
     isValidForm = true;
     if (_articleNameController.value.text == "") {
       isValidForm &= false;
@@ -237,17 +262,34 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
     }
 
     if (isValidForm) {
-      bool result = await dataManagerService.addNewArticle(
-          _articleNameController.value.text,
-          int.parse(_articleDurationController.value.text),
-          int.parse(_alertLevelController.value.text),
-          int.parse(_criticalLevelController.value.text),
-          widgetServiceState.currentSelectedTypeArticle.value!);
+      bool result = false;
+      if(potentialCurrentArticle == null) {
+        log.info("_addOrUpdateArticle() - Calling the data manager service"
+            " to add a new article <$_articleNameController.value.text>");
+        result = await dataManagerService.addNewArticle(
+            _articleNameController.value.text,
+            int.parse(_articleDurationController.value.text),
+            int.parse(_alertLevelController.value.text),
+            int.parse(_criticalLevelController.value.text),
+            widgetServiceState.currentSelectedTypeArticle.value!);
+      } else {
+        log.info("_addOrUpdateArticle() - Calling the data manager service"
+            " to update the existing article"
+            " <$_articleNameController.value.text>");
+        result = await dataManagerService.updateArticle(
+            potentialCurrentArticle,
+            _articleNameController.value.text,
+            int.parse(_articleDurationController.value.text),
+            int.parse(_alertLevelController.value.text),
+            int.parse(_criticalLevelController.value.text),
+            widgetServiceState.currentSelectedTypeArticle.value!);
+      }
       if (result) {
         widgetServiceState.triggerListUpdate.value++;
       }
       Navigator.of(context).pop();
     } else {
+      log.severe("_addOrUpdateArticle() - Form is not properly filled");
       int blinkCountLimit = 2;
       if (timer != null) {
         timer!.cancel();

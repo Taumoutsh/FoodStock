@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foodstock/domain/model/enumerate/article_tile_state_enum.dart';
+import 'package:foodstock/widgets/article_creation/article_creation_dialog.dart';
 import 'package:foodstock/widgets/article_update_tile/article_update_tile.dart';
 import 'package:foodstock/service/data_provider.dart';
 import 'package:foodstock/service/widget_service_state.dart';
@@ -128,36 +129,20 @@ class _ArticleTileWidgetState extends State<ArticleTileWidget> {
                   }))),
       ValueListenableBuilder<bool>(
           valueListenable: widget.currentArticle.isInRemovingState,
-          builder: (context, value, child) {
-            Article currentArticle = widget.currentArticle;
-            log.config("build() - Display removal button <$value> for"
-                " article <$currentArticle>");
-            return GestureDetector(
-                onTap: _removeArticle,
-                child: AnimatedContainer(
-                  clipBehavior: Clip.hardEdge,
-                  alignment: Alignment.center,
-                  curve: Curves.ease,
-                  height: 90,
-                  width: computeRemovingState(value),
-                  child: const Icon(Icons.delete, color: Colors.white),
-                  margin: const EdgeInsets.fromLTRB(0, 0, 5, 0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: const [
-                      BoxShadow(
-                          color: Color(0x33000000),
-                          blurRadius: 5,
-                          spreadRadius: 1,
-                          offset: Offset(0, 4))
-                    ],
-                    gradient: const LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [Color(0xFFF38888), Color(0xFFFF4E4E)]),
-                  ),
-                  duration: const Duration(milliseconds: 300),
-                ));
+          builder: (context, removingState, child) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                    _modifyOrRemoveArticleWidget(
+                        _updateArticle,
+                        [const Color(0xFFF3CF88), const Color(0xFFFF844E)],
+                        Icons.edit, 0),
+                    _modifyOrRemoveArticleWidget(
+                        _removeArticle,
+                        [const Color(0xFFF38888), const Color(0xFFFF4E4E)],
+                        Icons.delete, 5)
+              ],
+            );
           })
     ]);
   }
@@ -201,11 +186,47 @@ class _ArticleTileWidgetState extends State<ArticleTileWidget> {
     }
   }
 
-  _removeArticle() {
+  Future<void> _removeArticle() {
     return showDialog<void>(
         context: context,
         builder: (BuildContext context) {
           return ArticleRemoveDialog(currentArticle: widget.currentArticle);
         });
+  }
+
+  Future<void> _updateArticle() {
+    return showDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return ArticleCreationDialog(widget.currentArticle);
+        });
+  }
+
+  Widget _modifyOrRemoveArticleWidget(VoidCallback actionOnTap,
+      List<Color> colorGradient, IconData iconToDisplay, double topMargin) {
+    return GestureDetector(
+        onTap: actionOnTap,
+        child: AnimatedContainer(
+          curve: Curves.ease,
+          height: 40,
+          width: computeRemovingState(widget.currentArticle.isInRemovingState.value),
+          child: Icon(iconToDisplay, color: Colors.white),
+          margin: EdgeInsets.fromLTRB(0, topMargin, 5, 0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            boxShadow: const [
+              BoxShadow(
+                  color: Color(0x33000000),
+                  blurRadius: 5,
+                  spreadRadius: 1,
+                  offset: Offset(0, 4))
+            ],
+            gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: colorGradient),
+          ),
+          duration: const Duration(milliseconds: 300),
+        ));
   }
 }
