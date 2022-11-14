@@ -19,7 +19,8 @@ class ArticleCreationWidget extends StatelessWidget {
                       });
                 },
                 child: AnimatedContainer(
-                    child: const Icon(Icons.add, size: 50, color: Colors.white),
+                    child: const Icon(Icons.add_rounded,
+                        size: 50, color: Colors.white),
                     curve: Curves.linear,
                     height: 90,
                     margin: const EdgeInsets.fromLTRB(10, 7, 12, 7),

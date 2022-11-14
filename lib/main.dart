@@ -2,6 +2,7 @@ import 'dart:core';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:foodstock/domain/model/enumerate/database_source.dart';
 import 'package:foodstock/service/data_manager.dart';
 import 'package:foodstock/service/data_provider.dart';
@@ -18,7 +19,10 @@ void main() {
   Logger.root.onRecord.listen((record) {
     print('${record.level.name}: ${record.time}: ${record.message}');
   });
-
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    statusBarBrightness: Brightness.light,
+    statusBarIconBrightness: Brightness.dark
+  ));
   runApp(MyApp());
 }
 
