@@ -190,6 +190,7 @@ class DataManagerService extends ChangeNotifier {
         estFavoris: oldArticle.estFavoris,
         typeArticle: articleType);
     updatedArticle.pkArticle = oldArticle.pkArticle;
+    updatedArticle.articleReference = oldArticle.articleReference;
     int articleUpdatedCount =
         await _articleDataFetcher.updateData(updatedArticle);
     if (articleUpdatedCount > 0) {

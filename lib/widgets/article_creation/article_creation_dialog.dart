@@ -265,7 +265,7 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
       bool result = false;
       if(potentialCurrentArticle == null) {
         log.info("_addOrUpdateArticle() - Calling the data manager service"
-            " to add a new article <$_articleNameController.value.text>");
+            " to add a new article <" + _articleNameController.value.text + ">");
         result = await dataManagerService.addNewArticle(
             _articleNameController.value.text,
             int.parse(_articleDurationController.value.text),
@@ -275,7 +275,7 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
       } else {
         log.info("_addOrUpdateArticle() - Calling the data manager service"
             " to update the existing article"
-            " <$_articleNameController.value.text>");
+            " <" + _articleNameController.value.text + ">");
         result = await dataManagerService.updateArticle(
             potentialCurrentArticle,
             _articleNameController.value.text,
