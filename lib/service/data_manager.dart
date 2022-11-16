@@ -1,9 +1,13 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:foodstock/domain/fetcher/firebase/firebase_data_fetcher.dart';
 import 'package:foodstock/domain/fetcher/interfaces/inventaire_special_queries.dart';
 import 'package:foodstock/domain/model/article.dart';
+import 'package:foodstock/domain/model/enumerate/item_event_type.dart';
 import 'package:foodstock/domain/model/type_article.dart';
+import 'package:foodstock/service/widget_service_state.dart';
 
 import '../database/firebase_provider.dart';
 import '../domain/fetcher/data_fetcher.dart';
@@ -29,6 +33,8 @@ class DataManagerService extends ChangeNotifier {
 
   var firebaseProvider = FirebaseProvider();
 
+  var widgetServiceState = WidgetServiceState();
+
   static final DataManagerService _instance = DataManagerService._internal();
 
   factory DataManagerService() {
@@ -44,12 +50,58 @@ class DataManagerService extends ChangeNotifier {
       _articleDataFetcher = FirebaseArticleDataFetcher();
       _typeArticleDataFetcher = FirebaseTypeArticleDataFetcher();
       _inventaireDataFetcher = FirebaseInventaireDataFetcher();
+      _subscribeToDataUpdates();
+
     } else if (databaseSource == DatabaseSource.SQLITE_DATABASE) {
       _articleDataFetcher = SqliteArticleDataFetcher();
       _typeArticleDataFetcher = SqliteTypeArticleDataFetcher();
       _inventaireDataFetcher = SqliteInventaireDataFetcher();
     }
   }
+
+  _subscribeToDataUpdates() {
+    (_articleDataFetcher as FirebaseArticleDataFetcher)
+        .dataComingFromDatabaseProperty.listen((value) {
+      if(ItemEventType.UPDATED == value.itemEventType) {
+        Article updatedArticle = value.itemToUpdate;
+        dataProviderService.articleMap[updatedArticle.pkArticle!] =
+            updatedArticle;
+      } else if (ItemEventType.ADDED == value.itemEventType) {
+        Article newArticle = value.itemToUpdate;
+        dataProviderService.articleMap[newArticle.pkArticle!] = newArticle;
+        dataProviderService.addDefaultConservationDataByArticle(newArticle);
+        dataProviderService.addDefaultArticleCountByArticle(newArticle);
+      } else if (ItemEventType.REMOVED == value.itemEventType) {
+        Article removedArticle = value.itemToUpdate;
+        dataProviderService.articleMap.remove(removedArticle.pkArticle);
+      }
+      widgetServiceState.triggerListUpdate.value++;
+    });
+
+    (_inventaireDataFetcher as FirebaseInventaireDataFetcher)
+        .dataComingFromDatabaseProperty.listen((value) {
+      var inventorsArticle = value.itemToUpdate.article;
+      if(ItemEventType.REMOVED == value.itemEventType) {
+        dataProviderService.inventaireMap
+            .remove(value.itemToUpdate.pkInventaire);
+        dataProviderService.updateConservationDataByArticle(
+            inventorsArticle, false);
+      } else if (ItemEventType.ADDED == value.itemEventType) {
+        dataProviderService.inventaireMap[value.itemToUpdate.pkInventaire!] =
+            value.itemToUpdate;
+        dataProviderService.updateConservationDataByArticle(
+            inventorsArticle, false);
+      }
+      dataProviderService.updateAvailableArticlesCountByArticle(
+          inventorsArticle);
+      widgetServiceState
+          .currentQuantityByArticle[inventorsArticle.pkArticle!] =
+          dataProviderService.availableArticlesCount[
+          inventorsArticle.pkArticle]!.value;
+      widgetServiceState.triggerListUpdate.value++;
+    });
+  }
+
 
   Future<bool> refreshValuesFromDatabase(DatabaseSource databaseSource) async {
     await _initializeDataFetchersSource(databaseSource);

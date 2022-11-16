@@ -1,27 +1,74 @@
 import 'dart:async';
 import 'dart:collection';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
+import 'package:foodstock/domain/model/datatypes/mapped_object.dart';
+import 'package:foodstock/domain/model/enumerate/item_event_type.dart';
+import 'package:foodstock/domain/model/item_update_event.dart';
+import 'package:rxdart/rxdart.dart';
 import '../../../database/firebase_provider.dart';
 import '../data_fetcher.dart';
 
-abstract class FirebaseDataFetcher<T> extends DataFetcher<T> {
+abstract class FirebaseDataFetcher<T extends MappedObject> extends DataFetcher<T> {
+  FirebaseDataFetcher() {
+    subscribeToUpdates();
+  }
 
-  FirebaseProvider firebaseProvider =
-  FirebaseProvider();
+  FirebaseProvider firebaseProvider = FirebaseProvider();
 
-  Future<List<T>> constructObjectFromDatabase(List<Map<String, dynamic>> map);
+  BehaviorSubject<ItemUpdateEvent> dataComingFromDatabaseProperty = BehaviorSubject();
+
+  @override
+  Future<void> subscribeToUpdates() async {
+    FirebaseFirestore? firestoreDatabase = firebaseProvider.db;
+    if (firestoreDatabase != null) {
+      firestoreDatabase.collection(tableName()).snapshots().listen((event) async {
+        var docChangeIterator = event.docChanges.iterator;
+        while (docChangeIterator.moveNext()) {
+          var documentChange = docChangeIterator.current;
+          DocumentSnapshot documentSnapshot = documentChange.doc;
+          Map<String, dynamic>? data =
+          documentSnapshot.data() as Map<String, dynamic>?;
+          Map<String, dynamic> mapInternal = {};
+          if (data != null) {
+            print(documentSnapshot.id);
+            mapInternal[primaryKeyName()] = documentSnapshot.id;
+            mapInternal[getReferenceLabel()] = documentSnapshot.reference;
+            for (MapEntry internalData in data.entries) {
+              if (internalData.value is DocumentReference) {
+                String id = internalData.value.id;
+                mapInternal[internalData.key] = id;
+              } else {
+                mapInternal[internalData.key] = internalData.value;
+              }
+            }
+            T listOfChanges =
+                await constructSingleObjectFromDatabase(mapInternal);
+            dataComingFromDatabaseProperty.add(
+                  ItemUpdateEvent(listOfChanges,
+                      ItemEventType.getItemEventTypeFromDocumentChangeType
+                        (documentChange.type)));
+          }
+        }
+      });
+    }
+  }
+
+  Future<List<T>> constructObjectsFromDatabase(List<Map<String, dynamic>> map);
+
+  Future<T> constructSingleObjectFromDatabase(Map<String, dynamic> map);
 
   @override
   Future<List<T>> getData(int primaryKey) async {
     // Get a reference to the database.
     FirebaseFirestore? firestoreDatabase = firebaseProvider.db;
     List<Map<String, dynamic>> listOfMaps = [];
-    if(firestoreDatabase!= null) {
+    if (firestoreDatabase != null) {
       final docRef = firestoreDatabase.collection(tableName()).get();
       QuerySnapshot queryResponse = await docRef;
       listOfMaps = _computeListOfMaps(queryResponse);
     }
-    return constructObjectFromDatabase(listOfMaps);
+    return constructObjectsFromDatabase(listOfMaps);
   }
 
   @override
@@ -29,23 +76,20 @@ abstract class FirebaseDataFetcher<T> extends DataFetcher<T> {
     // Get a reference to the database.
     FirebaseFirestore? firestoreDatabase = firebaseProvider.db;
     List<Map<String, dynamic>> listOfMaps = [];
-    if(firestoreDatabase!= null) {
+    if (firestoreDatabase != null) {
       final docRef = firestoreDatabase.collection(tableName()).get();
       QuerySnapshot queryResponse = await docRef;
       listOfMaps = _computeListOfMaps(queryResponse);
     }
-    return constructObjectFromDatabase(listOfMaps);
+    return constructObjectsFromDatabase(listOfMaps);
   }
 
   @override
   Future<int> removeData(String primaryKey) async {
     int count = 0;
     FirebaseFirestore? firestoreDatabase = firebaseProvider.db;
-    if(firestoreDatabase != null ){
-      await firestoreDatabase
-          .collection(tableName())
-          .doc(primaryKey)
-          .delete();
+    if (firestoreDatabase != null) {
+      await firestoreDatabase.collection(tableName()).doc(primaryKey).delete();
       count++;
     }
     return count;
@@ -55,16 +99,19 @@ abstract class FirebaseDataFetcher<T> extends DataFetcher<T> {
   Future<List<T>> getDataFromTableOrderBy(String label, bool byAsc) async {
     FirebaseFirestore? firestoreDatabase = firebaseProvider.db;
     List<Map<String, dynamic>> listOfMaps = [];
-    if(firestoreDatabase!= null) {
-      final docRef = firestoreDatabase.collection(tableName())
-          .orderBy(label, descending: !byAsc).get();
+    if (firestoreDatabase != null) {
+      final docRef = firestoreDatabase
+          .collection(tableName())
+          .orderBy(label, descending: !byAsc)
+          .get();
       QuerySnapshot queryResponse = await docRef;
       listOfMaps = _computeListOfMaps(queryResponse);
     }
-    return constructObjectFromDatabase(listOfMaps);
+    return constructObjectsFromDatabase(listOfMaps);
   }
 
-  List<Map<String, dynamic>> _computeListOfMaps(QuerySnapshot<Object?> queryResponse) {
+  List<Map<String, dynamic>> _computeListOfMaps(
+      QuerySnapshot<Object?> queryResponse) {
     final List<Map<String, dynamic>> listOfMaps = [];
     for (var rawDataMap in queryResponse.docs) {
       var data = rawDataMap.data();

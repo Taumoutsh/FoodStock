@@ -28,11 +28,6 @@ class _ArticleValidButtonWidget extends State<ArticleValidButtonWidget> {
           widget.currentArticle,
           widgetServiceState
               .currentQuantityByArticle[widget.currentArticle.pkArticle]!);
-      futureInventoryHasChanged.then((inventoryHasChanged) => {
-        if(inventoryHasChanged) {
-            widgetServiceState.triggerListUpdate.value++
-        }
-      });
       widget.currentArticle.resetReadingTileState();
     });
   }

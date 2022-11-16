@@ -3,11 +3,7 @@ import 'package:foodstock/domain/model/article.dart';
 import 'package:foodstock/service/data_provider.dart';
 import 'package:foodstock/domain/model/type_article.dart';
 
-
 class WidgetServiceState extends ChangeNotifier {
-
-  static final DataProviderService dataProviderService = DataProviderService();
-
   static final WidgetServiceState _instance = WidgetServiceState._internal();
 
   Map<String, int> currentQuantityByArticle = {};
@@ -28,9 +24,5 @@ class WidgetServiceState extends ChangeNotifier {
     favoriteAddition.value++;
   }
 
-
   WidgetServiceState._internal();
-
-
-
 }

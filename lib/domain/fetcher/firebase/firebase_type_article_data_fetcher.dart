@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:logging/logging.dart';
 import '../../model/type_article.dart';
 import 'firebase_data_fetcher.dart';
@@ -6,23 +7,25 @@ import 'firebase_data_fetcher.dart';
 class FirebaseTypeArticleDataFetcher extends FirebaseDataFetcher<TypeArticle> {
   final log = Logger('FirebaseTypeArticleDataFetcher');
 
-  @override
-  Future<List<TypeArticle>> constructObjectFromDatabase(listOfMaps) {
-    return Future(() {
-      List<TypeArticle> list = [];
-      for (Map mapEntry in listOfMaps) {
-        var typeArticleToAdd = TypeArticle(
-          pkTypeArticle: mapEntry['pk_TypeArticle'],
-          labelTypeArticle: mapEntry['labelTypeArticle'],
-          svgResource: mapEntry['svgResource'],
-        );
-        typeArticleToAdd.typeArticleReference =
-            mapEntry[TypeArticle.REFERENCE_LABEL];
+  Future<TypeArticle> constructSingleObjectFromDatabase(mapEntry) async {
+    var typeArticleToAdd = TypeArticle(
+        pkTypeArticle: mapEntry['pk_TypeArticle'],
+        labelTypeArticle: mapEntry['labelTypeArticle'],
+        svgResource: mapEntry['svgResource']);
+    typeArticleToAdd.typeArticleReference =
+    mapEntry[TypeArticle.REFERENCE_LABEL];
+    return typeArticleToAdd;
+  }
 
-        list.add(typeArticleToAdd);
+  @override
+  Future<List<TypeArticle>> constructObjectsFromDatabase(listOfMaps) async {
+      List<TypeArticle> typeArticleToReturn = [];
+      for (Map<String, dynamic>  mapEntry in listOfMaps) {
+        TypeArticle typeArticleToAdd = await
+            constructSingleObjectFromDatabase(mapEntry);
+        typeArticleToReturn.add(typeArticleToAdd);
       }
-      return list;
-    });
+      return Future(() => typeArticleToReturn);
   }
 
   @override

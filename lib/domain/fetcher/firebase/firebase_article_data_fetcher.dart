@@ -42,22 +42,27 @@ class FirebaseArticleDataFetcher extends FirebaseDataFetcher<Article> {
     return count;
   }
 
+  Future<Article> constructSingleObjectFromDatabase(mapEntry) async {
+    TypeArticle typeArticle = dataProviderService
+        .typeArticleMap[mapEntry['fk_TypeArticle'].toString()]!;
+    var articleToAdd = Article(
+        pkArticle: mapEntry['pk_Article'],
+        labelArticle: mapEntry['labelArticle'],
+        peremptionEnJours: mapEntry['peremptionEnJours'],
+        quantiteAlerte: mapEntry['quantiteAlerte'],
+        quantiteCritique: mapEntry['quantiteCritique'],
+        estFavoris: mapEntry['estFavoris'] == 1 ? true : false,
+        typeArticle: typeArticle);
+    articleToAdd.articleReference = mapEntry['articleReference'];
+    return articleToAdd;
+  }
+
   @override
-  Future<List<Article>> constructObjectFromDatabase(
+  Future<List<Article>> constructObjectsFromDatabase(
       List<Map<String, dynamic>> map) async {
     List<Article> articleToReturn = [];
     for (Map<String, dynamic> mapEntry in map) {
-      TypeArticle typeArticle = dataProviderService
-          .typeArticleMap[mapEntry['fk_TypeArticle'].toString()]!;
-      var articleToAdd = Article(
-          pkArticle: mapEntry['pk_Article'],
-          labelArticle: mapEntry['labelArticle'],
-          peremptionEnJours: mapEntry['peremptionEnJours'],
-          quantiteAlerte: mapEntry['quantiteAlerte'],
-          quantiteCritique: mapEntry['quantiteCritique'],
-          estFavoris: mapEntry['estFavoris'] == 1 ? true : false,
-          typeArticle: typeArticle);
-      articleToAdd.articleReference = mapEntry['articleReference'];
+      Article articleToAdd = await constructSingleObjectFromDatabase(mapEntry);
       articleToReturn.add(articleToAdd);
     }
     return Future(() => articleToReturn);
