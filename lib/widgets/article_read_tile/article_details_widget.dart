@@ -21,11 +21,7 @@ class ArticleDetailsWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(currentArticle.labelArticle,
-                  style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: ".AppleSystemUIFont")),
+              Text(currentArticle.labelArticle),
               Container(margin: EdgeInsets.all(2)),
               getFavoriteWidget()
             ],

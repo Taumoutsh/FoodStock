@@ -34,7 +34,7 @@ class ArticleCountContainer extends StatelessWidget {
                 value.toString(),
                 style: const TextStyle(
                     color: Color(0xFF303030),
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
                     fontSize: 26,
                     fontFamily: ".AppleSystemUIFont"),
                 textAlign: TextAlign.center,

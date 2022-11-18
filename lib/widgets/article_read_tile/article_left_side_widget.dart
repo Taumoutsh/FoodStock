@@ -34,7 +34,7 @@ class _ArticleLeftSideTile extends State<ArticleLeftSideTile> {
                   value.computeLastingInDaysOrMonthsOrYearsString(),
                   style: const TextStyle(
                       fontSize: 20.0,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w600,
                       fontFamily: ".AppleSystemUIFont",
                       color: Colors.black),
                 ),

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:collection';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:foodstock/domain/fetcher/interfaces/inventaire_special_queries.dart';
 import 'package:foodstock/domain/model/article.dart';

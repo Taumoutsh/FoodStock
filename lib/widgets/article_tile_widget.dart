@@ -75,6 +75,15 @@ class _ArticleTileWidgetState extends State<ArticleTileWidget> {
     });
   }
 
+  List<Color> _selectColorDependingOnState(ArticleTileState articleTileState) {
+    if(widget.currentArticle.estFavoris &&
+        articleTileState == ArticleTileState.READ_ARTICLE) {
+      return const [Color(0xFFF9F295), Color(0xFFE0AA3E), Color(0xFFFFD66A), Color(0xFFB88A44)];
+    } else {
+      return const [Color(0xFFE9E9E9), Color(0xFFE9E9E9)];
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -113,6 +122,11 @@ class _ArticleTileWidgetState extends State<ArticleTileWidget> {
                         height: returnDynamicTileHeight(value),
                         margin: const EdgeInsets.fromLTRB(10, 7, 10, 7),
                         decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                              colors: _selectColorDependingOnState(value)
+                            ),
                             color: const Color(0xFFE9E9E9),
                             borderRadius: BorderRadius.circular(20),
                             boxShadow: const [
