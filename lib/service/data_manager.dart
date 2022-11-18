@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:foodstock/domain/fetcher/firebase/firebase_data_fetcher.dart';
 import 'package:foodstock/domain/fetcher/interfaces/inventaire_special_queries.dart';
 import 'package:foodstock/domain/model/article.dart';
 import 'package:foodstock/domain/model/enumerate/item_event_type.dart';
@@ -63,34 +62,44 @@ class DataManagerService extends ChangeNotifier {
     (_articleDataFetcher as FirebaseArticleDataFetcher)
         .dataComingFromDatabaseProperty.listen((value) {
       if(ItemEventType.UPDATED == value.itemEventType) {
-        Article updatedArticle = value.itemToUpdate;
-        dataProviderService.articleMap[updatedArticle.pkArticle!] =
-            updatedArticle;
+        for(var itemToUpdate in value.itemsToUpdate) {
+          Article updatedArticle = itemToUpdate;
+          dataProviderService.articleMap[updatedArticle.pkArticle!] =
+              updatedArticle;
+        }
       } else if (ItemEventType.ADDED == value.itemEventType) {
-        Article newArticle = value.itemToUpdate;
-        dataProviderService.articleMap[newArticle.pkArticle!] = newArticle;
-        dataProviderService.addDefaultConservationDataByArticle(newArticle);
-        dataProviderService.addDefaultArticleCountByArticle(newArticle);
+        for(var itemToUpdate in value.itemsToUpdate) {
+          Article newArticle = itemToUpdate;
+          dataProviderService.articleMap[newArticle.pkArticle!] = newArticle;
+          dataProviderService.addDefaultConservationDataByArticle(newArticle);
+          dataProviderService.addDefaultArticleCountByArticle(newArticle);
+        }
       } else if (ItemEventType.REMOVED == value.itemEventType) {
-        Article removedArticle = value.itemToUpdate;
-        dataProviderService.articleMap.remove(removedArticle.pkArticle);
+        for(var itemToUpdate in value.itemsToUpdate) {
+          Article removedArticle = itemToUpdate;
+          dataProviderService.articleMap.remove(removedArticle.pkArticle);
+        }
       }
       widgetServiceState.triggerListUpdate.value++;
     });
 
     (_inventaireDataFetcher as FirebaseInventaireDataFetcher)
         .dataComingFromDatabaseProperty.listen((value) {
-      var inventorsArticle = value.itemToUpdate.article;
+      var inventorsArticle = value.itemsToUpdate.first.article;
       if(ItemEventType.REMOVED == value.itemEventType) {
-        dataProviderService.inventaireMap
-            .remove(value.itemToUpdate.pkInventaire);
-        dataProviderService.updateConservationDataByArticle(
-            inventorsArticle, false);
+        for(var itemToUpdate in value.itemsToUpdate) {
+          dataProviderService.inventaireMap
+              .remove(itemToUpdate.pkInventaire);
+          dataProviderService.updateConservationDataByArticle(
+              inventorsArticle, false);
+        }
       } else if (ItemEventType.ADDED == value.itemEventType) {
-        dataProviderService.inventaireMap[value.itemToUpdate.pkInventaire!] =
-            value.itemToUpdate;
-        dataProviderService.updateConservationDataByArticle(
-            inventorsArticle, false);
+        for(var itemToUpdate in value.itemsToUpdate) {
+          dataProviderService.inventaireMap[itemToUpdate.pkInventaire!] =
+              itemToUpdate;
+          dataProviderService.updateConservationDataByArticle(
+              inventorsArticle, true);
+        }
       }
       dataProviderService.updateAvailableArticlesCountByArticle(
           inventorsArticle);
@@ -170,27 +179,26 @@ class DataManagerService extends ChangeNotifier {
       if (futureResult != null && futureResult.isNotEmpty) {
         inventoryHasChanged = true;
       }
-      for (Inventaire inventaire in futureResult) {
-        dataProviderService.inventaireMap[inventaire.pkInventaire!] =
-            inventaire;
-      }
-      dataProviderService.updateConservationDataByArticle(article, true);
+      // for (Inventaire inventaire in futureResult) {
+      //   dataProviderService.inventaireMap[inventaire.pkInventaire!] =
+      //       inventaire;
+      // }
+      // dataProviderService.updateConservationDataByArticle(article, true);
     } else {
-      for (int i = 0; i < sizeInventaireMapByArticle - quantity; i++) {
+      var numberToRemove = sizeInventaireMapByArticle - quantity;
         singleInventaire =
             await (_inventaireDataFetcher as InventaireSpecialQueries)
-                .removeInventoryItemWhereArticle(article);
+                .removeInventoryItemWhereArticle(article, numberToRemove);
         if (singleInventaire != null) {
           if (!inventoryHasChanged) {
             inventoryHasChanged = true;
           }
-          dataProviderService.inventaireMap
-              .remove(singleInventaire.pkInventaire);
+          // dataProviderService.inventaireMap
+          //     .remove(singleInventaire.pkInventaire);
         }
-      }
-      dataProviderService.updateConservationDataByArticle(article, false);
+      // dataProviderService.updateConservationDataByArticle(article, false);
     }
-    dataProviderService.updateAvailableArticlesCountByArticle(article);
+    // dataProviderService.updateAvailableArticlesCountByArticle(article);
     return inventoryHasChanged;
   }
 
@@ -212,10 +220,10 @@ class DataManagerService extends ChangeNotifier {
       log.info("addNewArticle() - L'article avec la clé primaire "
           "$articleCreationState a été ajouté avec succès"
           " à la base de données");
-      article.pkArticle = articleCreationState.toString();
-      dataProviderService.articleMap[article.pkArticle!] = article;
-      dataProviderService.addDefaultConservationDataByArticle(article);
-      dataProviderService.addDefaultArticleCountByArticle(article);
+      // article.pkArticle = articleCreationState.toString();
+      // dataProviderService.articleMap[article.pkArticle!] = article;
+      // dataProviderService.addDefaultConservationDataByArticle(article);
+      // dataProviderService.addDefaultArticleCountByArticle(article);
       isArticleAddedToDatabase = true;
     } else {
       isArticleAddedToDatabase = false;
@@ -245,18 +253,18 @@ class DataManagerService extends ChangeNotifier {
     updatedArticle.articleReference = oldArticle.articleReference;
     int articleUpdatedCount =
         await _articleDataFetcher.updateData(updatedArticle);
-    if (articleUpdatedCount > 0) {
-      articleHasBeenUpdated = true;
-      dataProviderService.articleMap[updatedArticle.pkArticle!] =
-          updatedArticle;
-      log.info("updateArticle() - L'article avec la clé primaire "
-          "$updatedArticle a été modifié avec succès"
-          " à la base de données");
-    } else {
-      log.severe("updateArticle() - L'article avec le label "
-          "$updatedArticle n'a pas pu être modifié dans la base de "
-          "données et dans le modèle");
-    }
+    // if (articleUpdatedCount > 0) {
+    //   articleHasBeenUpdated = true;
+    //   dataProviderService.articleMap[updatedArticle.pkArticle!] =
+    //       updatedArticle;
+    //   log.info("updateArticle() - L'article avec la clé primaire "
+    //       "$updatedArticle a été modifié avec succès"
+    //       " à la base de données");
+    // } else {
+    //   log.severe("updateArticle() - L'article avec le label "
+    //       "$updatedArticle n'a pas pu être modifié dans la base de "
+    //       "données et dans le modèle");
+    // }
     return articleHasBeenUpdated;
   }
 
@@ -270,25 +278,25 @@ class DataManagerService extends ChangeNotifier {
     log.info(
         "removeArticle() - Nombre d'items inventaire supprimés en base de données associés"
         " à l'article <$article> : $inventoryResponse");
-    if (inventoryResponse > 0) {
-      List<String> inventoryKeyToRemove = [];
-      for (Inventaire inventaire in dataProviderService.inventaireMap.values) {
-        if (inventaire.article.pkArticle == articleKey) {
-          inventoryKeyToRemove.add(inventaire.pkInventaire!);
-        }
-      }
-      for (String inventoryPrimaryKey in inventoryKeyToRemove) {
-        log.info(
-            "removeArticle() - Suppression dans le modèle de l'item inventaire"
-            " <$inventoryPrimaryKey>");
-        dataProviderService.inventaireMap.remove(inventoryPrimaryKey);
-      }
-    }
+    // if (inventoryResponse > 0) {
+    //   List<String> inventoryKeyToRemove = [];
+    //   for (Inventaire inventaire in dataProviderService.inventaireMap.values) {
+    //     if (inventaire.article.pkArticle == articleKey) {
+    //       inventoryKeyToRemove.add(inventaire.pkInventaire!);
+    //     }
+    //   }
+    //   for (String inventoryPrimaryKey in inventoryKeyToRemove) {
+    //     log.info(
+    //         "removeArticle() - Suppression dans le modèle de l'item inventaire"
+    //         " <$inventoryPrimaryKey>");
+    //     dataProviderService.inventaireMap.remove(inventoryPrimaryKey);
+    //   }
+    // }
     int articleResponse = await _articleDataFetcher.removeData(articleKey);
     if (articleResponse > 0) {
       log.info("removeArticle() - Suppression de l'article <$article> réussie"
           " nombre d'item d'inventaire supprimés : $inventoryResponse");
-      dataProviderService.articleMap.remove(articleKey);
+      // dataProviderService.articleMap.remove(articleKey);
       articleRemovalSucceeded = true;
     } else {
       log.severe(

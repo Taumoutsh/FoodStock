@@ -105,7 +105,8 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
                                   child: const Text("Catégorie d'article",
                                       style: TextStyle(
                                           fontSize: 16,
-                                          fontFamily: ".AppleSystemUIFont")),
+                                          fontFamily: ".AppleSystemUIFont",
+                                          letterSpacing: 0)),
                                   padding: const EdgeInsets.fromLTRB(
                                       5, 10, 10, 10)),
                               Flex(
@@ -144,7 +145,8 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                                 fontSize: 16,
-                                                fontFamily: ".AppleSystemUIFont")),
+                                                fontFamily: ".AppleSystemUIFont",
+                                                letterSpacing: 0)),
                                         padding: const EdgeInsets.fromLTRB(
                                             10, 10, 10, 10))),
                                 Container(

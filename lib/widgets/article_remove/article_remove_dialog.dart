@@ -38,7 +38,7 @@ class _ArticleRemoveDialog extends State<ArticleRemoveDialog> {
       ),
       child: Container(
           clipBehavior: Clip.hardEdge,
-          height: 260,
+          height: 235,
           width: 415,
           decoration: BoxDecoration(
               color: const Color(0xFFE9E9E9),
@@ -56,8 +56,9 @@ class _ArticleRemoveDialog extends State<ArticleRemoveDialog> {
                             " sur le point d'être supprimé."
                             "\n\nVeuillez valider pour confirmer cette action.",
                             style: const TextStyle(
-                                fontSize: 18,
-                                fontFamily: ".AppleSystemUIFont")),
+                                fontSize: 16,
+                                fontFamily: ".AppleSystemUIFont",
+                                letterSpacing: 0)),
                   ),
                   Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                     Expanded(
@@ -78,11 +79,7 @@ class _ArticleRemoveDialog extends State<ArticleRemoveDialog> {
   }
 
   _removeArticle() async {
-    bool articleRemovalState =
-        await dataManagerService.removeArticle(widget.currentArticle);
-    if(articleRemovalState) {
-      widgetServiceState.triggerListUpdate.value++;
+    await dataManagerService.removeArticle(widget.currentArticle);
       Navigator.of(context).pop();
-    }
   }
 }

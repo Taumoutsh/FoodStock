@@ -78,7 +78,7 @@ class _ArticleTileWidgetState extends State<ArticleTileWidget> {
   List<Color> _selectColorDependingOnState(ArticleTileState articleTileState) {
     if(widget.currentArticle.estFavoris &&
         articleTileState == ArticleTileState.READ_ARTICLE) {
-      return const [Color(0xFFF9F295), Color(0xFFE0AA3E), Color(0xFFFFD66A), Color(0xFFB88A44)];
+      return const [Color(0xFFDBD262), Color(0xFFE0AA3E), Color(0xFFFFD66A), Color(0xFFB88A44)];
     } else {
       return const [Color(0xFFE9E9E9), Color(0xFFE9E9E9)];
     }

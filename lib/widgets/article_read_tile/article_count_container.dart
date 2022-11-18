@@ -34,9 +34,10 @@ class ArticleCountContainer extends StatelessWidget {
                 value.toString(),
                 style: const TextStyle(
                     color: Color(0xFF303030),
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w700,
                     fontSize: 26,
-                    fontFamily: ".AppleSystemUIFont"),
+                    fontFamily: ".AppleSystemUIFont",
+                    letterSpacing: 0),
                 textAlign: TextAlign.center,
               ));
         }); //Quantité

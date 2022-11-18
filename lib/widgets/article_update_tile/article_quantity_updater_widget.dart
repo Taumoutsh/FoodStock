@@ -81,6 +81,7 @@ class _ArticleQuantityUpdaterWidget
                   color: Color(0xFF303030),
                   fontWeight: FontWeight.bold,
                   fontSize: 28,
+                  letterSpacing: 0,
                   fontFamily: ".AppleSystemUIFont")),
           GestureDetector(
               onTap: _addValue,

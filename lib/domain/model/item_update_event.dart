@@ -4,9 +4,9 @@ import 'enumerate/item_event_type.dart';
 
 class ItemUpdateEvent<T> {
 
-  T? itemToUpdate;
+  List<T?> itemsToUpdate;
 
   ItemEventType? itemEventType;
 
-  ItemUpdateEvent(this.itemToUpdate, this.itemEventType);
+  ItemUpdateEvent(this.itemsToUpdate, this.itemEventType);
 }

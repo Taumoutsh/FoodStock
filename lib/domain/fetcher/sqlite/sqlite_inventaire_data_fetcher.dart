@@ -59,23 +59,26 @@ class SqliteInventaireDataFetcher extends SqliteDataFetcher<Inventaire>
   }
 
   @override
-  Future<Inventaire?> removeInventoryItemWhereArticle(Article article) async {
-    final Database db = await initDB();
+  Future<Inventaire?> removeInventoryItemWhereArticle(Article article,
+      int numberOfInventoryToRemove) async {
 
+    final Database db = await initDB();
+    Inventaire? inventaireToRemove;
     var primaryKeyNameStr = primaryKeyName();
     String pkArticle = article.pkArticle!;
     var tableNameStr = tableName();
+    for (int i = 0; i < numberOfInventoryToRemove; i++) {
+      List<Inventaire> listInventaire =
+      await getFirstDataFromTableWhereArticle(pkArticle, true);
 
-    List<Inventaire> listInventaire =
-        await getFirstDataFromTableWhereArticle(pkArticle, true);
-
-    Inventaire inventaireToRemove = listInventaire[0];
-    String inventaireToRemoveKey = inventaireToRemove.pkInventaire!;
-    var str =
-        'fk_Article = $pkArticle AND $primaryKeyNameStr = $inventaireToRemoveKey';
-    int i = await db.delete(tableNameStr, where: str, whereArgs: []);
-    log.info("removeFromTable() - Suppression de l'item d'inventaire"
-        " avec l'identifiant $i");
+      inventaireToRemove = listInventaire[0];
+      String inventaireToRemoveKey = inventaireToRemove.pkInventaire!;
+      var str =
+          'fk_Article = $pkArticle AND $primaryKeyNameStr = $inventaireToRemoveKey';
+      int i = await db.delete(tableNameStr, where: str, whereArgs: []);
+      log.info("removeFromTable() - Suppression de l'item d'inventaire"
+          " avec l'identifiant $i");
+    }
     return inventaireToRemove;
   }
 

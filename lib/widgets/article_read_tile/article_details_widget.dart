@@ -21,7 +21,10 @@ class ArticleDetailsWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(currentArticle.labelArticle),
+              Text(currentArticle.labelArticle,
+              style: const TextStyle(
+                  fontSize: 16,
+                  letterSpacing: 0)),
               Container(margin: EdgeInsets.all(2)),
               getFavoriteWidget()
             ],

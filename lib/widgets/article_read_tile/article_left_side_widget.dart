@@ -36,7 +36,8 @@ class _ArticleLeftSideTile extends State<ArticleLeftSideTile> {
                       fontSize: 20.0,
                       fontWeight: FontWeight.w600,
                       fontFamily: ".AppleSystemUIFont",
-                      color: Colors.black),
+                      color: Colors.black,
+                      letterSpacing: 0),
                 ),
                 progressColor:
                     _updateProgressColor(value.computeLastingInPercent()),

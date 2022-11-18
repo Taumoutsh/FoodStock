@@ -13,6 +13,22 @@ class FirebaseInventaireDataFetcher extends FirebaseDataFetcher<Inventaire>
 
   var dataProviderService = DataProviderService();
 
+  Future<bool> addDataByBatch(List<Inventaire> listInventaire) async {
+    bool dataAdditionSuccessful = false;
+    FirebaseFirestore? firestoreDatabase = firebaseProvider.db;
+    if (firestoreDatabase != null) {
+      final batch = firestoreDatabase.batch();
+      for(Inventaire inventaire in listInventaire) {
+        var inventaireInDatabase = firestoreDatabase.collection(tableName())
+            .doc();
+        batch.set(inventaireInDatabase, inventaire.toFirebase());
+      }
+      await batch.commit();
+      dataAdditionSuccessful = true;
+    }
+    return dataAdditionSuccessful;
+  }
+
   @override
   Future<String> addData(Inventaire inventaire) async {
     String pkInventaire = "ERROR";
@@ -30,41 +46,37 @@ class FirebaseInventaireDataFetcher extends FirebaseDataFetcher<Inventaire>
 
   @override
   Future<List<Inventaire>> addInventoryItems(article, quantity) async {
-    FirebaseFirestore? firestoreDatabase = firebaseProvider.db;
     List<Inventaire> inventaireListToAdd = [];
-    if (firestoreDatabase != null) {
       for (int i = 0; i < quantity; i++) {
         Inventaire inventaire = Inventaire(
             dateAchatArticle: DateTime.now().toString(),
             dateAchatArticleDateTime: DateTime.now(),
             article: article);
-        String pkInventaire = await addData(inventaire);
-        log.info("addToTable() -"
-                " Ajout de l'item d'inventaire avec l'identifiant " +
-            pkInventaire);
-
         inventaireListToAdd.add(inventaire);
-      }
     }
+    bool dataAdditionSuccessful = await addDataByBatch(inventaireListToAdd);
+      log.info("addInventoryItems() - Data addition is successful"
+          " <$dataAdditionSuccessful>");
     return inventaireListToAdd;
   }
 
   @override
-  Future<Inventaire?> removeInventoryItemWhereArticle(Article article) async {
+  Future<Inventaire?> removeInventoryItemWhereArticle(Article article,
+      int numberOfInventoryToRemove) async {
     Inventaire? futureInventaire;
     FirebaseFirestore? firestoreDatabase = firebaseProvider.db;
     if (firestoreDatabase != null) {
-      Inventaire inventaireToRemove =
-          await dataProviderService.getOlderInventoryItemByArticle(article);
-      String inventaireToRemoveKey = inventaireToRemove.pkInventaire!;
-      firestoreDatabase
-          .collection(tableName())
-          .doc(inventaireToRemoveKey)
-          .delete();
-      log.info("removeFromTable() - Suppression de l'item d'inventaire"
-              " avec l'identifiant " +
-          inventaireToRemoveKey);
-      futureInventaire = inventaireToRemove;
+      await firestoreDatabase.runTransaction((transaction) async {
+          final snapshot = await firestoreDatabase
+              .collection(tableName())
+              .where(foreignKeyName(), isEqualTo: article.articleReference)
+              .orderBy(labelName(), descending: false)
+              .limit(numberOfInventoryToRemove)
+              .get();
+          for (int i = 0; i < numberOfInventoryToRemove; i++) {
+            transaction.delete(snapshot.docs[i].reference);
+          }
+      });
     } else {
       log.severe("removeFromTable() - FirestoreDatabase instance is null");
     }
@@ -92,15 +104,16 @@ class FirebaseInventaireDataFetcher extends FirebaseDataFetcher<Inventaire>
     return count;
   }
 
-  Future<Inventaire> constructSingleObjectFromDatabase(mapEntry) async {
+  @override
+  Future<Inventaire> constructSingleObjectFromDatabase(map) async {
     Article article =
-        dataProviderService.articleMap[mapEntry['fk_Article'].toString()]!;
+        dataProviderService.articleMap[map['fk_Article'].toString()]!;
     var inventaireToAdd = Inventaire(
-        pkInventaire: mapEntry['pk_Inventaire'],
-        dateAchatArticle: mapEntry['dateAchatArticle'],
-        dateAchatArticleDateTime: DateTime.parse(mapEntry['dateAchatArticle']),
+        pkInventaire: map['pk_Inventaire'],
+        dateAchatArticle: map['dateAchatArticle'],
+        dateAchatArticleDateTime: DateTime.parse(map['dateAchatArticle']),
         article: article);
-    inventaireToAdd.inventaireReference = mapEntry[Inventaire.REFERENCE_LABEL];
+    inventaireToAdd.inventaireReference = map[Inventaire.REFERENCE_LABEL];
     return inventaireToAdd;
   }
 
