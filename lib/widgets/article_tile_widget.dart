@@ -42,6 +42,7 @@ class _ArticleTileWidgetState extends State<ArticleTileWidget> {
   }
 
   _selectRightTile() {
+    FocusManager.instance.primaryFocus?.unfocus();
     setState(() {
       var currentArticle = widget.currentArticle;
       if (currentArticle.articleTileState.value ==

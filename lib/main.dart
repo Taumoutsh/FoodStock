@@ -50,20 +50,25 @@ class MyApp extends StatelessWidget {
             return MaterialApp(
                 title: 'FoodStock',
                 home: Scaffold(
-                    body: Column(children: [
-                  Row(children: [
-                      Container(
-                          margin: const EdgeInsets.fromLTRB(5, 35, 5, 0),
-                          child: SearchWidget()),
-                      Expanded(child:
-                      Container(
-                        margin: const EdgeInsets.fromLTRB(0, 35, 0, 0),
-                        child: MainMenuBarWidget(isResizable: true),
-                      ))
+                    body: GestureDetector(
+                      onTap: () {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                      },
+                      child: Column(children: [
+                        Row(children: [
+                          Container(
+                              margin: const EdgeInsets.fromLTRB(10, 35, 5, 0),
+                              child: SearchWidget()),
+                          Expanded(child:
+                          Container(
+                            margin: const EdgeInsets.fromLTRB(0, 35, 5, 0),
+                            child: MainMenuBarWidget(isResizable: true),
+                          ))
 
-                    ]),
-                  ArticleTileListWidget(),
-                ])
+                        ]),
+                        ArticleTileListWidget(),
+                      ]),
+                    )
                     //bottomNavigationBar: TypeArticleListViewWidget(),
                     ));
           } else {

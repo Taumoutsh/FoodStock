@@ -86,7 +86,7 @@ class _SearchWidget extends State<SearchWidget> {
 
   double _computeTextFieldSizeDependingOnValue(bool isSearchMode) {
     if (isSearchMode) {
-      return MediaQuery.of(context).size.width - 60;
+      return MediaQuery.of(context).size.width - 70;
     } else {
       return 0;
     }
