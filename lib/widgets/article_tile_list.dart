@@ -31,11 +31,22 @@ class _ArticleTileList extends State<ArticleTileListWidget> {
   List<ArticleTileWidget> _redrawList(TypeArticle? typeArticle) {
     articleTileList.clear();
     List<ArticleTileWidget> newUnorderedArticleTileList = [];
-    if (typeArticle != null) {
-      for (Article article in widget.dataProviderService.articleMap.values) {
-        if (article.typeArticle.pkTypeArticle == typeArticle.pkTypeArticle) {
+    if(widget.widgetServiceState.isSearchModeActivated.value) {
+      var currentResearchContent =
+          widget.widgetServiceState.currentResearchContent.value;
+      for(Article article in widget.dataProviderService.articleMap.values) {
+        if(article.labelArticle.contains(currentResearchContent)) {
           newUnorderedArticleTileList
               .add(ArticleTileWidget(currentArticle: article));
+        }
+      }
+    } else {
+      if (typeArticle != null) {
+        for (Article article in widget.dataProviderService.articleMap.values) {
+          if (article.typeArticle.pkTypeArticle == typeArticle.pkTypeArticle) {
+            newUnorderedArticleTileList
+                .add(ArticleTileWidget(currentArticle: article));
+          }
         }
       }
     }

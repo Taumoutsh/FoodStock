@@ -9,9 +9,9 @@ import 'package:logging/logging.dart';
 
 import '../../domain/model/article.dart';
 import '../generic_items/generic_button_widget.dart';
+import '../search_widget/search_widget.dart';
 
 class ArticleCreationDialog extends StatefulWidget {
-
   ArticleCreationDialog(this.potentialCurrentArticle, {super.key});
 
   Article? potentialCurrentArticle;
@@ -42,7 +42,7 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
   final _criticalLevelController = TextEditingController();
 
   void _predefineControllersText() {
-    if(widget.potentialCurrentArticle != null) {
+    if (widget.potentialCurrentArticle != null) {
       _articleNameController.text =
           widget.potentialCurrentArticle!.labelArticle;
       _articleDurationController.text =
@@ -55,6 +55,17 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
       log.info("_predefineControllersText() - No initial text is required"
           "it appears to be the article creation use case");
     }
+  }
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is removed from the
+    // widget tree.
+    _articleNameController.dispose();
+    _articleDurationController.dispose();
+    _alertLevelController.dispose();
+    _criticalLevelController.dispose();
+    super.dispose();
   }
 
   @override
@@ -88,8 +99,7 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
                             controller: _articleNameController,
                             scrollPadding: EdgeInsets.zero,
                             style: const TextStyle(
-                                fontSize: 16,
-                                fontFamily: ".AppleSystemUIFont"),
+                                fontSize: 16, fontFamily: ".AppleSystemUIFont"),
                             decoration: const InputDecoration(
                                 contentPadding:
                                     EdgeInsets.fromLTRB(0, 10, 0, 0),
@@ -107,11 +117,16 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
                                           fontSize: 16,
                                           fontFamily: ".AppleSystemUIFont",
                                           letterSpacing: 0)),
-                                  padding: const EdgeInsets.fromLTRB(
-                                      5, 10, 10, 10)),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(5, 10, 10, 10)),
                               Flex(
                                 direction: Axis.horizontal,
-                                children: [MainMenuBarWidget()],
+                                children: [
+                                  Expanded(
+                                      child: Column(children: [
+                                    MainMenuBarWidget(isResizable: false)
+                                  ]))
+                                ],
                               )
                             ],
                           ),
@@ -145,7 +160,8 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                                 fontSize: 16,
-                                                fontFamily: ".AppleSystemUIFont",
+                                                fontFamily:
+                                                    ".AppleSystemUIFont",
                                                 letterSpacing: 0)),
                                         padding: const EdgeInsets.fromLTRB(
                                             10, 10, 10, 10))),
@@ -239,8 +255,9 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
                                             Color(0xFF70AC62),
                                             Color(0xFF377F29)
                                           ],
-                                          onTapFunction: () => _addOrUpdateArticle(
-                                              widget.potentialCurrentArticle),
+                                          onTapFunction: () =>
+                                              _addOrUpdateArticle(widget
+                                                  .potentialCurrentArticle),
                                           iconData: Icons.check_rounded,
                                           iconSize: 50))),
                             ])
@@ -265,9 +282,11 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
 
     if (isValidForm) {
       bool result = false;
-      if(potentialCurrentArticle == null) {
+      if (potentialCurrentArticle == null) {
         log.info("_addOrUpdateArticle() - Calling the data manager service"
-            " to add a new article <" + _articleNameController.value.text + ">");
+                " to add a new article <" +
+            _articleNameController.value.text +
+            ">");
         result = await dataManagerService.addNewArticle(
             _articleNameController.value.text,
             int.parse(_articleDurationController.value.text),
@@ -276,8 +295,10 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
             widgetServiceState.currentSelectedTypeArticle.value!);
       } else {
         log.info("_addOrUpdateArticle() - Calling the data manager service"
-            " to update the existing article"
-            " <" + _articleNameController.value.text + ">");
+                " to update the existing article"
+                " <" +
+            _articleNameController.value.text +
+            ">");
         result = await dataManagerService.updateArticle(
             potentialCurrentArticle,
             _articleNameController.value.text,

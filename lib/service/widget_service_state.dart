@@ -16,6 +16,10 @@ class WidgetServiceState extends ChangeNotifier {
 
   ValueNotifier<int> triggerListUpdate = ValueNotifier(0);
 
+  ValueNotifier<bool> isSearchModeActivated = ValueNotifier(false);
+
+  ValueNotifier<String> currentResearchContent = ValueNotifier("");
+
   factory WidgetServiceState() {
     return _instance;
   }

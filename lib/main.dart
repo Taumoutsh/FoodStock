@@ -1,6 +1,7 @@
 import 'dart:core';
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:foodstock/domain/model/enumerate/database_source.dart';
@@ -10,6 +11,7 @@ import 'package:foodstock/service/widget_service_state.dart';
 
 import 'package:foodstock/widgets/article_tile_list.dart';
 import 'package:foodstock/widgets/menu_widget/main_menu_bar_widget.dart';
+import 'package:foodstock/widgets/search_widget/search_widget.dart';
 import 'package:logging/logging.dart';
 
 final log = Logger('Main');
@@ -20,9 +22,12 @@ void main() {
     print('${record.level.name}: ${record.time}: ${record.message}');
   });
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    statusBarBrightness: Brightness.light,
-    statusBarIconBrightness: Brightness.dark
-  ));
+      statusBarBrightness: Brightness.light,
+      statusBarIconBrightness: Brightness.dark));
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
   runApp(MyApp());
 }
 
@@ -36,8 +41,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<bool>(
-        future: dataManagerService.refreshValuesFromDatabase(
-            DatabaseSource.FIREBASE_DATABASE),
+        future: dataManagerService
+            .refreshValuesFromDatabase(DatabaseSource.FIREBASE_DATABASE),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             widgetServiceState.currentSelectedTypeArticle.value =
@@ -46,24 +51,31 @@ class MyApp extends StatelessWidget {
                 title: 'FoodStock',
                 home: Scaffold(
                     body: Column(children: [
-                  Container(
-                      margin: const EdgeInsets.fromLTRB(0, 35, 0, 0),
-                      child: Flex(
-                        direction: Axis.horizontal,
-                        children: [MainMenuBarWidget()],
-                      )),
+                  Row(children: [
+                      Container(
+                          margin: const EdgeInsets.fromLTRB(5, 35, 5, 0),
+                          child: SearchWidget()),
+                      Expanded(child:
+                      Container(
+                        margin: const EdgeInsets.fromLTRB(0, 35, 0, 0),
+                        child: MainMenuBarWidget(isResizable: true),
+                      ))
+
+                    ]),
                   ArticleTileListWidget(),
                 ])
                     //bottomNavigationBar: TypeArticleListViewWidget(),
                     ));
           } else {
-            return LoadingWidget();
+            return const LoadingWidget();
           }
         });
   }
 }
 
 class LoadingWidget extends StatelessWidget {
+  const LoadingWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -73,13 +85,14 @@ class LoadingWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              margin: EdgeInsets.fromLTRB(0, 0, 0, 15),
+              margin: const EdgeInsets.fromLTRB(0, 0, 0, 15),
               height: 200,
               width: 200,
               clipBehavior: Clip.antiAlias,
               decoration:
                   BoxDecoration(borderRadius: BorderRadius.circular(40)),
-              child: Image(image: AssetImage('assets/images/foodstock.png')),
+              child: const Image(
+                  image: AssetImage('assets/images/foodstock.png')),
             ),
             Container(
               height: 20,
