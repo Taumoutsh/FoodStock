@@ -31,9 +31,6 @@ class _SearchWidget extends State<SearchWidget> {
     return ValueListenableBuilder<bool>(
         valueListenable: widgetServiceState.isSearchModeActivated,
         builder: (context, value, child) {
-          if(!value) {
-            FocusManager.instance.primaryFocus?.unfocus();
-          }
           return AnimatedContainer(
             curve: Curves.linearToEaseOut,
             height: 50,
@@ -83,26 +80,29 @@ class _SearchWidget extends State<SearchWidget> {
         });
   }
 
-  void _updateListOnSearchModeTrigger(bool isSearchMode) {
-    if (!isSearchMode) {
+  void _updateListOnSearchModeTrigger(bool willBeSearchMode) {
+    if (!willBeSearchMode) {
       log.config("_updateListOnSearchModeTrigger() -"
-          " Repliement automatique du clavier <$isSearchMode>");
+          " Repliement automatique du clavier <$willBeSearchMode>");
       _searchController.text = "";
+
+    } else {
+      FocusManager.instance.primaryFocus?.unfocus();
     }
-    widgetServiceState.isSearchModeActivated.value = !isSearchMode;
+    widgetServiceState.isSearchModeActivated.value = !willBeSearchMode;
     widgetServiceState.triggerListUpdate.value++;
   }
 
-  double _computeTextFieldSizeDependingOnValue(bool isSearchMode) {
-    if (isSearchMode) {
+  double _computeTextFieldSizeDependingOnValue(bool willBeSearchMode) {
+    if (willBeSearchMode) {
       return MediaQuery.of(context).size.width - 70;
     } else {
       return 0;
     }
   }
 
-  Icon _computeIconDependingOnValue(bool isSearchMode) {
-    if (isSearchMode) {
+  Icon _computeIconDependingOnValue(bool willBeSearchMode) {
+    if (willBeSearchMode) {
       return const Icon(
         Icons.delete_forever,
         size: 35,
