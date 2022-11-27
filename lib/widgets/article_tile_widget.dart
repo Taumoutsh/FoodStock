@@ -68,10 +68,10 @@ class _ArticleTileWidgetState extends State<ArticleTileWidget> {
         widgetServiceState.currentUpdatedArticle = currentArticle;
         currentArticle.articleTileState.value = ArticleTileState.UPDATE_ARTICLE;
         currentArticle.isInRemovingState.value = false;
-        log.info("_selectRightTile() - Select"
-            " <$ArticleTileState.UPDATE_ARTICLE> tile for"
-            " article <$currentArticle>"
-            " and reset removing state to false");
+        log.info("_selectRightTile() - Selection de la tuile"
+            " <$ArticleTileState.UPDATE_ARTICLE> pour"
+            " l'article <$currentArticle>"
+            " ainsi que la disponibilité des boutons de suppression/modification à False");
       }
     });
   }
@@ -88,7 +88,7 @@ class _ArticleTileWidgetState extends State<ArticleTileWidget> {
   @override
   void initState() {
     super.initState();
-    log.config("initState() - Initialisation of the widget tile of Article : " +
+    log.config("initState() - Initialisation de la tuile pour l'article : " +
         widget.currentArticle.labelArticle);
   }
 
@@ -116,8 +116,8 @@ class _ArticleTileWidgetState extends State<ArticleTileWidget> {
                   valueListenable: widget.currentArticle.articleTileState,
                   builder: (context, value, child) {
                     Article currentArticle = widget.currentArticle;
-                    log.config("build() - Display tile state <$value>"
-                        " for article <$currentArticle>");
+                    log.config("build() - Affichage de la tuile dans l'état <$value>"
+                        " pour l'article <$currentArticle>");
                     return AnimatedContainer(
                         curve: Curves.linear,
                         height: returnDynamicTileHeight(value),

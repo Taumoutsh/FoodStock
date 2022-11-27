@@ -2,9 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:foodstock/service/data_provider.dart';
 import 'package:foodstock/domain/model/type_article.dart';
 import 'package:foodstock/service/widget_service_state.dart';
+import 'package:logging/logging.dart';
 import 'menu_widget.dart';
 
 class MainMenuBarWidget extends StatelessWidget {
+
+  final log = Logger('MainMenuBarWidget');
 
   final bool isResizable;
 
@@ -24,7 +27,7 @@ class MainMenuBarWidget extends StatelessWidget {
         valueListenable: widgetServiceState.isSearchModeActivated,
         builder: (context, value, child) {
           return AnimatedContainer(
-              duration: const Duration(milliseconds: 250),
+              duration: const Duration(milliseconds: 300),
               curve: Curves.linearToEaseOut,
               margin: const EdgeInsets.fromLTRB(5, 0, 5, 0),
               clipBehavior: Clip.antiAlias,
@@ -42,6 +45,8 @@ class MainMenuBarWidget extends StatelessWidget {
   }
 
   List<BoxShadow>? _computeShadowDependingOnValue(bool isSearchMode) {
+    log.info("_computeShadowDependingOnValue() -"
+        " Passage en mode recherche : <$isSearchMode>");
     if (isSearchMode && isResizable) {
       return [];
     } else {

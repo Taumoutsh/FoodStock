@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
 import 'package:path/path.dart';
 import '../../domain/model/article.dart';
 import '../../service/data_provider.dart';
@@ -15,6 +16,9 @@ class ArticleQuantityUpdaterWidget extends StatefulWidget {
 
 class _ArticleQuantityUpdaterWidget
     extends State<ArticleQuantityUpdaterWidget> {
+
+  final log = Logger('_ArticleQuantityUpdaterWidget');
+
   var dataProviderService = DataProviderService();
 
   var widgetServiceState = WidgetServiceState();
@@ -30,6 +34,11 @@ class _ArticleQuantityUpdaterWidget
         widgetServiceState
                 .currentQuantityByArticle[widget.currentArticle.pkArticle!] =
             currentQuantity;
+        log.config("_addValue() -"
+            " Incrémentation de 1 de la valeur de l'article dans le service"
+            " WidgetServiceState : " +
+            widget.currentArticle.toString() +
+            ", quantité courante <$currentQuantity>");
       }
     });
   }
@@ -41,6 +50,11 @@ class _ArticleQuantityUpdaterWidget
         widgetServiceState
                 .currentQuantityByArticle[widget.currentArticle.pkArticle!] =
             currentQuantity;
+        log.config("_removeValue() -"
+            " Décrémentation de 1 de la valeur de l'article dans le service"
+            " WidgetServiceState : " +
+            widget.currentArticle.toString() +
+            ", quantité courante <$currentQuantity>");
       }
     });
   }

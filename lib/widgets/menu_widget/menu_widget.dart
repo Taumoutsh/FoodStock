@@ -36,7 +36,8 @@ class _MenuWidget extends State<MenuWidget> {
                 , builder: (context, value, child) {
           return GestureDetector(
               onTap: _selectTypeArticle,
-              child: Container(
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 100),
                 child: Container(
                   margin: const EdgeInsets.all(10),
                   child:

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
 
 import '../../service/widget_service_state.dart';
 
@@ -11,6 +12,8 @@ class SearchWidget extends StatefulWidget {
 }
 
 class _SearchWidget extends State<SearchWidget> {
+  final log = Logger('_SearchWidget');
+
   WidgetServiceState widgetServiceState = WidgetServiceState();
 
   final TextEditingController _searchController = TextEditingController();
@@ -28,11 +31,24 @@ class _SearchWidget extends State<SearchWidget> {
     return ValueListenableBuilder<bool>(
         valueListenable: widgetServiceState.isSearchModeActivated,
         builder: (context, value, child) {
+          if(!value) {
+            FocusManager.instance.primaryFocus?.unfocus();
+          }
           return AnimatedContainer(
             curve: Curves.linearToEaseOut,
             height: 50,
-            decoration: _computeWidgetStyleDependingOnValue(value),
-            duration: const Duration(milliseconds: 250),
+            decoration: BoxDecoration(
+                color: const Color(0xFFCFCDCD),
+                borderRadius: BorderRadius.circular(60),
+                shape: BoxShape.rectangle,
+                boxShadow: const [
+                  BoxShadow(
+                      color: Color(0x66000000),
+                      blurRadius: 5,
+                      spreadRadius: 1,
+                      offset: Offset(0, 4))
+                ]),
+            duration: const Duration(milliseconds: 300),
             child: Row(
               children: [
                 GestureDetector(
@@ -44,7 +60,7 @@ class _SearchWidget extends State<SearchWidget> {
                   ),
                 ),
                 AnimatedContainer(
-                  duration: const Duration(milliseconds: 250),
+                  duration: const Duration(milliseconds: 300),
                   curve: Curves.linearToEaseOut,
                   height: 45,
                   padding: const EdgeInsets.fromLTRB(0, 0, 20, 5),
@@ -57,8 +73,7 @@ class _SearchWidget extends State<SearchWidget> {
                     style: const TextStyle(
                         fontSize: 16, fontFamily: ".AppleSystemUIFont"),
                     decoration: const InputDecoration(
-                        contentPadding:
-                        EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                         hintText: "Intitulé de l'article"),
                   ),
                 )
@@ -70,18 +85,12 @@ class _SearchWidget extends State<SearchWidget> {
 
   void _updateListOnSearchModeTrigger(bool isSearchMode) {
     if (!isSearchMode) {
+      log.config("_updateListOnSearchModeTrigger() -"
+          " Repliement automatique du clavier <$isSearchMode>");
       _searchController.text = "";
     }
     widgetServiceState.isSearchModeActivated.value = !isSearchMode;
     widgetServiceState.triggerListUpdate.value++;
-  }
-
-  BoxDecoration _computeWidgetStyleDependingOnValue(bool isSearchMode) {
-    if (isSearchMode) {
-      return getSearchModeLayout();
-    } else {
-      return getNormalModeLayout();
-    }
   }
 
   double _computeTextFieldSizeDependingOnValue(bool isSearchMode) {
@@ -108,37 +117,9 @@ class _SearchWidget extends State<SearchWidget> {
     }
   }
 
-  BoxDecoration getNormalModeLayout() {
-    return BoxDecoration(
-        color: Color(0xFFCFCDCD),
-        shape: BoxShape.rectangle,
-        borderRadius: BorderRadius.circular(60),
-        boxShadow: const [
-          BoxShadow(
-              color: Color(0x66000000),
-              blurRadius: 5,
-              spreadRadius: 1,
-              offset: Offset(0, 4))
-        ]);
-  }
-
-  BoxDecoration getSearchModeLayout() {
-    return BoxDecoration(
-        color: const Color(0xFFCFCDCD),
-        borderRadius: BorderRadius.circular(20),
-        shape: BoxShape.rectangle,
-        boxShadow: const [
-          BoxShadow(
-              color: Color(0x66000000),
-              blurRadius: 5,
-              spreadRadius: 1,
-              offset: Offset(0, 4))
-        ]);
-  }
-
   void _updateListIfSearchMode() {
     widgetServiceState.currentResearchContent.value = _searchController.text;
-    if(widgetServiceState.isSearchModeActivated.value) {
+    if (widgetServiceState.isSearchModeActivated.value) {
       widgetServiceState.triggerListUpdate.value++;
     }
   }

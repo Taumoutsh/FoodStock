@@ -32,12 +32,14 @@ class _ArticleTileList extends State<ArticleTileListWidget> {
     articleTileList.clear();
     List<ArticleTileWidget> newUnorderedArticleTileList = [];
     if(widget.widgetServiceState.isSearchModeActivated.value) {
-      var currentResearchContent =
-          widget.widgetServiceState.currentResearchContent.value;
-      for(Article article in widget.dataProviderService.articleMap.values) {
-        if(article.labelArticle.contains(currentResearchContent)) {
-          newUnorderedArticleTileList
-              .add(ArticleTileWidget(currentArticle: article));
+      if(widget.widgetServiceState.currentResearchContent.value != "") {
+        var currentResearchContent =
+            widget.widgetServiceState.currentResearchContent.value;
+        for (Article article in widget.dataProviderService.articleMap.values) {
+          if (article.labelArticle.contains(currentResearchContent)) {
+            newUnorderedArticleTileList
+                .add(ArticleTileWidget(currentArticle: article));
+          }
         }
       }
     } else {
@@ -58,6 +60,7 @@ class _ArticleTileList extends State<ArticleTileListWidget> {
 
   @override
   void initState() {
+    super.initState();
     articleTileList =
         _redrawList(widget.widgetServiceState.currentSelectedTypeArticle.value);
 
@@ -65,8 +68,8 @@ class _ArticleTileList extends State<ArticleTileListWidget> {
     // dans le cas où certaines étaient en état de modification.
     widget.widgetServiceState.currentSelectedTypeArticle.addListener(() {
       log.config("currentSelectedTypeArticle.listener() -"
-          " Redraw tiles list because the"
-          " current selected TypeArticle has changed");
+          " Regénération des tuiles puisque le "
+          " type d'article courant a changé");
       setState(() {
         articleTileList = _redrawList(
             widget.widgetServiceState.currentSelectedTypeArticle.value);
@@ -76,8 +79,7 @@ class _ArticleTileList extends State<ArticleTileListWidget> {
     // Ce listener écoute le bouton de favoris. Il permet de
     widget.widgetServiceState.favoriteAddition.addListener(() {
       log.config("favoriteAddition.listener() -"
-          " Redraw tiles list because the"
-          " favorite button has been triggered");
+          " Regénération des tuiles puisque le bouton favoris a été pressé");
       setState(() {
         List<ArticleTileWidget> newList = articleTileList
           ..sort((e1, e2) => widget.articleComparator
@@ -89,7 +91,7 @@ class _ArticleTileList extends State<ArticleTileListWidget> {
     // Ce listener écoute le bouton de favoris. Il permet de
     widget.widgetServiceState.triggerListUpdate.addListener(() {
       log.config("triggerListUpdate.listener() -"
-          " Redraw tiles list because an Article has been added or remove");
+          " Regénération des tuiles puisqu'un article a été supprimé ou ajouté");
       setState(() {
         articleTileList = _redrawList(
             widget.widgetServiceState.currentSelectedTypeArticle.value);
@@ -104,7 +106,7 @@ class _ArticleTileList extends State<ArticleTileListWidget> {
     completeArticleTileList.add(ArticleCreationWidget());
     return Expanded(
         child: Container(
-            margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+            margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
             child: SingleChildScrollView(
                 padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                 child: Column(

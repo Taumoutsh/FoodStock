@@ -7,6 +7,7 @@ import 'package:foodstock/domain/model/article.dart';
 import 'package:foodstock/domain/model/enumerate/item_event_type.dart';
 import 'package:foodstock/domain/model/type_article.dart';
 import 'package:foodstock/service/widget_service_state.dart';
+import 'package:foodstock/widgets/search_widget/search_widget.dart';
 
 import '../database/firebase_provider.dart';
 import '../domain/fetcher/data_fetcher.dart';
@@ -151,13 +152,13 @@ class DataManagerService extends ChangeNotifier {
     if (articleHasBeenUpdated == 1) {
       dataProviderService.articleMap[article.pkArticle!] = article;
       log.info(
-          "DataManagerService() - The favorite has been updated on the article : "
-          "$articleName, set article favorite : $estFavoris");
+          "DataManagerService() - La variable de favoris a été mise à jour pour l'article : "
+          "$articleName, est favoris : $estFavoris");
       notifyListeners();
     } else {
       log.severe(
-          "DataManagerService() - The favorite has not been updated on the article : "
-          "$articleName. Current SQL return is : $articleHasBeenUpdated");
+          "DataManagerService() - La variable de favoris n'a pas été mise à jour pour l'article : "
+          "$articleName. Retour SQL : $articleHasBeenUpdated");
     }
     return articleHasBeenUpdated;
   }

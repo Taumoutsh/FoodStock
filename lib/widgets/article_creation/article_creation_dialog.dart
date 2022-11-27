@@ -52,8 +52,8 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
       _criticalLevelController.text =
           widget.potentialCurrentArticle!.quantiteCritique.toString();
     } else {
-      log.info("_predefineControllersText() - No initial text is required"
-          "it appears to be the article creation use case");
+      log.info("_predefineControllersText() - Aucun texte initial n'est requis car "
+          "nous sommes dans le cas initial d'une création d'article");
     }
   }
 
@@ -283,8 +283,8 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
     if (isValidForm) {
       bool result = false;
       if (potentialCurrentArticle == null) {
-        log.info("_addOrUpdateArticle() - Calling the data manager service"
-                " to add a new article <" +
+        log.info("_addOrUpdateArticle() - Appel de data manager service"
+                " pour ajouter un nouvel article <" +
             _articleNameController.value.text +
             ">");
         result = await dataManagerService.addNewArticle(
@@ -294,8 +294,8 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
             int.parse(_criticalLevelController.value.text),
             widgetServiceState.currentSelectedTypeArticle.value!);
       } else {
-        log.info("_addOrUpdateArticle() - Calling the data manager service"
-                " to update the existing article"
+        log.info("_addOrUpdateArticle() - Appel de data manager service"
+                " pour mettre à jour l'article existant"
                 " <" +
             _articleNameController.value.text +
             ">");
@@ -312,7 +312,8 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
       }
       Navigator.of(context).pop();
     } else {
-      log.severe("_addOrUpdateArticle() - Form is not properly filled");
+      log.severe("_addOrUpdateArticle() - Le formulaire n'est pas"
+          " correctement rempli");
       int blinkCountLimit = 2;
       if (timer != null) {
         timer!.cancel();

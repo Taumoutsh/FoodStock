@@ -60,8 +60,8 @@ abstract class FirebaseDataFetcher<T extends MappedObject> extends DataFetcher<T
                   ItemEventType.getItemEventTypeFromDocumentChangeType
                     (documentType)));
         } else {
-          log.severe("subscribeToUpdates() - Impossible to send ItemUpdateEvent"
-              " because either listOfMap is empty or documentType is null");
+          log.severe("subscribeToUpdates() - Impossible d'envoyer l'évènement ItemUpdateEvent"
+              " car soit la map listOfMap est vide, ou documentType est null");
         }
       });
     }

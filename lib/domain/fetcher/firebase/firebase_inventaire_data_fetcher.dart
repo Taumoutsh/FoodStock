@@ -55,7 +55,7 @@ class FirebaseInventaireDataFetcher extends FirebaseDataFetcher<Inventaire>
         inventaireListToAdd.add(inventaire);
     }
     bool dataAdditionSuccessful = await addDataByBatch(inventaireListToAdd);
-      log.info("addInventoryItems() - Data addition is successful"
+      log.info("addInventoryItems() - L'ajout de données est en succès"
           " <$dataAdditionSuccessful>");
     return inventaireListToAdd;
   }
@@ -78,7 +78,7 @@ class FirebaseInventaireDataFetcher extends FirebaseDataFetcher<Inventaire>
           }
       });
     } else {
-      log.severe("removeFromTable() - FirestoreDatabase instance is null");
+      log.severe("removeFromTable() - L'instance FiresotreDatabase est null");
     }
     return futureInventaire;
   }
