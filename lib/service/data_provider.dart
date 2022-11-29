@@ -4,8 +4,12 @@ import 'package:foodstock/domain/model/article.dart';
 import 'package:foodstock/domain/model/type_article.dart';
 
 import '../domain/model/inventaire.dart';
+import 'application_start_service.dart';
 
 class DataProviderService {
+
+  ApplicationStartMonitor applicationStartService = ApplicationStartMonitor();
+
   Map<String, Article> articleMap = {};
   Map<String, TypeArticle> typeArticleMap = {};
   Map<String, Inventaire> inventaireMap = {};

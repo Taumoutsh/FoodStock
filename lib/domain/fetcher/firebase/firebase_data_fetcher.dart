@@ -8,6 +8,7 @@ import 'package:foodstock/domain/model/item_update_event.dart';
 import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
 import '../../../database/firebase_provider.dart';
+import '../../../service/application_start_service.dart';
 import '../data_fetcher.dart';
 
 abstract class FirebaseDataFetcher<T extends MappedObject> extends DataFetcher<T> {
@@ -17,6 +18,8 @@ abstract class FirebaseDataFetcher<T extends MappedObject> extends DataFetcher<T
 
   FirebaseProvider firebaseProvider = FirebaseProvider();
 
+  ApplicationStartMonitor applicationStartService = ApplicationStartMonitor();
+
   BehaviorSubject<ItemUpdateEvent> dataComingFromDatabaseProperty = BehaviorSubject();
 
   final log = Logger('FirebaseDataFetcher');
@@ -25,43 +28,48 @@ abstract class FirebaseDataFetcher<T extends MappedObject> extends DataFetcher<T
     FirebaseFirestore? firestoreDatabase = firebaseProvider.db;
     if (firestoreDatabase != null) {
       firestoreDatabase.collection(tableName()).snapshots().listen((event) async {
-        var docChangeIterator = event.docChanges.iterator;
-        List<T> listOfMap = [];
-        // !!! We ensure that the documentChangeType will be the same for the single data updates,
-        // transactions and batch. If not, handle the type for each arrays. !!!
-        DocumentChangeType? documentType;
-        while (docChangeIterator.moveNext()) {
-          var documentChange = docChangeIterator.current;
-          DocumentSnapshot documentSnapshot = documentChange.doc;
-          documentType = documentChange.type;
-          Map<String, dynamic>? data =
-          documentSnapshot.data() as Map<String, dynamic>?;
-          Map<String, dynamic> mapInternal = {};
-          if (data != null) {
-            print(documentSnapshot.id);
-            mapInternal[primaryKeyName()] = documentSnapshot.id;
-            mapInternal[getReferenceLabel()] = documentSnapshot.reference;
-            for (MapEntry internalData in data.entries) {
-              if (internalData.value is DocumentReference) {
-                String id = internalData.value.id;
-                mapInternal[internalData.key] = id;
-              } else {
-                mapInternal[internalData.key] = internalData.value;
+        if(applicationStartService.isInitialRefreshComplete) {
+          var docChangeIterator = event.docChanges.iterator;
+          List<T> listOfMap = [];
+          // !!! We ensure that the documentChangeType will be the same for the single data updates,
+          // transactions and batch. If not, handle the type for each arrays. !!!
+          DocumentChangeType? documentType;
+          while (docChangeIterator.moveNext()) {
+            var documentChange = docChangeIterator.current;
+            DocumentSnapshot documentSnapshot = documentChange.doc;
+            documentType = documentChange.type;
+            Map<String, dynamic>? data =
+            documentSnapshot.data() as Map<String, dynamic>?;
+            Map<String, dynamic> mapInternal = {};
+            if (data != null) {
+              print(documentSnapshot.id);
+              mapInternal[primaryKeyName()] = documentSnapshot.id;
+              mapInternal[getReferenceLabel()] = documentSnapshot.reference;
+              for (MapEntry internalData in data.entries) {
+                if (internalData.value is DocumentReference) {
+                  String id = internalData.value.id;
+                  mapInternal[internalData.key] = id;
+                } else {
+                  mapInternal[internalData.key] = internalData.value;
+                }
               }
+              T listOfChanges =
+              await constructSingleObjectFromDatabase(mapInternal);
+              listOfMap.add(listOfChanges);
             }
-            T listOfChanges =
-                await constructSingleObjectFromDatabase(mapInternal);
-            listOfMap.add(listOfChanges);
           }
-        }
-        if(listOfMap.isNotEmpty && documentType != null) {
-          dataComingFromDatabaseProperty.add(
-              ItemUpdateEvent(listOfMap,
-                  ItemEventType.getItemEventTypeFromDocumentChangeType
-                    (documentType)));
+          if(listOfMap.isNotEmpty && documentType != null) {
+            dataComingFromDatabaseProperty.add(
+                ItemUpdateEvent(listOfMap,
+                    ItemEventType.getItemEventTypeFromDocumentChangeType
+                      (documentType)));
+          } else {
+            log.severe("subscribeToUpdates() - Impossible d'envoyer l'évènement ItemUpdateEvent"
+                " car soit la map listOfMap est vide, ou documentType est null");
+          }
         } else {
-          log.severe("subscribeToUpdates() - Impossible d'envoyer l'évènement ItemUpdateEvent"
-              " car soit la map listOfMap est vide, ou documentType est null");
+          log.info("subscribeToUpdates() - L'initialisation "
+              "n'est pas complète, les écoutes sont ignorées");
         }
       });
     }

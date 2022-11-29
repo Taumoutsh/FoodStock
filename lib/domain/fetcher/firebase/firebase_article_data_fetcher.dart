@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:foodstock/domain/model/article.dart';
-import 'package:logging/logging.dart';
 import '../../../service/data_provider.dart';
 import '../../model/type_article.dart';
 import 'firebase_data_fetcher.dart';
@@ -9,7 +8,7 @@ import 'firebase_data_fetcher.dart';
 class FirebaseArticleDataFetcher extends FirebaseDataFetcher<Article> {
   var dataProviderService = DataProviderService();
 
-  final log = Logger('FirebaseArticleDataFetcher');
+
 
   @override
   Future<String> addData(Article article) async {
@@ -33,11 +32,11 @@ class FirebaseArticleDataFetcher extends FirebaseDataFetcher<Article> {
     int count = 0;
     FirebaseFirestore? firestoreDatabase = firebaseProvider.db;
     if (firestoreDatabase != null) {
-       await firestoreDatabase
+      await firestoreDatabase
           .collection(tableName())
-      .doc(article.pkArticle)
-      .update(article.toFirebase());
-       count++;
+          .doc(article.pkArticle)
+          .update(article.toFirebase());
+      count++;
     }
     return count;
   }

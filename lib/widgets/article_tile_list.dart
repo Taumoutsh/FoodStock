@@ -11,6 +11,7 @@ import '../domain/model/type_article.dart';
 import '../service/widget_service_state.dart';
 import 'article_tile_widget.dart';
 
+
 class ArticleTileListWidget extends StatefulWidget {
   DataProviderService dataProviderService = DataProviderService();
   DataManagerService dataManagerService = DataManagerService();

@@ -3,20 +3,18 @@ import 'dart:core';
 import '../../../service/data_provider.dart';
 import '../article.dart';
 
-/**
- *
- * Le comparateur compare les article en fonction de leur :
- *
- * - L'aspect de favoris (article favoris en premier puis les autres ensuite)
- * - Le nombre d'article (du plus petit au plus grand)
- * - La quantité critique de chaque article :
- *      > plus un article possède une quantité critique élevée,
- *        plus il sera classé haut dans la liste
- * - La quantité d'alerte de chaque article :
- *      > plus un article possède une quantité critique élevée,
- *        plus il sera classé haut dans la liste
- *
- */
+///
+/// Le comparateur compare les articles en fonction de leur :
+///
+/// - L'aspect de favoris (article favoris en premier puis les autres ensuite)
+/// - Le nombre d'article (du plus petit au plus grand)
+/// - La quantité critique de chaque article :
+///      > plus un article possède une quantité critique élevée,
+///        plus il sera classé haut dans la liste
+/// - La quantité d'alerte de chaque article :
+///      > plus un article possède une quantité critique élevée,
+///        plus il sera classé haut dans la liste
+///
 class ArticleComparator {
   DataProviderService dataProviderService = DataProviderService();
 

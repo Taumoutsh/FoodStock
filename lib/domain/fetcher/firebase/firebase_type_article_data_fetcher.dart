@@ -7,25 +7,25 @@ import 'firebase_data_fetcher.dart';
 class FirebaseTypeArticleDataFetcher extends FirebaseDataFetcher<TypeArticle> {
   final log = Logger('FirebaseTypeArticleDataFetcher');
 
-  Future<TypeArticle> constructSingleObjectFromDatabase(mapEntry) async {
+  Future<TypeArticle> constructSingleObjectFromDatabase(map) async {
     var typeArticleToAdd = TypeArticle(
-        pkTypeArticle: mapEntry['pk_TypeArticle'],
-        labelTypeArticle: mapEntry['labelTypeArticle'],
-        svgResource: mapEntry['svgResource']);
+        pkTypeArticle: map['pk_TypeArticle'],
+        labelTypeArticle: map['labelTypeArticle'],
+        svgResource: map['svgResource']);
     typeArticleToAdd.typeArticleReference =
-    mapEntry[TypeArticle.REFERENCE_LABEL];
+        map[TypeArticle.REFERENCE_LABEL];
     return typeArticleToAdd;
   }
 
   @override
   Future<List<TypeArticle>> constructObjectsFromDatabase(listOfMaps) async {
-      List<TypeArticle> typeArticleToReturn = [];
-      for (Map<String, dynamic>  mapEntry in listOfMaps) {
-        TypeArticle typeArticleToAdd = await
-            constructSingleObjectFromDatabase(mapEntry);
-        typeArticleToReturn.add(typeArticleToAdd);
-      }
-      return Future(() => typeArticleToReturn);
+    List<TypeArticle> typeArticleToReturn = [];
+    for (Map<String, dynamic> mapEntry in listOfMaps) {
+      TypeArticle typeArticleToAdd =
+          await constructSingleObjectFromDatabase(mapEntry);
+      typeArticleToReturn.add(typeArticleToAdd);
+    }
+    return Future(() => typeArticleToReturn);
   }
 
   @override
