@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:foodstock/domain/model/comparator/article_comparator.dart';
-import 'package:foodstock/domain/model/enumerate/article_tile_state_enum.dart';
 import 'package:foodstock/domain/model/enumerate/inventory_mode.dart';
 import 'package:foodstock/widgets/article_creation/article_creation_widget.dart';
 import 'package:logging/logging.dart';
 
 import '../domain/model/article.dart';
+import '../domain/model/constants/ui_constants.dart' as UiConstants;
 import '../service/data_manager.dart';
 import '../service/data_provider.dart';
 import '../domain/model/type_article.dart';
@@ -47,7 +47,8 @@ class _ArticleTileList extends State<ArticleTileListWidget> {
             " en mode recherche lorsqu'aucune saisie n'est entrée");
         if (widget.widgetServiceState.currentInventoryMode.value ==
             InventoryMode.CART_MODE) {
-          for (Article article in widget.dataProviderService.articleMap.values) {
+          for (Article article
+              in widget.dataProviderService.articleMap.values) {
             if (article.isInCart) {
               newUnorderedArticleTileList
                   .add(ArticleTileWidget(currentArticle: article));
@@ -160,9 +161,12 @@ class _ArticleTileList extends State<ArticleTileListWidget> {
     List<Widget> completeArticleTileList = [];
     completeArticleTileList.addAll(articleTileList);
     if (widget.widgetServiceState.currentInventoryMode.value ==
-    InventoryMode.STOCK_MODE) {
+        InventoryMode.STOCK_MODE) {
       completeArticleTileList.add(ArticleCreationWidget());
     }
+    completeArticleTileList
+        .add(Container(height: UiConstants.INVENTORY_MENU_HEIGHT));
+
     return Expanded(
         child: Container(
             margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),

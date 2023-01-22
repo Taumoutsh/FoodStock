@@ -24,8 +24,7 @@ class ArticleCreationWidget extends StatelessWidget {
                         size: 50, color: Colors.white),
                     curve: Curves.linear,
                     height: 90,
-                    margin: const EdgeInsets.fromLTRB(10, 7, 12,
-                        7 + UiConstants.INVENTORY_MENU_HEIGHT),
+                    margin: const EdgeInsets.fromLTRB(10, 7, 12, 7),
                     decoration: BoxDecoration(
                         gradient: const LinearGradient(
                             colors: [Color(0xFF377F29), Color(0xFF71AF54)]),
