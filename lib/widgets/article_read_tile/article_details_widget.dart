@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:foodstock/domain/model/article.dart';
 
+import '../../domain/model/enumerate/inventory_mode.dart';
+import '../../service/widget_service_state.dart';
+
 
 class ArticleDetailsWidget extends StatelessWidget {
   final Article currentArticle;
 
-  const ArticleDetailsWidget({super.key, required this.currentArticle});
+  final WidgetServiceState widgetServiceState = WidgetServiceState();
+
+  ArticleDetailsWidget({super.key, required this.currentArticle});
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +40,11 @@ class ArticleDetailsWidget extends StatelessWidget {
 
   Widget getWidgetInCart() {
     Widget widgetToReturn;
-    if (currentArticle.isInCart) {
+    if (currentArticle.isInCart &&
+        InventoryMode.STOCK_MODE == widgetServiceState.currentInventoryMode.value) {
       widgetToReturn = const Icon(
         Icons.shopping_cart,
-        color: Color(0xFFFF147A),
+        color: Color(0xFF8B8787),
         size: 18,
       );
     } else {

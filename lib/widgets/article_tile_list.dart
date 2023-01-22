@@ -42,6 +42,18 @@ class _ArticleTileList extends State<ArticleTileListWidget> {
                 article, newUnorderedArticleTileList);
           }
         }
+      } else {
+        log.config("_redrawList() - Affichage de toutes les tuiles du panier"
+            " en mode recherche lorsqu'aucune saisie n'est entrée");
+        if (widget.widgetServiceState.currentInventoryMode.value ==
+            InventoryMode.CART_MODE) {
+          for (Article article in widget.dataProviderService.articleMap.values) {
+            if (article.isInCart) {
+              newUnorderedArticleTileList
+                  .add(ArticleTileWidget(currentArticle: article));
+            }
+          }
+        }
       }
     } else {
       if (typeArticle != null) {

@@ -16,6 +16,7 @@ class InventoryModeMenuWidget extends StatelessWidget {
             elevation: 20,
             child: Container(
               height: UiConstants.INVENTORY_MENU_HEIGHT,
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
               decoration:
                   const BoxDecoration(color: Color(0xFFCFCDCD), boxShadow: [
                 BoxShadow(

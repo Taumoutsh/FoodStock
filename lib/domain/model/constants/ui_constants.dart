@@ -1,1 +1,1 @@
-const double INVENTORY_MENU_HEIGHT = 60;
+const double INVENTORY_MENU_HEIGHT = 75;

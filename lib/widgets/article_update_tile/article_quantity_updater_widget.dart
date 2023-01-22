@@ -90,13 +90,17 @@ class _ArticleQuantityUpdaterWidget
               onTap: _removeValue,
               child: Icon(Icons.remove_rounded,
                   color: computeRemoveColor(currentQuantity), size: 50)),
-          Text(currentQuantity.toString(),
-              style: const TextStyle(
-                  color: Color(0xFF303030),
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24,
-                  letterSpacing: 0,
-                  fontFamily: ".AppleSystemUIFont")),
+          Container(
+            width: 30,
+            child: Text(currentQuantity.toString(),
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                    color: Color(0xFF303030),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                    letterSpacing: 0,
+                    fontFamily: ".AppleSystemUIFont")),
+          ),
           GestureDetector(
               onTap: _addValue,
               child: Icon(Icons.add_rounded,
