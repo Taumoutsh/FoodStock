@@ -89,9 +89,9 @@ class _ArticleQuantityUpdaterWidget
           GestureDetector(
               onTap: _removeValue,
               child: Icon(Icons.remove_rounded,
-                  color: computeRemoveColor(currentQuantity), size: 48)),
+                  color: computeRemoveColor(currentQuantity), size: 47)),
           Container(
-            width: 34,
+            width: 36,
             child: Text(currentQuantity.toString(),
                 textAlign: TextAlign.center,
                 style: const TextStyle(
@@ -104,7 +104,7 @@ class _ArticleQuantityUpdaterWidget
           GestureDetector(
               onTap: _addValue,
               child: Icon(Icons.add_rounded,
-                  color: computeAddColor(currentQuantity), size: 48))
+                  color: computeAddColor(currentQuantity), size: 47))
         ],
       ),
     );
