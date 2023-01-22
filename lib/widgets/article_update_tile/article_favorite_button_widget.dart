@@ -34,7 +34,7 @@ class _ArticleFavoriteButtonWidget extends State<ArticleFavoriteButtonWidget> {
             colorsToApply: const [Color(0xFFFF1048), Color(0xFFFF147A)],
             onTapFunction: _updateFavoriteStatus,
             iconData: Icons.favorite_rounded,
-            iconSize: 30));
+            iconSize: 25));
   }
 
   getIconStyle() {

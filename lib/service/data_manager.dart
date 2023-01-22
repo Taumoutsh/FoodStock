@@ -184,6 +184,30 @@ class DataManagerService extends ChangeNotifier {
     return articleHasBeenUpdated;
   }
 
+  Future<int> updateArticleCart(Article article) async {
+    String articleName = article.labelArticle;
+    if (article.isInCart) {
+      article.isInCart = false;
+    } else {
+      article.isInCart = true;
+    }
+    bool isInCart = article.isInCart;
+    isInCart = !isInCart;
+    int articleHasBeenUpdated = await _articleDataFetcher.updateData(article);
+    if (articleHasBeenUpdated == 1) {
+      dataProviderService.articleMap[article.pkArticle!] = article;
+      log.info(
+          "DataManagerService() - La variable de panier a été mise à jour pour l'article : "
+          "$articleName, est dans le panier : $isInCart");
+      //notifyListeners();
+    } else {
+      log.severe(
+          "DataManagerService() - La variable de panier n'a pas été mise à jour pour l'article : "
+          "$articleName. Retour SQL : $articleHasBeenUpdated");
+    }
+    return articleHasBeenUpdated;
+  }
+
   Future<bool> addOrRemoveFromInventaire(Article article, int quantity) async {
     // Récupération du nombre d'article dans l'inventaire
     bool inventoryHasChanged =
@@ -244,7 +268,8 @@ class DataManagerService extends ChangeNotifier {
         quantiteAlerte: alerteLevel,
         quantiteCritique: criticalLevel,
         estFavoris: false,
-        typeArticle: articleType);
+        typeArticle: articleType,
+        isInCart: false);
     String articleCreationState = await _articleDataFetcher.addData(article);
     if (articleCreationState.toString() != "0") {
       log.info("addNewArticle() - L'article avec la clé primaire "
@@ -280,7 +305,8 @@ class DataManagerService extends ChangeNotifier {
         quantiteAlerte: alerteLevel,
         quantiteCritique: criticalLevel,
         estFavoris: oldArticle.estFavoris,
-        typeArticle: articleType);
+        typeArticle: articleType,
+        isInCart: oldArticle.isInCart);
     updatedArticle.pkArticle = oldArticle.pkArticle;
     updatedArticle.articleReference = oldArticle.articleReference;
     int articleUpdatedCount =

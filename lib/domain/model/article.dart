@@ -18,6 +18,7 @@ class Article extends MappedObject implements Comparable<Article> {
   int quantiteAlerte;
   int quantiteCritique;
   bool estFavoris;
+  bool isInCart;
   TypeArticle typeArticle;
   DocumentReference? articleReference;
 
@@ -31,7 +32,8 @@ class Article extends MappedObject implements Comparable<Article> {
       required this.quantiteAlerte,
       required this.quantiteCritique,
       required this.estFavoris,
-      required this.typeArticle});
+      required this.typeArticle,
+      required this.isInCart});
 
   void resetReadingTileState() {
     articleTileState.value = ArticleTileState.READ_ARTICLE;
@@ -75,7 +77,8 @@ class Article extends MappedObject implements Comparable<Article> {
       'estFavoris': estFavoris ? 1 : 0,
       'quantiteAlerte': quantiteAlerte,
       'quantiteCritique': quantiteCritique,
-      'fk_TypeArticle': typeArticle.pkTypeArticle
+      'fk_TypeArticle': typeArticle.pkTypeArticle,
+      'isInCart' : isInCart
     };
   }
 
@@ -87,7 +90,8 @@ class Article extends MappedObject implements Comparable<Article> {
       'estFavoris': estFavoris ? 1 : 0,
       'quantiteAlerte': quantiteAlerte,
       'quantiteCritique': quantiteCritique,
-      'fk_TypeArticle': typeArticle.typeArticleReference
+      'fk_TypeArticle': typeArticle.typeArticleReference,
+      'isInCart' : isInCart ? 1 : 0
     };
   }
 

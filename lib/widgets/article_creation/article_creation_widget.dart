@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../../domain/model/constants/ui_constants.dart' as UiConstants;
 
 import 'article_creation_dialog.dart';
 
@@ -23,7 +24,8 @@ class ArticleCreationWidget extends StatelessWidget {
                         size: 50, color: Colors.white),
                     curve: Curves.linear,
                     height: 90,
-                    margin: const EdgeInsets.fromLTRB(10, 7, 12, 7),
+                    margin: const EdgeInsets.fromLTRB(10, 7, 12,
+                        7 + UiConstants.INVENTORY_MENU_HEIGHT),
                     decoration: BoxDecoration(
                         gradient: const LinearGradient(
                             colors: [Color(0xFF377F29), Color(0xFF71AF54)]),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foodstock/widgets/article_update_tile/article_cart_button_widget.dart';
 
 import 'article_favorite_button_widget.dart';
 import 'article_quantity_updater_widget.dart';
@@ -18,9 +19,10 @@ class ArticleUpdateTile extends StatelessWidget {
     return Expanded(
       flex: 1,
         child: Container(
-            padding: const EdgeInsets.fromLTRB(10, 15, 10, 15),
+            padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
             child: Row(textDirection: TextDirection.ltr, children: [
               ArticleQuantityUpdaterWidget(currentArticle: currentArticle),
+              ArticleCartButtonWidget(currentArticle: currentArticle),
               ArticleFavoriteButtonWidget(currentArticle: currentArticle),
               ArticleValidButtonWidget(currentArticle: currentArticle)
             ])));

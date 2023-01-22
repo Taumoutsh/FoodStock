@@ -39,6 +39,6 @@ class _ArticleValidButtonWidget extends State<ArticleValidButtonWidget> {
           colorsToApply: const [Color(0xFF70AC62), Color(0xFF377F29)],
           onTapFunction: _updateArticleQuantity,
           iconData: Icons.check_rounded,
-          iconSize: 50));
+          iconSize: 40));
   }
 }

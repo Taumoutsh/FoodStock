@@ -120,7 +120,7 @@ class _ArticleTileWidgetState extends State<ArticleTileWidget> {
                         " pour l'article <$currentArticle>");
                     return AnimatedContainer(
                         curve: Curves.linear,
-                        height: returnDynamicTileHeight(value),
+                        height: 90,
                         margin: const EdgeInsets.fromLTRB(10, 7, 10, 7),
                         decoration: BoxDecoration(
                             gradient: LinearGradient(
@@ -168,16 +168,6 @@ class _ArticleTileWidgetState extends State<ArticleTileWidget> {
       computedSize = 50;
     }
     return computedSize;
-  }
-
-  double returnDynamicTileHeight(ArticleTileState state) {
-    double dynamicHeight;
-    if (state == ArticleTileState.UPDATE_ARTICLE) {
-      dynamicHeight = 110;
-    } else {
-      dynamicHeight = 90;
-    }
-    return dynamicHeight;
   }
 
   List<Widget> getArticleTileContentByState(ArticleTileState state) {

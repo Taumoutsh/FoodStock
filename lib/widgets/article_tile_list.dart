@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:foodstock/domain/model/comparator/article_comparator.dart';
 import 'package:foodstock/domain/model/enumerate/article_tile_state_enum.dart';
+import 'package:foodstock/domain/model/enumerate/inventory_mode.dart';
 import 'package:foodstock/widgets/article_creation/article_creation_widget.dart';
 import 'package:logging/logging.dart';
 
@@ -10,7 +11,6 @@ import '../service/data_provider.dart';
 import '../domain/model/type_article.dart';
 import '../service/widget_service_state.dart';
 import 'article_tile_widget.dart';
-
 
 class ArticleTileListWidget extends StatefulWidget {
   DataProviderService dataProviderService = DataProviderService();
@@ -32,14 +32,14 @@ class _ArticleTileList extends State<ArticleTileListWidget> {
   List<ArticleTileWidget> _redrawList(TypeArticle? typeArticle) {
     articleTileList.clear();
     List<ArticleTileWidget> newUnorderedArticleTileList = [];
-    if(widget.widgetServiceState.isSearchModeActivated.value) {
-      if(widget.widgetServiceState.currentResearchContent.value != "") {
+    if (widget.widgetServiceState.isSearchModeActivated.value) {
+      if (widget.widgetServiceState.currentResearchContent.value != "") {
         var currentResearchContent =
             widget.widgetServiceState.currentResearchContent.value;
         for (Article article in widget.dataProviderService.articleMap.values) {
           if (article.labelArticle.contains(currentResearchContent)) {
-            newUnorderedArticleTileList
-                .add(ArticleTileWidget(currentArticle: article));
+            _addArticleDependingOnInventoryMode(
+                article, newUnorderedArticleTileList);
           }
         }
       }
@@ -47,8 +47,8 @@ class _ArticleTileList extends State<ArticleTileListWidget> {
       if (typeArticle != null) {
         for (Article article in widget.dataProviderService.articleMap.values) {
           if (article.typeArticle.pkTypeArticle == typeArticle.pkTypeArticle) {
-            newUnorderedArticleTileList
-                .add(ArticleTileWidget(currentArticle: article));
+            _addArticleDependingOnInventoryMode(
+                article, newUnorderedArticleTileList);
           }
         }
       }
@@ -57,6 +57,20 @@ class _ArticleTileList extends State<ArticleTileListWidget> {
       ..sort((e1, e2) => widget.articleComparator
           .compareTwoArticle(e1.currentArticle, e2.currentArticle));
     return newList;
+  }
+
+  _addArticleDependingOnInventoryMode(
+      Article article, List<ArticleTileWidget> newUnorderedArticleTileList) {
+    if (widget.widgetServiceState.currentInventoryMode.value ==
+        InventoryMode.CART_MODE) {
+      if (article.isInCart) {
+        newUnorderedArticleTileList
+            .add(ArticleTileWidget(currentArticle: article));
+      }
+    } else {
+      newUnorderedArticleTileList
+          .add(ArticleTileWidget(currentArticle: article));
+    }
   }
 
   @override
@@ -90,6 +104,35 @@ class _ArticleTileList extends State<ArticleTileListWidget> {
     });
 
     // Ce listener écoute le bouton de favoris. Il permet de
+    widget.widgetServiceState.currentInventoryMode.addListener(() {
+      InventoryMode inventoryMode =
+          widget.widgetServiceState.currentInventoryMode.value;
+      log.config("currentInventoryMode.listener() -"
+          " Changement de type d'inventaire, regénération des tuiles."
+          " L'inventaire maintenant affiché est du type "
+          "<$inventoryMode>");
+      setState(() {
+        articleTileList = _redrawList(
+            widget.widgetServiceState.currentSelectedTypeArticle.value);
+      });
+    });
+
+    // Ce listener écoute le bouton de favoris. Il permet de
+    widget.widgetServiceState.cartAddition.addListener(() {
+      InventoryMode inventoryMode =
+          widget.widgetServiceState.currentInventoryMode.value;
+      if (InventoryMode.CART_MODE == inventoryMode) {
+        log.config("cartAddition.listener() -"
+            " Suppresion d'un article du panier en mode d'inventaire $inventoryMode"
+            ", regénération de la liste.");
+        setState(() {
+          articleTileList = _redrawList(
+              widget.widgetServiceState.currentSelectedTypeArticle.value);
+        });
+      }
+    });
+
+    // Ce listener écoute le bouton de favoris. Il permet de
     widget.widgetServiceState.triggerListUpdate.addListener(() {
       log.config("triggerListUpdate.listener() -"
           " Regénération des tuiles puisqu'un article a été supprimé ou ajouté");
@@ -109,9 +152,8 @@ class _ArticleTileList extends State<ArticleTileListWidget> {
         child: Container(
             margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
             child: SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                 child: Column(
-                  children: completeArticleTileList,
-                ))));
+              children: completeArticleTileList,
+            ))));
   }
 }

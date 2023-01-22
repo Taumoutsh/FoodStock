@@ -26,18 +26,18 @@ class ArticleDetailsWidget extends StatelessWidget {
                   fontSize: 16,
                   letterSpacing: 0)),
               Container(margin: EdgeInsets.all(2)),
-              getFavoriteWidget()
+              getWidgetInCart()
             ],
           )// DLUO
         ]))
     );
   }
 
-  Widget getFavoriteWidget() {
+  Widget getWidgetInCart() {
     Widget widgetToReturn;
-    if (currentArticle.estFavoris) {
+    if (currentArticle.isInCart) {
       widgetToReturn = const Icon(
-        Icons.favorite_rounded,
+        Icons.shopping_cart,
         color: Color(0xFFFF147A),
         size: 18,
       );

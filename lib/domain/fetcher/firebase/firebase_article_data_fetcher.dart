@@ -51,6 +51,7 @@ class FirebaseArticleDataFetcher extends FirebaseDataFetcher<Article> {
         quantiteAlerte: mapEntry['quantiteAlerte'],
         quantiteCritique: mapEntry['quantiteCritique'],
         estFavoris: mapEntry['estFavoris'] == 1 ? true : false,
+        isInCart: mapEntry['isInCart'] == 1 ? true : false,
         typeArticle: typeArticle);
     articleToAdd.articleReference = mapEntry['articleReference'];
     return articleToAdd;

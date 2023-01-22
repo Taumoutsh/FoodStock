@@ -35,7 +35,7 @@ class SqliteArticleDataFetcher extends SqliteDataFetcher<Article> {
     var primaryKeyNameStr = primaryKeyName();
     articleNumberUpdated = await db.update(tableName(), article.toSqlite(),
         where: "$primaryKeyNameStr = $primaryKey");
-    log.info("updateArticleFavoriteStatus() - Mise à jours de l'article"
+    log.info("updateData() - Mise à jours de l'article"
         "  <$article> ayant pour clé primarire <$articleNumberUpdated>");
     return articleNumberUpdated;
   }
@@ -79,6 +79,7 @@ class SqliteArticleDataFetcher extends SqliteDataFetcher<Article> {
           quantiteAlerte: mapEntry['quantiteAlerte'],
           quantiteCritique: mapEntry['quantiteCritique'],
           estFavoris: mapEntry['estFavoris'] == 1 ? true : false,
+          isInCart: mapEntry['isInCart'] == 1 ? true : false,
           typeArticle: typeArticle));
     }
     return Future(() => articleToReturn);

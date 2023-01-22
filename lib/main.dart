@@ -11,6 +11,7 @@ import 'package:foodstock/service/data_provider.dart';
 import 'package:foodstock/service/widget_service_state.dart';
 
 import 'package:foodstock/widgets/article_tile_list.dart';
+import 'package:foodstock/widgets/inventory_mode/inventory_mode_menu.dart';
 import 'package:foodstock/widgets/menu_widget/main_menu_bar_widget.dart';
 import 'package:foodstock/widgets/search_widget/search_widget.dart';
 import 'package:logging/logging.dart';
@@ -54,23 +55,28 @@ class MyApp extends StatelessWidget {
                 title: 'FoodStock',
                 home: Scaffold(
                     body: GestureDetector(
-                  onTap: () {
-                    FocusManager.instance.primaryFocus?.unfocus();
-                  },
-                  child: Column(children: [
-                    Row(children: [
-                      Container(
-                          margin: const EdgeInsets.fromLTRB(10, 35, 5, 0),
-                          child: SearchWidget()),
-                      Expanded(
-                          child: Container(
-                        margin: const EdgeInsets.fromLTRB(0, 35, 5, 0),
-                        child: MainMenuBarWidget(isResizable: true),
-                      ))
-                    ]),
-                    ArticleTileListWidget(),
-                  ]),
-                )
+                        onTap: () {
+                          FocusManager.instance.primaryFocus?.unfocus();
+                        },
+                        child: Stack(children: <Widget>[
+                          Column(children: [
+                            Row(children: [
+                              Container(
+                                  margin:
+                                      const EdgeInsets.fromLTRB(10, 35, 5, 0),
+                                  child: const SearchWidget()),
+                              Expanded(
+                                  child: Container(
+                                margin: const EdgeInsets.fromLTRB(0, 35, 5, 0),
+                                child: MainMenuBarWidget(isResizable: true),
+                              ))
+                            ]),
+                            ArticleTileListWidget(),
+                          ]),
+                          Align(
+                              alignment: Alignment.bottomRight,
+                              child: InventoryModeMenuWidget())
+                        ]))
                     //bottomNavigationBar: TypeArticleListViewWidget(),
                     ));
           } else {
