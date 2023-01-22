@@ -13,10 +13,10 @@ import '../service/widget_service_state.dart';
 import 'article_tile_widget.dart';
 
 class ArticleTileListWidget extends StatefulWidget {
-  DataProviderService dataProviderService = DataProviderService();
-  DataManagerService dataManagerService = DataManagerService();
-  WidgetServiceState widgetServiceState = WidgetServiceState();
-  ArticleComparator articleComparator = ArticleComparator();
+  final DataProviderService dataProviderService = DataProviderService();
+  final DataManagerService dataManagerService = DataManagerService();
+  final WidgetServiceState widgetServiceState = WidgetServiceState();
+  final ArticleComparator articleComparator = ArticleComparator();
 
   ArticleTileListWidget({super.key});
 
@@ -159,7 +159,10 @@ class _ArticleTileList extends State<ArticleTileListWidget> {
   Widget build(BuildContext context) {
     List<Widget> completeArticleTileList = [];
     completeArticleTileList.addAll(articleTileList);
-    completeArticleTileList.add(ArticleCreationWidget());
+    if (widget.widgetServiceState.currentInventoryMode.value ==
+    InventoryMode.STOCK_MODE) {
+      completeArticleTileList.add(ArticleCreationWidget());
+    }
     return Expanded(
         child: Container(
             margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),

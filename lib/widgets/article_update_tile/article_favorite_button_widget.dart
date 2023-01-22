@@ -6,25 +6,17 @@ import 'package:foodstock/widgets/generic_items/generic_button_widget.dart';
 import '../../domain/model/article.dart';
 import '../../domain/model/enumerate/article_tile_state_enum.dart';
 
-class ArticleFavoriteButtonWidget extends StatefulWidget {
+class ArticleFavoriteButtonWidget extends StatelessWidget {
   final Article currentArticle;
-
-  const ArticleFavoriteButtonWidget({super.key, required this.currentArticle});
-
-  @override
-  State<StatefulWidget> createState() => _ArticleFavoriteButtonWidget();
-}
-
-class _ArticleFavoriteButtonWidget extends State<ArticleFavoriteButtonWidget> {
   final DataManagerService dataManagerService = DataManagerService();
   final WidgetServiceState widgetServiceState = WidgetServiceState();
 
+  ArticleFavoriteButtonWidget({super.key, required this.currentArticle});
+
   _updateFavoriteStatus() {
-    setState(() {
-      dataManagerService.updateArticleFavorite(widget.currentArticle);
-      widgetServiceState.incrementFavoriteTriggeredCount();
-      widget.currentArticle.resetReadingTileState();
-    });
+    dataManagerService.updateArticleFavorite(currentArticle);
+    widgetServiceState.incrementFavoriteTriggeredCount();
+    currentArticle.resetReadingTileState();
   }
 
   @override
@@ -35,17 +27,5 @@ class _ArticleFavoriteButtonWidget extends State<ArticleFavoriteButtonWidget> {
             onTapFunction: _updateFavoriteStatus,
             iconData: Icons.favorite_rounded,
             iconSize: 25));
-  }
-
-  getIconStyle() {
-    Icon iconToReturn;
-    if (!widget.currentArticle.estFavoris) {
-      iconToReturn =
-          const Icon(Icons.favorite_rounded, size: 50, color: Colors.white);
-    } else {
-      iconToReturn = const Icon(Icons.favorite_border_rounded,
-          size: 50, color: Colors.white);
-    }
-    return iconToReturn;
   }
 }

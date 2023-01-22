@@ -31,7 +31,7 @@ class _InventoryModeItem extends State<InventoryModeItem> {
                   height: double.infinity,
                   margin: const EdgeInsets.fromLTRB(11, 6, 11, 6),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(30),
                       color: computeBackgroundColor(value)),
                   child: Icon(widget.iconData,
                       size: 30, color: computeIconColor(value)),

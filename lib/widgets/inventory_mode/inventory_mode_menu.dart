@@ -11,20 +11,14 @@ class InventoryModeMenuWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipRRect(
         borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+            topLeft: Radius.circular(30), topRight: Radius.circular(30)),
         child: Material(
             elevation: 20,
             child: Container(
               height: UiConstants.INVENTORY_MENU_HEIGHT,
               padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
               decoration:
-                  const BoxDecoration(color: Color(0xFFCFCDCD), boxShadow: [
-                BoxShadow(
-                    color: Color(0x66000000),
-                    blurRadius: 5,
-                    spreadRadius: 1,
-                    offset: Offset(0, 4))
-              ]),
+                  const BoxDecoration(color: Color(0xFFCFCDCD)),
               child: Row(
                 children: [
                   InventoryModeItem(
