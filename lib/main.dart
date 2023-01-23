@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder<bool>(
         future: dataManagerService
-            .refreshValuesFromDatabase(DatabaseSource.SQLITE_DATABASE),
+            .refreshValuesFromDatabase(DatabaseSource.FIREBASE_DATABASE),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             widgetServiceState.currentSelectedTypeArticle.value =
