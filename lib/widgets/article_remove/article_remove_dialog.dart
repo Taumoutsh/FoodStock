@@ -41,12 +41,12 @@ class _ArticleRemoveDialog extends State<ArticleRemoveDialog> {
           height: 235,
           width: 415,
           decoration: BoxDecoration(
-              color: const Color(0xFFE9E9E9),
+              color: Theme.of(context).colorScheme.tertiary,
               borderRadius: BorderRadius.circular(30)),
           child: Container(
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: const Color(0xFFFFFFFF)),
+                  color: Theme.of(context).colorScheme.background),
               margin: const EdgeInsets.all(10),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -55,10 +55,7 @@ class _ArticleRemoveDialog extends State<ArticleRemoveDialog> {
                         child: Text("L'article $articleNameString et son stock associé est"
                             " sur le point d'être supprimé."
                             "\n\nVeuillez valider pour confirmer cette action.",
-                            style: const TextStyle(
-                                fontSize: 16,
-                                fontFamily: ".AppleSystemUIFont",
-                                letterSpacing: 0)),
+                            style: Theme.of(context).textTheme.bodySmall),
                   ),
                   Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                     Expanded(

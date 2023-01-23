@@ -82,50 +82,45 @@ class _ArticleQuantityUpdaterWidget
         minWidth: 130,
       ),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20), color: Colors.white),
+          borderRadius: BorderRadius.circular(20), color: Theme.of(context).colorScheme.background),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           GestureDetector(
               onTap: _removeValue,
               child: Icon(Icons.remove_rounded,
-                  color: computeRemoveColor(currentQuantity), size: 47)),
+                  color: computeRemoveColor(context, currentQuantity), size: 47)),
           Container(
             width: 36,
             child: Text(currentQuantity.toString(),
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                    color: Color(0xFF303030),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24,
-                    letterSpacing: 0,
-                    fontFamily: ".AppleSystemUIFont")),
-          ),
+                style: Theme.of(context).textTheme.titleLarge,
+          )),
           GestureDetector(
               onTap: _addValue,
               child: Icon(Icons.add_rounded,
-                  color: computeAddColor(currentQuantity), size: 47))
+                  color: computeAddColor(context, currentQuantity), size: 47))
         ],
       ),
     );
   }
 
-  Color computeRemoveColor(int quantityValue) {
+  Color computeRemoveColor(BuildContext context, int quantityValue) {
     Color colorToReturn;
     if (quantityValue > 0) {
-      colorToReturn = const Color(0xFF747474);
+      colorToReturn = Theme.of(context).colorScheme.secondary;
     } else {
-      colorToReturn = const Color(0xFFDBDBDB);
+      colorToReturn = Theme.of(context).colorScheme.primary;
     }
     return colorToReturn;
   }
 
-  Color computeAddColor(int quantityValue) {
+  Color computeAddColor(BuildContext context, int quantityValue) {
     Color colorToReturn;
     if (quantityValue < 20) {
-      colorToReturn = const Color(0xFF747474);
+      colorToReturn = Theme.of(context).colorScheme.secondary;
     } else {
-      colorToReturn = const Color(0xFFDBDBDB);
+      colorToReturn = Theme.of(context).colorScheme.primary;
     }
     return colorToReturn;
   }

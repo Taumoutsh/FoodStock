@@ -22,7 +22,7 @@ class _ArticleRightSideTile extends State<ArticleRightSideTile> {
         child: Container(
             margin: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(15)),
+                color: Theme.of(context).colorScheme.background, borderRadius: BorderRadius.circular(15)),
             child: ValueListenableBuilder<bool>(
               valueListenable: widget.currentArticle.isInRemovingState,
               builder: (context, value, child) {

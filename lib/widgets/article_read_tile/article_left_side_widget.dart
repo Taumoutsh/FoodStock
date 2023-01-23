@@ -32,12 +32,7 @@ class _ArticleLeftSideTile extends State<ArticleLeftSideTile> {
                 percent: value.computeLastingInPercentAbsolute(),
                 center: Text(
                   value.computeLastingInDaysOrMonthsOrYearsString(),
-                  style: const TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.w600,
-                      fontFamily: ".AppleSystemUIFont",
-                      color: Colors.black,
-                      letterSpacing: 0),
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
                 progressColor:
                     _updateProgressColor(value.computeLastingInPercent()),
@@ -45,12 +40,12 @@ class _ArticleLeftSideTile extends State<ArticleLeftSideTile> {
                 radius: 35,
               ),
               width: 60,
-              decoration: const BoxDecoration(
-                  color: Color(0xFFFFFFFF),
+              decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.background,
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                        color: Color(0x33000000),
+                        color: Theme.of(context).colorScheme.surface,
                         blurRadius: 5,
                         spreadRadius: 1,
                         offset: Offset(0, 5))

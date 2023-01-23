@@ -1,5 +1,4 @@
-import 'package:flutter/widgets.dart';
-
+import 'package:flutter/material.dart';
 import '../../domain/model/article.dart';
 import '../../service/data_provider.dart';
 
@@ -23,21 +22,16 @@ class ArticleCountContainer extends StatelessWidget {
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   color: getCountBackgroundColor(value),
-                  boxShadow: const [
+                  boxShadow: [
                     BoxShadow(
-                        color: Color(0x336B6B6B),
+                        color: Theme.of(context).colorScheme.surface,
                         blurRadius: 5,
                         spreadRadius: 1,
                         offset: Offset(0, 2))
                   ]),
               child: Text(
                 value.toString(),
-                style: const TextStyle(
-                    color: Color(0xFF303030),
-                    fontWeight: FontWeight.w700,
-                    fontSize: 26,
-                    fontFamily: ".AppleSystemUIFont",
-                    letterSpacing: 0),
+                style: Theme.of(context).textTheme.titleLarge,
                 textAlign: TextAlign.center,
               ));
         }); //Quantité

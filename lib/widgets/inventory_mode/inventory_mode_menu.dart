@@ -1,7 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodstock/domain/model/enumerate/inventory_mode.dart';
 import 'package:foodstock/widgets/inventory_mode/inventory_mode_item.dart';
+import 'package:foodstock/widgets/inventory_mode/option_popup_item.dart';
 import '../../domain/model/constants/ui_constants.dart' as UiConstants;
 
 class InventoryModeMenuWidget extends StatelessWidget {
@@ -18,7 +18,7 @@ class InventoryModeMenuWidget extends StatelessWidget {
               height: UiConstants.INVENTORY_MENU_HEIGHT,
               padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
               decoration:
-                  const BoxDecoration(color: Color(0xFFCFCDCD)),
+                  BoxDecoration(color: Theme.of(context).colorScheme.primary),
               child: Row(
                 children: [
                   InventoryModeItem(
@@ -27,6 +27,8 @@ class InventoryModeMenuWidget extends StatelessWidget {
                   InventoryModeItem(
                       iconData: Icons.shopping_cart,
                       inventoryMode: InventoryMode.CART_MODE),
+                  const OptionPopupItem(
+                      iconData: Icons.settings)
                 ],
               ),
             )));

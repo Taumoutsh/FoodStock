@@ -79,9 +79,9 @@ class _ArticleTileWidgetState extends State<ArticleTileWidget> {
   List<Color> _selectColorDependingOnState(ArticleTileState articleTileState) {
     if(widget.currentArticle.estFavoris &&
         articleTileState == ArticleTileState.READ_ARTICLE) {
-      return const [Color(0xFFDBD262), Color(0xFFE0AA3E), Color(0xFFFFD66A), Color(0xFFB88A44)];
+      return [Color(0xFFDBD262), Color(0xFFE0AA3E), Color(0xFFFFD66A), Color(0xFFB88A44)];
     } else {
-      return const [Color(0xFFE9E9E9), Color(0xFFE9E9E9)];
+      return [Theme.of(context).colorScheme.tertiary, Theme.of(context).colorScheme.tertiary];
     }
   }
 
@@ -121,18 +121,18 @@ class _ArticleTileWidgetState extends State<ArticleTileWidget> {
                     return AnimatedContainer(
                         curve: Curves.linear,
                         height: 90,
-                        margin: const EdgeInsets.fromLTRB(10, 7, 10, 7),
+                        margin: const EdgeInsets.fromLTRB(10, 7, 5, 7),
                         decoration: BoxDecoration(
                             gradient: LinearGradient(
                               begin: Alignment.centerLeft,
                               end: Alignment.centerRight,
                               colors: _selectColorDependingOnState(value)
                             ),
-                            color: const Color(0xFFE9E9E9),
+                            color: Theme.of(context).colorScheme.tertiary,
                             borderRadius: BorderRadius.circular(20),
-                            boxShadow: const [
+                            boxShadow: [
                               BoxShadow(
-                                  color: Color(0x33000000),
+                                  color: Theme.of(context).colorScheme.surface,
                                   blurRadius: 5,
                                   spreadRadius: 1,
                                   offset: Offset(0, 4))
@@ -214,14 +214,15 @@ class _ArticleTileWidgetState extends State<ArticleTileWidget> {
         child: AnimatedContainer(
           curve: Curves.ease,
           height: 40,
+          clipBehavior: Clip.hardEdge,
           width: computeRemovingState(widget.currentArticle.isInRemovingState.value),
-          child: Icon(iconToDisplay, color: Colors.white),
+          child: Icon(iconToDisplay, color: Theme.of(context).colorScheme.onBackground),
           margin: EdgeInsets.fromLTRB(0, topMargin, 5, 0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
-            boxShadow: const [
+            boxShadow: [
               BoxShadow(
-                  color: Color(0x33000000),
+                  color: Theme.of(context).colorScheme.surface,
                   blurRadius: 5,
                   spreadRadius: 1,
                   offset: Offset(0, 4))

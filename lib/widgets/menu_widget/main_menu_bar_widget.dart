@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:foodstock/service/data_provider.dart';
 import 'package:foodstock/domain/model/type_article.dart';
 import 'package:foodstock/service/widget_service_state.dart';
@@ -34,7 +34,7 @@ class MainMenuBarWidget extends StatelessWidget {
               height: 60,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: const Color(0xFFCFCDCD),
+                  color: Theme.of(context).colorScheme.primary,
                   boxShadow: _computeShadowDependingOnValue(value)),
               child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,

@@ -35,12 +35,12 @@ class _SearchWidget extends State<SearchWidget> {
             curve: Curves.linearToEaseOut,
             height: 50,
             decoration: BoxDecoration(
-                color: const Color(0xFFCFCDCD),
+                color: Theme.of(context).colorScheme.primary,
                 borderRadius: BorderRadius.circular(60),
                 shape: BoxShape.rectangle,
-                boxShadow: const [
+                boxShadow: [
                   BoxShadow(
-                      color: Color(0x66000000),
+                      color: Theme.of(context).colorScheme.onSurface,
                       blurRadius: 5,
                       spreadRadius: 1,
                       offset: Offset(0, 4))
@@ -67,8 +67,7 @@ class _SearchWidget extends State<SearchWidget> {
                     textCapitalization: TextCapitalization.sentences,
                     controller: _searchController,
                     scrollPadding: EdgeInsets.zero,
-                    style: const TextStyle(
-                        fontSize: 16, fontFamily: ".AppleSystemUIFont"),
+                    style: Theme.of(context).textTheme.bodySmall,
                     decoration: const InputDecoration(
                         contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                         hintText: "Intitulé de l'article"),
@@ -103,16 +102,16 @@ class _SearchWidget extends State<SearchWidget> {
 
   Icon _computeIconDependingOnValue(bool willBeSearchMode) {
     if (willBeSearchMode) {
-      return const Icon(
+      return Icon(
         Icons.delete_forever,
         size: 35,
-        color: Color(0xFF8B8787),
+        color: Theme.of(context).colorScheme.secondary,
       );
     } else {
-      return const Icon(
+      return Icon(
         Icons.search_rounded,
         size: 35,
-        color: Color(0xFF8B8787),
+        color: Theme.of(context).colorScheme.secondary,
       );
     }
   }

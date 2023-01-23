@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import '../../domain/model/enumerate/inventory_mode.dart';
 import '../../service/widget_service_state.dart';
@@ -42,7 +43,7 @@ class _InventoryModeItem extends State<InventoryModeItem> {
 
   Color computeBackgroundColor(InventoryMode currentInventoryMode) {
     if (widget.inventoryMode == currentInventoryMode) {
-      return const Color(0xFF8B8787);
+      return Theme.of(context).colorScheme.secondary;
     } else {
       return const Color(0x00000000);
     }
@@ -50,9 +51,9 @@ class _InventoryModeItem extends State<InventoryModeItem> {
 
   Color computeIconColor(InventoryMode currentInventoryMode) {
     if (widget.inventoryMode == currentInventoryMode) {
-      return const Color(0xFFFFFFFF);
+      return Theme.of(context).colorScheme.background;
     } else {
-      return const Color(0xFF8B8787);
+      return Theme.of(context).colorScheme.secondary;
     }
   }
 }

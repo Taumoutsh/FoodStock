@@ -41,9 +41,9 @@ class _GenericButtonWidget extends State<GenericButtonWidget> {
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: widget.colorsToApply),
-                boxShadow: const [
+                boxShadow: [
                   BoxShadow(
-                      color: Color(0x33000000),
+                      color: Theme.of(context).colorScheme.surface,
                       blurRadius: 5,
                       spreadRadius: 1,
                       offset: Offset(0, 4))
@@ -51,7 +51,7 @@ class _GenericButtonWidget extends State<GenericButtonWidget> {
             child: Icon(
               widget.iconData,
               size: widget.iconSize,
-              color: Colors.white,
+              color: Theme.of(context).colorScheme.onBackground,
             )));
   }
 }

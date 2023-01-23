@@ -31,8 +31,7 @@ class _ArticleCartButtonWidget extends State<ArticleCartButtonWidget> {
   Widget build(BuildContext context) {
     return Expanded(
         child: GenericButtonWidget(
-            colorsToApply: const [Color(0xFFF3EA6A), Color(0xFFF8B020),
-              Color(0xFFFFD500)],
+            colorsToApply: const [Color(0xFFF3EA6A), Color(0xFFF8B020)],
             onTapFunction: _updateCartStatus,
             iconData: getIconStyle(),
             iconSize: 25));

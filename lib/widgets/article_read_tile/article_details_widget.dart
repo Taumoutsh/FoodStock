@@ -27,9 +27,7 @@ class ArticleDetailsWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(currentArticle.labelArticle,
-              style: const TextStyle(
-                  fontSize: 16,
-                  letterSpacing: 0)),
+              style: Theme.of(context).textTheme.bodySmall),
               Container(margin: EdgeInsets.all(2)),
               getWidgetInCart()
             ],

@@ -20,19 +20,19 @@ class ArticleCreationWidget extends StatelessWidget {
                       });
                 },
                 child: AnimatedContainer(
-                    child: const Icon(Icons.add_rounded,
-                        size: 50, color: Colors.white),
+                    child: Icon(Icons.add_rounded,
+                        size: 50, color: Theme.of(context).colorScheme.onBackground),
                     curve: Curves.linear,
                     height: 90,
                     margin: const EdgeInsets.fromLTRB(10, 7, 12, 7),
                     decoration: BoxDecoration(
                         gradient: const LinearGradient(
                             colors: [Color(0xFF377F29), Color(0xFF71AF54)]),
-                        color: const Color(0xFFE9E9E9),
+                        color: Theme.of(context).colorScheme.tertiary,
                         borderRadius: BorderRadius.circular(20),
-                        boxShadow: const [
+                        boxShadow: [
                           BoxShadow(
-                              color: Color(0x33000000),
+                              color: Theme.of(context).colorScheme.surface,
                               blurRadius: 5,
                               spreadRadius: 1,
                               offset: Offset(0, 4))

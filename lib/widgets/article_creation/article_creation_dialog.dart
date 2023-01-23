@@ -9,7 +9,6 @@ import 'package:logging/logging.dart';
 
 import '../../domain/model/article.dart';
 import '../generic_items/generic_button_widget.dart';
-import '../search_widget/search_widget.dart';
 
 class ArticleCreationDialog extends StatefulWidget {
   ArticleCreationDialog(this.potentialCurrentArticle, {super.key});
@@ -22,8 +21,6 @@ class ArticleCreationDialog extends StatefulWidget {
 
 class _ArticleCreationDialog extends State<ArticleCreationDialog> {
   final log = Logger('ArticleCreationDialog');
-
-  Color _mainContainerColor = const Color(0xFFE9E9E9);
 
   bool isValidForm = true;
 
@@ -70,6 +67,9 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
 
   @override
   Widget build(BuildContext context) {
+
+    Color _mainContainerColor = Theme.of(context).colorScheme.tertiary;
+
     _predefineControllersText();
     return Dialog(
         shape: RoundedRectangleBorder(
@@ -88,7 +88,7 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
                 child: Container(
                     margin: EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                        color: Color(0xFFFFFFFF),
+                        color: Theme.of(context).colorScheme.background,
                         borderRadius: BorderRadius.circular(15)),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -98,8 +98,7 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
                           child: TextField(
                             controller: _articleNameController,
                             scrollPadding: EdgeInsets.zero,
-                            style: const TextStyle(
-                                fontSize: 16, fontFamily: ".AppleSystemUIFont"),
+                            style: Theme.of(context).textTheme.bodySmall,
                             decoration: const InputDecoration(
                                 contentPadding:
                                     EdgeInsets.fromLTRB(0, 10, 0, 0),
@@ -112,11 +111,8 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                  child: const Text("Catégorie d'article",
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontFamily: ".AppleSystemUIFont",
-                                          letterSpacing: 0)),
+                                  child: Text("Catégorie d'article",
+                                      style: Theme.of(context).textTheme.bodySmall),
                                   padding:
                                       const EdgeInsets.fromLTRB(5, 10, 10, 10)),
                               Flex(
@@ -140,9 +136,7 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
                                 FilteringTextInputFormatter.digitsOnly
                               ],
                               scrollPadding: EdgeInsets.zero,
-                              style: const TextStyle(
-                                  fontSize: 16,
-                                  fontFamily: ".AppleSystemUIFont"),
+                              style: Theme.of(context).textTheme.bodySmall,
                               decoration: const InputDecoration(
                                   contentPadding:
                                       EdgeInsets.fromLTRB(0, 10, 0, 0),
@@ -156,13 +150,9 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
                               children: [
                                 Expanded(
                                     child: Container(
-                                        child: const Text("Niveaux d'alertes",
+                                        child: Text("Niveaux d'alertes",
                                             textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                fontFamily:
-                                                    ".AppleSystemUIFont",
-                                                letterSpacing: 0)),
+                                            style: Theme.of(context).textTheme.bodySmall),
                                         padding: const EdgeInsets.fromLTRB(
                                             10, 10, 10, 10))),
                                 Container(
@@ -175,9 +165,9 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
                                     decoration: BoxDecoration(
                                         color: const Color(0x70F16060),
                                         borderRadius: BorderRadius.circular(20),
-                                        boxShadow: const [
+                                        boxShadow: [
                                           BoxShadow(
-                                              color: Color(0x336B6B6B),
+                                              color: Theme.of(context).colorScheme.surface,
                                               blurRadius: 5,
                                               spreadRadius: 1,
                                               offset: Offset(0, 2))
@@ -194,10 +184,7 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
                                           ],
                                           scrollPadding: EdgeInsets.zero,
                                           textAlign: TextAlign.center,
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 24,
-                                              fontFamily: ".AppleSystemUIFont"),
+                                          style: Theme.of(context).textTheme.titleLarge,
                                           decoration: const InputDecoration(
                                               contentPadding:
                                                   EdgeInsets.fromLTRB(
@@ -213,9 +200,9 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
                                     decoration: BoxDecoration(
                                         color: const Color(0x70EBA131),
                                         borderRadius: BorderRadius.circular(20),
-                                        boxShadow: const [
+                                        boxShadow: [
                                           BoxShadow(
-                                              color: Color(0x336B6B6B),
+                                              color: Theme.of(context).colorScheme.surface,
                                               blurRadius: 5,
                                               spreadRadius: 1,
                                               offset: Offset(0, 2))
@@ -232,10 +219,7 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
                                           ],
                                           scrollPadding: EdgeInsets.zero,
                                           textAlign: TextAlign.center,
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 24,
-                                              fontFamily: ".AppleSystemUIFont"),
+                                          style: Theme.of(context).textTheme.titleLarge,
                                           decoration: const InputDecoration(
                                               contentPadding:
                                                   EdgeInsets.fromLTRB(
@@ -257,7 +241,8 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
                                           ],
                                           onTapFunction: () =>
                                               _addOrUpdateArticle(widget
-                                                  .potentialCurrentArticle),
+                                                  .potentialCurrentArticle,
+                                                  _mainContainerColor),
                                           iconData: Icons.check_rounded,
                                           iconSize: 50))),
                             ])
@@ -265,7 +250,8 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
                     )))));
   }
 
-  _addOrUpdateArticle(Article? potentialCurrentArticle) async {
+  _addOrUpdateArticle(Article? potentialCurrentArticle,
+      Color _mainContainerColor) async {
     isValidForm = true;
     if (_articleNameController.value.text == "") {
       isValidForm &= false;
@@ -321,9 +307,9 @@ class _ArticleCreationDialog extends State<ArticleCreationDialog> {
       timer = Timer.periodic(const Duration(milliseconds: 400), (Timer timer) {
         setState(() {
           if (blinkCountLimit % 2 == 0) {
-            _mainContainerColor = const Color(0xFFF00000);
+            _mainContainerColor = Theme.of(context).colorScheme.error;
           } else {
-            _mainContainerColor = const Color(0xFFE9E9E9);
+            _mainContainerColor = Theme.of(context).colorScheme.tertiary;
           }
           blinkCountLimit--;
           if (blinkCountLimit == 0) {
