@@ -34,6 +34,7 @@ class _ArticleLeftSideTile extends State<ArticleLeftSideTile> {
                   value.computeLastingInDaysOrMonthsOrYearsString(),
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
+                backgroundColor: Theme.of(context).colorScheme.primary,
                 progressColor:
                     _updateProgressColor(value.computeLastingInPercent()),
                 circularStrokeCap: CircularStrokeCap.round,
