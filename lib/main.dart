@@ -47,9 +47,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<bool>(
-        future: dataManagerService
-            .refreshValuesFromDatabase(DatabaseSource.FIREBASE_DATABASE),
+    return FutureBuilder(
+        future: Future.wait([
+          dataManagerService
+              .refreshValuesFromDatabase(DatabaseSource.SQLITE_DATABASE),
+          themeNotifier.initializeTheme()
+        ]),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             widgetServiceState.currentSelectedTypeArticle.value =
@@ -75,7 +78,8 @@ class MyApp extends StatelessWidget {
                                     child: Container(
                                       margin:
                                       const EdgeInsets.fromLTRB(0, 35, 5, 0),
-                                      child: MainMenuBarWidget(isResizable: true),
+                                      child: MainMenuBarWidget(
+                                          isResizable: true),
                                     ))
                               ]),
                               ArticleTileListWidget(),
@@ -86,7 +90,6 @@ class MyApp extends StatelessWidget {
                           ]))
                     //bottomNavigationBar: TypeArticleListViewWidget(),
                   )));
-
           } else {
             return const LoadingWidget();
           }

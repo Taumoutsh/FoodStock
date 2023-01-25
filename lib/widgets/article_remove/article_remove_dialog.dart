@@ -8,7 +8,6 @@ import '../../domain/model/article.dart';
 import '../generic_items/generic_button_widget.dart';
 
 class ArticleRemoveDialog extends StatefulWidget {
-
   Article currentArticle;
 
   ArticleRemoveDialog({super.key, required this.currentArticle});
@@ -50,12 +49,14 @@ class _ArticleRemoveDialog extends State<ArticleRemoveDialog> {
               margin: const EdgeInsets.all(10),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: [Container(
-                        margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                        child: Text("L'article $articleNameString et son stock associé est"
-                            " sur le point d'être supprimé."
-                            "\n\nVeuillez valider pour confirmer cette action.",
-                            style: Theme.of(context).textTheme.bodySmall),
+                children: [
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                    child: Text(
+                        "L'article $articleNameString et son stock associé est"
+                        " sur le point d'être supprimé."
+                        "\n\nVeuillez valider pour confirmer cette action.",
+                        style: Theme.of(context).textTheme.bodySmall),
                   ),
                   Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                     Expanded(
@@ -77,6 +78,6 @@ class _ArticleRemoveDialog extends State<ArticleRemoveDialog> {
 
   _removeArticle() async {
     await dataManagerService.removeArticle(widget.currentArticle);
-      Navigator.of(context).pop();
+    Navigator.of(context).pop();
   }
 }
