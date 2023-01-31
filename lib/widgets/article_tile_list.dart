@@ -27,6 +27,8 @@ class ArticleTileListWidget extends StatefulWidget {
 class _ArticleTileList extends State<ArticleTileListWidget> {
   final log = Logger('ArticleTileListWidget');
 
+  ScrollController _scrollController = ScrollController();
+
   List<ArticleTileWidget> articleTileList = [];
 
   List<ArticleTileWidget> _redrawList(TypeArticle? typeArticle) {
@@ -101,6 +103,7 @@ class _ArticleTileList extends State<ArticleTileListWidget> {
       setState(() {
         articleTileList = _redrawList(
             widget.widgetServiceState.currentSelectedTypeArticle.value);
+        _scrollArticleTileListUp();
       });
     });
 
@@ -127,6 +130,7 @@ class _ArticleTileList extends State<ArticleTileListWidget> {
       setState(() {
         articleTileList = _redrawList(
             widget.widgetServiceState.currentSelectedTypeArticle.value);
+        _scrollArticleTileListUp();
       });
     });
 
@@ -145,7 +149,7 @@ class _ArticleTileList extends State<ArticleTileListWidget> {
       }
     });
 
-    // Ce listener écoute le bouton de favoris. Il permet de
+    // Ce listener écoute le bouton de favoris.
     widget.widgetServiceState.triggerListUpdate.addListener(() {
       log.config("triggerListUpdate.listener() -"
           " Regénération des tuiles puisqu'un article a été supprimé ou ajouté");
@@ -154,6 +158,27 @@ class _ArticleTileList extends State<ArticleTileListWidget> {
             widget.widgetServiceState.currentSelectedTypeArticle.value);
       });
     });
+
+    // Ce listener écoute l'état d'activation du mode de recherche.
+    widget.widgetServiceState.isSearchModeActivated.addListener(() {
+      log.config("isSearchModeActivated.listener() -"
+          " Regénération des tuiles puisque le mode de recherche a été modifié");
+      setState(() {
+        articleTileList = _redrawList(
+            widget.widgetServiceState.currentSelectedTypeArticle.value);
+        _scrollArticleTileListUp();
+      });
+    });
+  }
+
+  _scrollArticleTileListUp() {
+    log.config("_scrollArticleTileListUp -"
+        " La liste d'article est automatiquement scrollée vers le haut");
+    _scrollController.animateTo(
+      _scrollController.position.minScrollExtent,
+      duration: const Duration(milliseconds: 100),
+      curve: Curves.fastOutSlowIn,
+    );
   }
 
   @override
@@ -171,6 +196,7 @@ class _ArticleTileList extends State<ArticleTileListWidget> {
         child: Container(
             margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
             child: SingleChildScrollView(
+              controller: _scrollController,
                 child: Column(
               children: completeArticleTileList,
             ))));

@@ -89,7 +89,6 @@ class _SearchWidget extends State<SearchWidget> {
       FocusManager.instance.primaryFocus?.unfocus();
     }
     widgetServiceState.isSearchModeActivated.value = !willBeSearchMode;
-    widgetServiceState.triggerListUpdate.value++;
   }
 
   double _computeTextFieldSizeDependingOnValue(bool willBeSearchMode) {
